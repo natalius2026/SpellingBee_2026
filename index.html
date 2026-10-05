@@ -108,6 +108,11 @@
     }
     .word-btn:hover { background: #eef2ff; border-color: #a5b4fc; }
     .word-btn:active { background: #e0e7ff; border-color: #818cf8; }
+    .word-btn.playing {
+      background: #dbeafe;
+      border-color: #60a5fa;
+      cursor: progress;
+    }
     .word-btn .num {
       flex-shrink: 0;
       width: 1.9rem;
@@ -121,6 +126,15 @@
       font-size: 0.8rem;
       font-weight: 700;
       line-height: 1;
+    }
+    .word-btn.playing .num {
+      background: #3b82f6;
+      color: white;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
     }
     .word-btn .w {
       flex: 1;
@@ -321,24 +335,24 @@
       { word: "ambience", sentence: "The relaxed ambience of the restaurant made everyone feel very comfrotable." }
     ];
 
-    // ── Oxford UK audio URL builder (multiple candidates) ──────────────────
-    function getOxfordAudioUrls(word) {
+    // ── URL builders ──────────────────────────────────────────────────────
+    function getOxfordAudioUrl(word) {
       const w = word.toLowerCase();
       const first  = w[0];
       const first3 = w.substring(0, 3);
-      const first5 = w.substring(0, 5);
-
-      const base = `https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/${first}/${first3}/${first5}/${w}`;
-
-      // Try gb_1 through gb_6
-      const urls = [];
-      for (let i = 1; i <= 6; i++) {
-        urls.push(`${base}__gb_${i}.mp3`);
-      }
-      return urls;
+      let first5 = w.substring(0, 5);
+      if (first5.length < 5) first5 = first5.padEnd(5, '_');
+      return `https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/${first}/${first3}/${first5}/${w}__gb_1.mp3`;
     }
 
-    // ── Voice selection (for fallback) ────────────────────────────────────
+    function getGoogleTtsUrl(text) {
+      return 'https://translate.google.com/translate_tts?ie=UTF-8'
+        + '&client=tw-ob'
+        + '&tl=en-GB'
+        + '&q=' + encodeURIComponent(text);
+    }
+
+    // ── Voice selection (fallback only) ───────────────────────────────────
     let ukVoice = null;
 
     function pickUKVoice() {
@@ -357,23 +371,31 @@
       speechSynthesis.onvoiceschanged = pickUKVoice;
     }
 
-    // ── Playback state ─────────────────────────────────────────────────────
+    // ── Playback state ────────────────────────────────────────────────────
     let activeAudio = null;
     let activeUtterance = null;
     let activeStatusEl = null;
+    let activeBtn = null;
     let playbackGeneration = 0;
 
+    // Hard-abort any audio and speech currently in flight.
     function stopAll() {
       playbackGeneration++;
 
       if (activeAudio) {
-        try { activeAudio.pause(); } catch (e) {}
+        const a = activeAudio;
         activeAudio = null;
+        try {
+          a.onended = null;
+          a.onerror = null;
+          a.pause();
+          a.removeAttribute('src');   // abort the download
+          a.load();                   // force the abort
+        } catch (e) {}
       }
+
       if (typeof speechSynthesis !== 'undefined') {
-        if (speechSynthesis.speaking || speechSynthesis.pending) {
-          try { speechSynthesis.cancel(); } catch (e) {}
-        }
+        try { speechSynthesis.cancel(); } catch (e) {}
       }
       activeUtterance = null;
 
@@ -382,13 +404,13 @@
         activeStatusEl.classList.remove('playing', 'warn');
         activeStatusEl = null;
       }
+      if (activeBtn) {
+        activeBtn.classList.remove('playing');
+        activeBtn = null;
+      }
     }
 
     function setStatus(el, text, cls) {
-      if (activeStatusEl && activeStatusEl !== el) {
-        activeStatusEl.textContent = '';
-        activeStatusEl.classList.remove('playing', 'warn');
-      }
       activeStatusEl = el;
       if (el) {
         el.textContent = text;
@@ -397,86 +419,60 @@
       }
     }
 
-    // ── Play an audio URL and resolve when done / on error ────────────────
-    function playAudioUrl(url, gen, onDone, onError) {
+    // ── Core: play an audio URL, resolve ONLY on genuine 'ended' ─────────
+    //   - No 'stalled' handler (that fires during normal buffering)
+    //   - Small post-roll after 'ended' so the tail fully drains
+    //   - Watchdog so we never hang forever
+    function playAudioFile(url, gen, onDone, onError) {
       let audio;
-      try { audio = new Audio(url); }
+      try { audio = new Audio(); }
       catch (e) { onError(e); return; }
 
+      audio.preload = 'auto';
+      audio.src = url;
       activeAudio = audio;
-      let done = false;
 
-      const finish = (err) => {
-        if (done) return;
-        done = true;
+      let settled = false;
+      let watchdog = null;
+
+      const cleanup = () => {
+        if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('error', handleError);
+      };
+
+      const settle = (err) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
         if (activeAudio === audio) activeAudio = null;
-        if (gen !== playbackGeneration) return;
+        if (gen !== playbackGeneration) return; // a newer sequence took over
         if (err) onError(err); else onDone();
       };
 
-      audio.onended = () => finish(null);
-      audio.onerror = (e) => finish(e);
-      audio.onstalled = (e) => finish(e);
+      function handleEnded() {
+        // Post-roll: give the audio pipeline a moment to fully drain so the
+        // next step can't overlap with the last samples of this one.
+        setTimeout(() => settle(null), 220);
+      }
+
+      function handleError(e) {
+        settle(e);
+      }
+
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('error', handleError);
+
+      // Absolute watchdog — 25s max for any single clip.
+      watchdog = setTimeout(() => settle(new Error('audio timeout')), 25000);
 
       const p = audio.play();
       if (p && typeof p.catch === 'function') {
-        p.catch(err => finish(err));
+        p.catch(err => settle(err));
       }
     }
 
-    // ── Try each candidate Oxford URL until one plays ────────────────────
-    function playWordAudio(word, gen, onDone, onError) {
-      const urls = getOxfordAudioUrls(word);
-      let index = 0;
-
-      function tryNext() {
-        if (gen !== playbackGeneration) return;
-        if (index >= urls.length) {
-          console.warn('[Spelling Bee] No working Oxford audio found for:', word);
-          onError(new Error('No working audio URL'));
-          return;
-        }
-        const url = urls[index++];
-        playAudioUrl(
-          url,
-          gen,
-          () => { if (gen === playbackGeneration) onDone(); },
-          () => { tryNext(); }
-        );
-      }
-
-      tryNext();
-    }
-
-    // ── Step 2: speak the sentence ────────────────────────────────────────
-    function playSentence(sentence, gen, statusEl, onDone) {
-      if (gen !== playbackGeneration) return;
-
-      const googleUrl = getGoogleTtsUrl(sentence);
-
-      playAudioUrl(
-        googleUrl,
-        gen,
-        () => {
-          if (gen !== playbackGeneration) return;
-          onDone();
-        },
-        (err) => {
-          if (gen !== playbackGeneration) return;
-          console.warn('[Spelling Bee] Google TTS failed, falling back to browser voice:', err);
-          if (statusEl) setStatus(statusEl, '2/3 · Sentence (browser voice fallback…)');
-          speakSentenceBrowser(sentence, gen, onDone);
-        }
-      );
-    }
-
-    function getGoogleTtsUrl(text) {
-      return 'https://translate.google.com/translate_tts?ie=UTF-8'
-        + '&client=tw-ob'
-        + '&tl=en-GB'
-        + '&q=' + encodeURIComponent(text);
-    }
-
+    // ── Browser speech-synthesis fallback (only used if Google TTS fails) ─
     function speakSentenceBrowser(sentence, gen, onDone) {
       if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
         onDone();
@@ -500,89 +496,108 @@
       u.volume = 1;
       if (ukVoice) u.voice = ukVoice;
       u.onend = finish;
-      u.onerror = (e) => { console.warn('[Spelling Bee] Speech error:', e); finish(); };
+      u.onerror = finish;
 
       activeUtterance = u;
       try { speechSynthesis.speak(u); }
-      catch (e) { console.warn('[Spelling Bee] speak() threw:', e); finish(); return; }
+      catch (e) { finish(); return; }
 
       setTimeout(() => { if (!finished) finish(); }, 25000);
     }
 
-    // ── Full sequence: word → sentence → word ─────────────────────────────
-    function playSequence(word, sentence, statusEl) {
+    // ── Step 2: the sentence — Google TTS first, browser voice as fallback
+    function playSentence(sentence, gen, statusEl, onDone) {
+      if (gen !== playbackGeneration) return;
+
+      const url = getGoogleTtsUrl(sentence);
+
+      playAudioFile(
+        url,
+        gen,
+        () => { if (gen === playbackGeneration) onDone(); },
+        (err) => {
+          console.warn('[Spelling Bee] Google TTS failed, falling back:', err);
+          if (gen !== playbackGeneration) return;
+          setStatus(statusEl, '2/3 · Sentence (browser voice…)', 'playing');
+          speakSentenceBrowser(sentence, gen, onDone);
+        }
+      );
+    }
+
+    // ── Full sequence: word → sentence → word ────────────────────────────
+    function playSequence(word, sentence, statusEl, btn) {
       stopAll();
+      activeBtn = btn;
+      btn.classList.add('playing');
       const gen = playbackGeneration;
 
       setStatus(statusEl, '1/3 · Word', 'playing');
-      playWordAudio(
-        word,
+      playAudioFile(
+        getOxfordAudioUrl(word),
         gen,
         () => {
           if (gen !== playbackGeneration) return;
-          setStatus(statusEl, '2/3 · Sentence', 'playing');
-          playSentence(sentence, gen, statusEl, () => {
+          // Small gap between steps prevents any audible clash.
+          setTimeout(() => {
             if (gen !== playbackGeneration) return;
-            setStatus(statusEl, '3/3 · Word', 'playing');
-            playWordAudio(
-              word,
-              gen,
-              () => {
+            setStatus(statusEl, '2/3 · Sentence', 'playing');
+            playSentence(sentence, gen, statusEl, () => {
+              if (gen !== playbackGeneration) return;
+              setTimeout(() => {
                 if (gen !== playbackGeneration) return;
-                setStatus(statusEl, '✓ Done', 'playing');
-                setTimeout(() => {
-                  if (gen !== playbackGeneration) return;
-                  if (activeStatusEl === statusEl) {
-                    statusEl.textContent = '';
-                    statusEl.classList.remove('playing', 'warn');
-                    activeStatusEl = null;
+                setStatus(statusEl, '3/3 · Word', 'playing');
+                playAudioFile(
+                  getOxfordAudioUrl(word),
+                  gen,
+                  () => {
+                    if (gen !== playbackGeneration) return;
+                    setStatus(statusEl, '✓ Done', 'playing');
+                    btn.classList.remove('playing');
+                    activeBtn = null;
+                    setTimeout(() => {
+                      if (gen !== playbackGeneration) return;
+                      if (activeStatusEl === statusEl) {
+                        statusEl.textContent = '';
+                        statusEl.classList.remove('playing', 'warn');
+                        activeStatusEl = null;
+                      }
+                    }, 1500);
+                  },
+                  () => {
+                    if (gen !== playbackGeneration) return;
+                    setStatus(statusEl, '⚠ Final word audio failed', 'warn');
+                    btn.classList.remove('playing');
+                    activeBtn = null;
                   }
-                }, 1500);
-              },
-              () => {
-                setStatus(statusEl, '✓ Done (word audio unavailable)', 'warn');
-                setTimeout(() => {
-                  if (activeStatusEl === statusEl) {
-                    statusEl.textContent = '';
-                    statusEl.classList.remove('playing', 'warn');
-                    activeStatusEl = null;
-                  }
-                }, 1500);
-              }
-            );
-          });
+                );
+              }, 350);
+            });
+          }, 350);
         },
         () => {
           if (gen !== playbackGeneration) return;
-          // Even if word audio fails, still try the sentence.
+          // First word failed — still try sentence + second word
           setStatus(statusEl, '2/3 · Sentence', 'playing');
           playSentence(sentence, gen, statusEl, () => {
             if (gen !== playbackGeneration) return;
-            setStatus(statusEl, '3/3 · Word', 'playing');
-            playWordAudio(
-              word,
-              gen,
-              () => {
-                setStatus(statusEl, '✓ Done (first word audio failed)', 'warn');
-                setTimeout(() => {
-                  if (activeStatusEl === statusEl) {
-                    statusEl.textContent = '';
-                    statusEl.classList.remove('playing', 'warn');
-                    activeStatusEl = null;
-                  }
-                }, 1500);
-              },
-              () => {
-                setStatus(statusEl, '✗ Word audio unavailable', 'warn');
-                setTimeout(() => {
-                  if (activeStatusEl === statusEl) {
-                    statusEl.textContent = '';
-                    statusEl.classList.remove('playing', 'warn');
-                    activeStatusEl = null;
-                  }
-                }, 2000);
-              }
-            );
+            setTimeout(() => {
+              if (gen !== playbackGeneration) return;
+              setStatus(statusEl, '3/3 · Word', 'playing');
+              playAudioFile(
+                getOxfordAudioUrl(word),
+                gen,
+                () => {
+                  setStatus(statusEl, '✓ Done (first word failed)', 'warn');
+                  btn.classList.remove('playing');
+                  activeBtn = null;
+                },
+                () => {
+                  setStatus(statusEl, '✗ Word audio unavailable', 'warn');
+                  btn.classList.remove('playing');
+                  activeBtn = null;
+                }
+              );
+            }, 350);
           });
         }
       );
@@ -623,7 +638,9 @@
       statusEl.className = 'status';
 
       btn.addEventListener('click', () => {
-        playSequence(word, sentence, statusEl);
+        // Debounce: if this exact card is already playing, ignore the click.
+        if (activeBtn === btn) return;
+        playSequence(word, sentence, statusEl, btn);
       });
 
       card.appendChild(btn);
@@ -632,7 +649,7 @@
       grid.appendChild(card);
     });
 
-    // ── Diagnostic buttons ────────────────────────────────────────────────
+    // ── Diagnostics ───────────────────────────────────────────────────────
     const speechStatus = document.getElementById('speechStatus');
     const testGoogleBtn = document.getElementById('testGoogleBtn');
     const testBrowserBtn = document.getElementById('testBrowserBtn');
@@ -649,7 +666,7 @@
       }
       const voices = speechSynthesis.getVoices();
       if (voices.length === 0) {
-        showStatus('⚠ No browser voices found — will use Google TTS only.', 'error');
+        showStatus('⚠ No browser voices — Google TTS will be used.', 'error');
       } else {
         const uk = voices.find(v => (v.lang || '').toLowerCase().startsWith('en-gb'));
         showStatus(uk ? `✓ UK browser voice: ${uk.name}` : `⚠ No UK browser voice (${voices.length} others)`, uk ? 'ok' : 'error');
@@ -662,22 +679,15 @@
       showStatus('⏳ Testing Google TTS…', 'pending');
 
       let done = false;
-      const finish = (msg, cls) => {
-        if (done) return;
-        done = true;
-        showStatus(msg, cls);
-      };
+      const finish = (msg, cls) => { if (!done) { done = true; showStatus(msg, cls); } };
 
       const audio = new Audio(url);
       audio.onended = () => finish('✓ Google TTS works — sentences will play.', 'ok');
       audio.onerror = (e) => finish('✗ Google TTS blocked/failed: ' + (e && e.type ? e.type : 'error'), 'error');
-      audio.onstalled = () => finish('✗ Google TTS stalled.', 'error');
       const p = audio.play();
       if (p && p.catch) p.catch(err => finish('✗ Google TTS play rejected: ' + (err && err.message ? err.message : err), 'error'));
       setTimeout(() => {
-        if (!done && audio.currentTime === 0 && audio.paused) {
-          finish('✗ Google TTS did not start within 3s.', 'error');
-        }
+        if (!done && audio.currentTime === 0 && audio.paused) finish('✗ Google TTS did not start within 3s.', 'error');
       }, 3000);
     });
 

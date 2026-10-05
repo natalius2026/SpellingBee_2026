@@ -15,25 +15,12 @@
       flex-direction: column;
       align-items: center;
     }
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      letter-spacing: -0.02em;
-      color: #0f172a;
-    }
-    .subhead {
-      font-size: 0.95rem;
-      color: #64748b;
-      margin-bottom: 1.25rem;
-      text-align: center;
-      max-width: 640px;
-      line-height: 1.5;
-    }
+    h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.25rem; letter-spacing: -0.02em; color: #0f172a; }
+    .subhead { font-size: 0.95rem; color: #64748b; margin-bottom: 1.25rem; text-align: center; max-width: 640px; line-height: 1.5; }
     .subhead strong { color: #3b82f6; font-weight: 600; }
 
     .tools {
-      margin-bottom: 1.75rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -62,10 +49,52 @@
     .tool-btn:active { background: #1d4ed8; }
     .tool-btn.secondary { background: #64748b; }
     .tool-btn.secondary:hover { background: #475569; }
+    .tool-btn.danger { background: #dc2626; }
+    .tool-btn.danger:hover { background: #b91c1c; }
     .tool-status { font-size: 0.8rem; color: #64748b; }
     .tool-status.error { color: #dc2626; }
     .tool-status.ok { color: #16a34a; font-weight: 500; }
     .tool-status.pending { color: #d97706; font-weight: 500; }
+
+    /* Legend for audio source badges */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem 1.25rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #eef2f7;
+      border-radius: 8px;
+      max-width: 900px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Audio source badge */
+    .src-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      margin-left: 0.35rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .src-badge.oxford   { background: #dbeafe; color: #1e40af; }
+    .src-badge.google   { background: #dcfce7; color: #166534; }
+    .src-badge.browser  { background: #fef3c7; color: #92400e; }
+    .src-badge.loading  { background: #f1f5f9; color: #64748b; font-style: italic; text-transform: none; font-weight: 500; letter-spacing: 0; }
+    .src-badge.failed   { background: #fee2e2; color: #991b1b; }
 
     .word-grid {
       width: 100%;
@@ -85,10 +114,7 @@
       flex-direction: column;
       gap: 0.5rem;
     }
-    .word-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-color: #cbd5e1;
-    }
+    .word-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #cbd5e1; }
     .word-btn {
       display: flex;
       align-items: center;
@@ -108,72 +134,38 @@
     }
     .word-btn:hover { background: #eef2ff; border-color: #a5b4fc; }
     .word-btn:active { background: #e0e7ff; border-color: #818cf8; }
-    .word-btn.playing {
-      background: #dbeafe;
-      border-color: #60a5fa;
-      cursor: progress;
-    }
+    .word-btn.playing { background: #dbeafe; border-color: #60a5fa; cursor: progress; }
     .word-btn .num {
       flex-shrink: 0;
-      width: 1.9rem;
-      height: 1.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #e0e7ff;
-      color: #3730a3;
+      width: 1.9rem; height: 1.9rem;
+      display: flex; align-items: center; justify-content: center;
+      background: #e0e7ff; color: #3730a3;
       border-radius: 50%;
-      font-size: 0.8rem;
-      font-weight: 700;
-      line-height: 1;
+      font-size: 0.8rem; font-weight: 700; line-height: 1;
     }
-    .word-btn.playing .num {
-      background: #3b82f6;
-      color: white;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.55; }
-    }
-    .word-btn .w {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .word-btn .icon {
-      font-size: 1.15rem;
-      opacity: 0.45;
-      flex-shrink: 0;
-      margin-left: auto;
-    }
+    .word-btn.playing .num { background: #3b82f6; color: white; animation: pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+    .word-btn .w { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .word-btn .icon { font-size: 1.15rem; opacity: 0.45; flex-shrink: 0; margin-left: auto; }
     .word-btn:hover .icon { opacity: 0.85; }
-    .sentence {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #475569;
-      border-left: 3px solid #e2e8f0;
-      padding-left: 0.75rem;
-    }
+    .sentence { font-size: 0.9rem; line-height: 1.5; color: #475569; border-left: 3px solid #e2e8f0; padding-left: 0.75rem; }
     .status {
       font-size: 0.78rem;
       color: #94a3b8;
-      min-height: 1.2em;
+      min-height: 1.4em;
       padding: 0 0.15rem;
       word-break: break-word;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.15rem;
     }
     .status.playing { color: #3b82f6; font-weight: 500; }
     .status.warn { color: #d97706; }
 
     .footer-note {
-      margin-top: 2.5rem;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      text-align: center;
-      max-width: 620px;
-      line-height: 1.5;
+      margin-top: 2.5rem; font-size: 0.85rem; color: #94a3b8;
+      text-align: center; max-width: 620px; line-height: 1.5;
     }
     .footer-note a { color: #3b82f6; text-decoration: none; }
     .footer-note a:hover { text-decoration: underline; }
@@ -184,6 +176,7 @@
       .word-grid { grid-template-columns: 1fr; }
       .word-btn { font-size: 1rem; padding: 0.5rem 0.75rem; }
       .word-btn .num { width: 1.7rem; height: 1.7rem; font-size: 0.75rem; }
+      .legend { font-size: 0.72rem; gap: 0.5rem 0.85rem; }
     }
   </style>
 </head>
@@ -191,23 +184,29 @@
 
   <h1>🐝 Spelling Bee Practice</h1>
   <p class="subhead">
-    Click any word to hear the sequence:
-    <strong>word → sentence → word</strong>.
-    Word audio uses <strong>Oxford Learner's Dictionaries (UK)</strong>.
-    Sentence audio uses <strong>Google UK English TTS</strong> with a browser-voice fallback.
+    Click any word to hear <strong>word → sentence → word</strong>.
+    Each step shows a badge telling you <em>which engine</em> is speaking, so you can
+    always verify the source of the UK pronunciation.
   </p>
 
   <div class="tools">
+    <button id="stopBtn" class="tool-btn danger" type="button">⏹ Stop</button>
     <button id="testGoogleBtn" class="tool-btn" type="button">🔊 Test sentence audio</button>
     <button id="testBrowserBtn" class="tool-btn secondary" type="button">🖥 Test browser voice</button>
     <span id="speechStatus" class="tool-status"></span>
   </div>
 
+  <div class="legend">
+    <span class="legend-item"><span class="src-badge oxford">Oxford UK</span> Recorded UK audio (Oxford Learner's Dictionaries)</span>
+    <span class="legend-item"><span class="src-badge google">Google TTS</span> Synthesised UK voice (Google Translate, en-GB)</span>
+    <span class="legend-item"><span class="src-badge browser">Browser voice</span> System voice fallback (en-GB)</span>
+  </div>
+
   <div class="word-grid" id="wordGrid"></div>
 
   <p class="footer-note">
-    Word audio: <a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a> (UK).
-    Sentence audio: Google Translate UK English TTS (with browser speech synthesis as fallback).
+    Word audio: <a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a> (UK), with Google TTS UK fallback.
+    Sentence audio: Google Translate UK English TTS. Sentences are cached locally after the first play.
   </p>
 
   <script>
@@ -248,7 +247,7 @@
       { word: "discreet", sentence: "Please be discreet with this information. Don't share it with anyone else." },
       { word: "ugliest", sentence: "This brown shirt is the ugliest one I own." },
       { word: "breakable", sentence: "I learned the toy was breakable the hard way, when I dropped it." },
-      { word: "appropriateness", sentence: "I am not sure of the appropriatness of some of these sentences." },
+      { word: "appropriateness", sentence: "I am not sure of the appropriateness of some of these sentences." },
       { word: "icicle", sentence: "A large icicle hung from the roof all winter." },
       { word: "mature", sentence: "He seemed very mature, even though he was younger than his classmates." },
       { word: "eradicate", sentence: "We need to eradicate all types of racism." },
@@ -352,7 +351,70 @@
         + '&q=' + encodeURIComponent(text);
     }
 
-    // ── Voice selection (fallback only) ───────────────────────────────────
+    // ── Sentence audio blob cache ────────────────────────────────────────
+    const sentenceBlobCache = new Map();
+    const sentenceFetchPromises = new Map();
+    let sentenceFetchDisabled = false;
+    let fetchCooldownUntil = 0;
+    let lastFetchTime = 0;
+    const MIN_FETCH_INTERVAL = 350;
+
+    async function fetchSentenceBlob(sentence) {
+      const now = Date.now();
+      const wait = Math.max(0, lastFetchTime + MIN_FETCH_INTERVAL - now);
+      if (wait > 0) await new Promise(r => setTimeout(r, wait));
+      lastFetchTime = Date.now();
+
+      const googleUrl = getGoogleTtsUrl(sentence);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+      try {
+        const res = await fetch(googleUrl, { signal: controller.signal });
+        if (res.status === 429) {
+          fetchCooldownUntil = Date.now() + 30000;
+          throw new Error('rate-limited');
+        }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const ct = res.headers.get('content-type') || '';
+        if (!ct.startsWith('audio/')) throw new Error('not audio (' + ct + ')');
+        const blob = await res.blob();
+        if (blob.size < 100) throw new Error('empty blob');
+        const blobUrl = URL.createObjectURL(blob);
+        sentenceBlobCache.set(sentence, blobUrl);
+        return blobUrl;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    function getSentenceAudioUrl(sentence) {
+      if (sentenceBlobCache.has(sentence)) {
+        return Promise.resolve(sentenceBlobCache.get(sentence));
+      }
+      if (sentenceFetchDisabled || Date.now() < fetchCooldownUntil) {
+        return Promise.resolve(getGoogleTtsUrl(sentence));
+      }
+      if (sentenceFetchPromises.has(sentence)) {
+        return sentenceFetchPromises.get(sentence);
+      }
+      const p = fetchSentenceBlob(sentence);
+      sentenceFetchPromises.set(sentence, p);
+      p.then(
+        () => sentenceFetchPromises.delete(sentence),
+        (err) => {
+          sentenceFetchPromises.delete(sentence);
+          if (err && (err.name === 'TypeError' ||
+                      /CORS|Failed to fetch|NetworkError|Load failed/i.test(err.message || ''))) {
+            console.warn('[Spelling Bee] Fetch blocked (likely CORS). Disabling blob cache.');
+            sentenceFetchDisabled = true;
+          }
+        }
+      );
+      return p;
+    }
+
+    // ── Voice selection (fallback only) ──────────────────────────────────
     let ukVoice = null;
 
     function pickUKVoice() {
@@ -378,7 +440,6 @@
     let activeBtn = null;
     let playbackGeneration = 0;
 
-    // Hard-abort any audio and speech currently in flight.
     function stopAll() {
       playbackGeneration++;
 
@@ -389,8 +450,8 @@
           a.onended = null;
           a.onerror = null;
           a.pause();
-          a.removeAttribute('src');   // abort the download
-          a.load();                   // force the abort
+          a.removeAttribute('src');
+          a.load();
         } catch (e) {}
       }
 
@@ -400,7 +461,7 @@
       activeUtterance = null;
 
       if (activeStatusEl) {
-        activeStatusEl.textContent = '';
+        activeStatusEl.innerHTML = '';
         activeStatusEl.classList.remove('playing', 'warn');
         activeStatusEl = null;
       }
@@ -410,33 +471,40 @@
       }
     }
 
-    function setStatus(el, text, cls) {
+    // Status element contains HTML (label + optional badge).
+    function setStatus(el, html, cls) {
       activeStatusEl = el;
       if (el) {
-        el.textContent = text;
+        el.innerHTML = html;
         el.classList.remove('playing', 'warn');
         if (cls) el.classList.add(cls);
       }
     }
 
-    // ── Core: play an audio URL, resolve ONLY on genuine 'ended' ─────────
-    //   - No 'stalled' handler (that fires during normal buffering)
-    //   - Small post-roll after 'ended' so the tail fully drains
-    //   - Watchdog so we never hang forever
-    function playAudioFile(url, gen, onDone, onError) {
+    // Convenience: build a badge span.
+    function badge(kind, text) {
+      return `<span class="src-badge ${kind}">${text}</span>`;
+    }
+
+    // ── Play one audio file; resolve on genuine end only ─────────────────
+    function playAudioFile(url, gen, opts) {
+      const { onStart, onDone, onError, timeoutMs = 12000 } = opts || {};
+
       let audio;
       try { audio = new Audio(); }
-      catch (e) { onError(e); return; }
+      catch (e) { onError && onError(e); return; }
 
       audio.preload = 'auto';
       audio.src = url;
       activeAudio = audio;
 
       let settled = false;
+      let started = false;
       let watchdog = null;
 
       const cleanup = () => {
         if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+        audio.removeEventListener('playing', handlePlaying);
         audio.removeEventListener('ended', handleEnded);
         audio.removeEventListener('error', handleError);
       };
@@ -446,25 +514,33 @@
         settled = true;
         cleanup();
         if (activeAudio === audio) activeAudio = null;
-        if (gen !== playbackGeneration) return; // a newer sequence took over
-        if (err) onError(err); else onDone();
+        if (gen !== playbackGeneration) return;
+        if (err) onError && onError(err); else onDone && onDone();
       };
 
+      function handlePlaying() {
+        if (started) return;
+        started = true;
+        if (gen === playbackGeneration && onStart) onStart();
+      }
+
       function handleEnded() {
-        // Post-roll: give the audio pipeline a moment to fully drain so the
-        // next step can't overlap with the last samples of this one.
         setTimeout(() => settle(null), 220);
       }
 
-      function handleError(e) {
-        settle(e);
-      }
+      function handleError(e) { settle(e); }
 
+      audio.addEventListener('playing', handlePlaying);
       audio.addEventListener('ended', handleEnded);
       audio.addEventListener('error', handleError);
 
-      // Absolute watchdog — 25s max for any single clip.
-      watchdog = setTimeout(() => settle(new Error('audio timeout')), 25000);
+      watchdog = setTimeout(() => {
+        if (audio.currentTime > 0.5) {
+          settle(null);
+        } else {
+          settle(new Error('playback timeout'));
+        }
+      }, timeoutMs);
 
       const p = audio.play();
       if (p && typeof p.catch === 'function') {
@@ -472,8 +548,67 @@
       }
     }
 
-    // ── Browser speech-synthesis fallback (only used if Google TTS fails) ─
-    function speakSentenceBrowser(sentence, gen, onDone) {
+    // ── Word audio with Oxford → Google TTS fallback ─────────────────────
+    //   onDone(source) where source = 'oxford' | 'tts' | 'failed'
+    function playWordAudio(word, gen, statusEl, stepLabel, onDone) {
+      setStatus(
+        statusEl,
+        `${stepLabel} ${badge('loading', 'Oxford UK…')}`,
+        'playing'
+      );
+
+      playAudioFile(
+        getOxfordAudioUrl(word),
+        gen,
+        {
+          onStart: () => {
+            if (gen !== playbackGeneration) return;
+            setStatus(
+              statusEl,
+              `${stepLabel} ${badge('oxford', 'Oxford UK')}`,
+              'playing'
+            );
+          },
+          onDone: () => onDone('oxford'),
+          onError: (err) => {
+            console.warn('[Spelling Bee] Oxford audio failed for "' + word + '":', err && err.message ? err.message : err);
+            if (gen !== playbackGeneration) return;
+
+            setStatus(
+              statusEl,
+              `${stepLabel} ${badge('loading', 'Google TTS…')}`,
+              'playing'
+            );
+
+            playAudioFile(
+              getGoogleTtsUrl(word),
+              gen,
+              {
+                onStart: () => {
+                  if (gen !== playbackGeneration) return;
+                  setStatus(
+                    statusEl,
+                    `${stepLabel} ${badge('google', 'Google TTS')}`,
+                    'playing'
+                  );
+                },
+                onDone: () => onDone('tts'),
+                onError: (err2) => {
+                  console.warn('[Spelling Bee] TTS word audio also failed for "' + word + '":', err2 && err2.message ? err2.message : err2);
+                  if (gen !== playbackGeneration) return;
+                  onDone('failed');
+                },
+                timeoutMs: 8000
+              }
+            );
+          },
+          timeoutMs: 8000
+        }
+      );
+    }
+
+    // ── Browser speech-synthesis fallback for sentences ──────────────────
+    function speakSentenceBrowser(sentence, gen, statusEl, onDone) {
       if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
         onDone();
         return;
@@ -495,6 +630,15 @@
       u.pitch = 1;
       u.volume = 1;
       if (ukVoice) u.voice = ukVoice;
+
+      u.onstart = () => {
+        if (gen !== playbackGeneration) return;
+        setStatus(
+          statusEl,
+          `2/3 · Sentence ${badge('browser', 'Browser voice')}`,
+          'playing'
+        );
+      };
       u.onend = finish;
       u.onerror = finish;
 
@@ -502,26 +646,56 @@
       try { speechSynthesis.speak(u); }
       catch (e) { finish(); return; }
 
-      setTimeout(() => { if (!finished) finish(); }, 25000);
+      setTimeout(() => {
+        if (!finished) {
+          try { speechSynthesis.cancel(); } catch (e) {}
+          finish();
+        }
+      }, 15000);
     }
 
-    // ── Step 2: the sentence — Google TTS first, browser voice as fallback
-    function playSentence(sentence, gen, statusEl, onDone) {
+    // ── Step 2: the sentence ─────────────────────────────────────────────
+    async function playSentence(sentence, gen, statusEl, onDone) {
       if (gen !== playbackGeneration) return;
 
-      const url = getGoogleTtsUrl(sentence);
-
-      playAudioFile(
-        url,
-        gen,
-        () => { if (gen === playbackGeneration) onDone(); },
-        (err) => {
-          console.warn('[Spelling Bee] Google TTS failed, falling back:', err);
-          if (gen !== playbackGeneration) return;
-          setStatus(statusEl, '2/3 · Sentence (browser voice…)', 'playing');
-          speakSentenceBrowser(sentence, gen, onDone);
-        }
+      setStatus(
+        statusEl,
+        `2/3 · Sentence ${badge('loading', 'Google TTS…')}`,
+        'playing'
       );
+
+      let audioUrl;
+      try {
+        audioUrl = await getSentenceAudioUrl(sentence);
+      } catch (err) {
+        console.warn('[Spelling Bee] Sentence fetch failed:', err);
+        if (gen !== playbackGeneration) return;
+        audioUrl = getGoogleTtsUrl(sentence);
+      }
+
+      if (gen !== playbackGeneration) return;
+
+      playAudioFile(audioUrl, gen, {
+        onStart: () => {
+          if (gen !== playbackGeneration) return;
+          setStatus(
+            statusEl,
+            `2/3 · Sentence ${badge('google', 'Google TTS')}`,
+            'playing'
+          );
+        },
+        onDone: onDone,
+        onError: (err) => {
+          console.warn('[Spelling Bee] Sentence playback failed:', err);
+          if (gen !== playbackGeneration) return;
+          setStatus(
+            statusEl,
+            `2/3 · Sentence ${badge('loading', 'Browser voice…')}`,
+            'playing'
+          );
+          speakSentenceBrowser(sentence, gen, statusEl, onDone);
+        }
+      });
     }
 
     // ── Full sequence: word → sentence → word ────────────────────────────
@@ -531,76 +705,43 @@
       btn.classList.add('playing');
       const gen = playbackGeneration;
 
-      setStatus(statusEl, '1/3 · Word', 'playing');
-      playAudioFile(
-        getOxfordAudioUrl(word),
-        gen,
-        () => {
+      playWordAudio(word, gen, statusEl, '1/3 · Word', (src1) => {
+        if (gen !== playbackGeneration) return;
+        setTimeout(() => {
           if (gen !== playbackGeneration) return;
-          // Small gap between steps prevents any audible clash.
-          setTimeout(() => {
-            if (gen !== playbackGeneration) return;
-            setStatus(statusEl, '2/3 · Sentence', 'playing');
-            playSentence(sentence, gen, statusEl, () => {
-              if (gen !== playbackGeneration) return;
-              setTimeout(() => {
-                if (gen !== playbackGeneration) return;
-                setStatus(statusEl, '3/3 · Word', 'playing');
-                playAudioFile(
-                  getOxfordAudioUrl(word),
-                  gen,
-                  () => {
-                    if (gen !== playbackGeneration) return;
-                    setStatus(statusEl, '✓ Done', 'playing');
-                    btn.classList.remove('playing');
-                    activeBtn = null;
-                    setTimeout(() => {
-                      if (gen !== playbackGeneration) return;
-                      if (activeStatusEl === statusEl) {
-                        statusEl.textContent = '';
-                        statusEl.classList.remove('playing', 'warn');
-                        activeStatusEl = null;
-                      }
-                    }, 1500);
-                  },
-                  () => {
-                    if (gen !== playbackGeneration) return;
-                    setStatus(statusEl, '⚠ Final word audio failed', 'warn');
-                    btn.classList.remove('playing');
-                    activeBtn = null;
-                  }
-                );
-              }, 350);
-            });
-          }, 350);
-        },
-        () => {
-          if (gen !== playbackGeneration) return;
-          // First word failed — still try sentence + second word
-          setStatus(statusEl, '2/3 · Sentence', 'playing');
           playSentence(sentence, gen, statusEl, () => {
             if (gen !== playbackGeneration) return;
             setTimeout(() => {
               if (gen !== playbackGeneration) return;
-              setStatus(statusEl, '3/3 · Word', 'playing');
-              playAudioFile(
-                getOxfordAudioUrl(word),
-                gen,
-                () => {
-                  setStatus(statusEl, '✓ Done (first word failed)', 'warn');
-                  btn.classList.remove('playing');
-                  activeBtn = null;
-                },
-                () => {
-                  setStatus(statusEl, '✗ Word audio unavailable', 'warn');
-                  btn.classList.remove('playing');
-                  activeBtn = null;
+              playWordAudio(word, gen, statusEl, '3/3 · Word', (src2) => {
+                if (gen !== playbackGeneration) return;
+
+                // Decide the final summary badge
+                let finalBadge;
+                if (src1 === 'failed' && src2 === 'failed') {
+                  finalBadge = badge('failed', 'Word audio unavailable');
+                } else if (src1 === 'tts' || src2 === 'tts') {
+                  finalBadge = badge('google', 'TTS fallback used');
+                } else {
+                  finalBadge = badge('oxford', 'Oxford UK');
                 }
-              );
+
+                setStatus(statusEl, `✓ Done ${finalBadge}`, 'playing');
+                btn.classList.remove('playing');
+                activeBtn = null;
+                setTimeout(() => {
+                  if (gen !== playbackGeneration) return;
+                  if (activeStatusEl === statusEl) {
+                    statusEl.innerHTML = '';
+                    statusEl.classList.remove('playing', 'warn');
+                    activeStatusEl = null;
+                  }
+                }, 2000);
+              });
             }, 350);
           });
-        }
-      );
+        }, 350);
+      });
     }
 
     // ── Build the UI ──────────────────────────────────────────────────────
@@ -638,7 +779,6 @@
       statusEl.className = 'status';
 
       btn.addEventListener('click', () => {
-        // Debounce: if this exact card is already playing, ignore the click.
         if (activeBtn === btn) return;
         playSequence(word, sentence, statusEl, btn);
       });
@@ -651,6 +791,7 @@
 
     // ── Diagnostics ───────────────────────────────────────────────────────
     const speechStatus = document.getElementById('speechStatus');
+    const stopBtn = document.getElementById('stopBtn');
     const testGoogleBtn = document.getElementById('testGoogleBtn');
     const testBrowserBtn = document.getElementById('testBrowserBtn');
 
@@ -658,6 +799,11 @@
       speechStatus.textContent = text;
       speechStatus.className = 'tool-status' + (cls ? ' ' + cls : '');
     }
+
+    stopBtn.addEventListener('click', () => {
+      stopAll();
+      showStatus('⏹ Stopped.', 'pending');
+    });
 
     setTimeout(() => {
       if (typeof speechSynthesis === 'undefined') {
@@ -673,22 +819,18 @@
       }
     }, 800);
 
-    testGoogleBtn.addEventListener('click', () => {
+    testGoogleBtn.addEventListener('click', async () => {
       const sample = 'Testing one, two, three. The quick brown fox jumps over the lazy dog.';
-      const url = getGoogleTtsUrl(sample);
-      showStatus('⏳ Testing Google TTS…', 'pending');
-
-      let done = false;
-      const finish = (msg, cls) => { if (!done) { done = true; showStatus(msg, cls); } };
-
-      const audio = new Audio(url);
-      audio.onended = () => finish('✓ Google TTS works — sentences will play.', 'ok');
-      audio.onerror = (e) => finish('✗ Google TTS blocked/failed: ' + (e && e.type ? e.type : 'error'), 'error');
-      const p = audio.play();
-      if (p && p.catch) p.catch(err => finish('✗ Google TTS play rejected: ' + (err && err.message ? err.message : err), 'error'));
-      setTimeout(() => {
-        if (!done && audio.currentTime === 0 && audio.paused) finish('✗ Google TTS did not start within 3s.', 'error');
-      }, 3000);
+      showStatus('⏳ Testing Google TTS (via fetch + cache)…', 'pending');
+      try {
+        const url = await getSentenceAudioUrl(sample);
+        const audio = new Audio(url);
+        audio.onended = () => showStatus('✓ Google TTS works — sentences will play.', 'ok');
+        audio.onerror = () => showStatus('✗ Google TTS audio playback failed.', 'error');
+        await audio.play();
+      } catch (e) {
+        showStatus('✗ Google TTS failed: ' + (e.message || e), 'error');
+      }
     });
 
     testBrowserBtn.addEventListener('click', () => {

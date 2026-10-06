@@ -56,7 +56,6 @@
     .tool-status.ok { color: #16a34a; font-weight: 500; }
     .tool-status.pending { color: #d97706; font-weight: 500; }
 
-    /* Legend for audio source badges */
     .legend {
       display: flex;
       flex-wrap: wrap;
@@ -71,13 +70,8 @@
       border-radius: 8px;
       max-width: 900px;
     }
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
+    .legend-item { display: inline-flex; align-items: center; gap: 0.4rem; }
 
-    /* Audio source badge */
     .src-badge {
       display: inline-block;
       font-size: 0.62rem;
@@ -212,126 +206,126 @@
   <script>
     // ── Word data ──────────────────────────────────────────────────────────
     const WORDS = [
-      { word: "Thesaurus", sentence: "I used a thesaurus to find a synonym for the word." },
-      { word: "Lights", sentence: "The stage lights turned on just before the performance began." },
-      { word: "Eastern", sentence: "The sun rises in the eastern part of the sky." },
-      { word: "Impressive", sentence: "The athlete gave an impressive performance and broke the school record." },
-      { word: "Benefit", sentence: "Regular exercise can benefit both your physical and mental health." },
-      { word: "Functional", sentence: "After the screen broke, the phone was no longer functional." },
-      { word: "Redeem", sentence: "He wanted to redeem himself after making a mistake." },
-      { word: "Engagement", sentence: "The couple announced their engagement to their families." },
-      { word: "Whisper", sentence: "Please whisper in the library so you do not disturb the other readers." },
-      { word: "Abstract", sentence: "The artist used abstract shapes and colors instead of painting real objects." },
-      { word: "Profound", sentence: "The book had a profound message about kindness and how our actions affect others." },
-      { word: "Occupation", sentence: "An occupation is a job or type of work that a person does." },
-      { word: "Permanent", sentence: "The mark was permanent, so it could not be removed with an ordinary eraser." },
-      { word: "Paragraph", sentence: "Write one paragraph explaining why you enjoyed the book." },
-      { word: "Feminine", sentence: "The word feminine describes qualities associated with women or girls." },
-      { word: "dinosaur", sentence: "I hope that some day we will be able to see a dinosaur at the zoo." },
-      { word: "elegant", sentence: "She wore an elegant dress to the wedding." },
-      { word: "belligerent", sentence: "He is a belligerent old man. Everyone feels threatened by him." },
-      { word: "smash", sentence: "Please don't smash anything in the house with that rock!" },
-      { word: "invincible", sentence: "Superman is basically invincible - except for kyptonite!" },
-      { word: "juvenile", sentence: "He's a 14 year old juvenile so cannot be sent to prison." },
-      { word: "bouncy", sentence: "I wanted to jump on the bed, but it wasn't very bouncy." },
-      { word: "spacious", sentence: "Even with a very large desk and several chairs, the office seemed spacious." },
-      { word: "circular", sentence: "A frisbee is circular in shape." },
-      { word: "author", sentence: "The author of the book was very famous." },
-      { word: "seashore", sentence: "Sally sells seashells by the seashore." },
-      { word: "victorious", sentence: "They were victorious in battle." },
-      { word: "filthy", sentence: "Clean your room - it's filthy!" },
-      { word: "wrestle", sentence: "I'm not going to play in the basketball game, because I need to wrestle in a match." },
-      { word: "tightfisted", sentence: "He never likes to spend money. He is tightfisted." },
-      { word: "heather", sentence: "The heather was flowering last time I visited the Scottish isles." },
-      { word: "dreadful", sentence: "I felt absolutely dreadful when I caught the flu." },
-      { word: "discreet", sentence: "Please be discreet with this information. Don't share it with anyone else." },
-      { word: "ugliest", sentence: "This brown shirt is the ugliest one I own." },
-      { word: "breakable", sentence: "I learned the toy was breakable the hard way, when I dropped it." },
-      { word: "appropriateness", sentence: "I am not sure of the appropriateness of some of these sentences." },
-      { word: "icicle", sentence: "A large icicle hung from the roof all winter." },
-      { word: "mature", sentence: "He seemed very mature, even though he was younger than his classmates." },
-      { word: "eradicate", sentence: "We need to eradicate all types of racism." },
-      { word: "lace", sentence: "There was a lot of lace on her fancy dress." },
-      { word: "embarrass", sentence: "Hopefully Mom and Dad won't embarrass you by cheering too loudly." },
-      { word: "dissimilar", sentence: "They don't look totally dissimilar but you culd stil tell the difference." },
-      { word: "prickly", sentence: "Be careful of prickly plants and animals in the desert." },
-      { word: "triangular", sentence: "The flag was triangular, so it only had three sides instead of four." },
-      { word: "schmuck", sentence: "A schmuck is contemptible or foolish person." },
-      { word: "swimsuit", sentence: "I can't go swimming because I didn't bring my swimsuit." },
-      { word: "chunky", sentence: "I like chunky soup, with plenty of vegetable." },
-      { word: "mistletoe", sentence: "In some countries it is tradition to hang mistletoe at Christmas time." },
-      { word: "stomach", sentence: "My stomach hurts because I ate two gallons of ice cream for breakfast." },
-      { word: "parallel", sentence: "The train tracks ran parallel to the road, never crossing each other." },
-      { word: "Rottweiler", sentence: "I don't want a big dog like a Rottweiler. I would prefer a poodle." },
-      { word: "scarecrow", sentence: "The farmer used a scarecrow in his fields to protect his crops." },
-      { word: "quaint", sentence: "The little village was quaint and felt like it hadn't changed in 100 years." },
-      { word: "alluring", sentence: "The ice-cream shop was very alluring on such a hot day." },
-      { word: "furniture", sentence: "All of the furniture in my house is very comfortable." },
-      { word: "cautious", sentence: "Be cautious when you cross the street - drivers can be crazy!" },
-      { word: "accommodation", sentence: "A house, apartement or boarding house are options for accommodation." },
-      { word: "gorilla", sentence: "The baby gorilla was very cute, but his mother looked dangerous!" },
-      { word: "injure", sentence: "Try not to injure yourself when you play sports, or you'll have to sit out for a while." },
-      { word: "incandescent", sentence: "The incandescent lightbulb was invented in the nineteenth century." },
-      { word: "pearl", sentence: "At the bottom of the ocean I found a pearl inside an oyster." },
-      { word: "courageous", sentence: "The soldier was courageous in battle, and was given a medal for it." },
-      { word: "lackadaisical", sentence: "The players lackadaisical approach meant that they lost 5-0. They should try harder next game." },
-      { word: "aquarium", sentence: "In my bedroom I have three fish in an aquarium." },
-      { word: "hysterical", sentence: "She was so upset, she was practically hysterical. We couldn't calm her down!" },
-      { word: "bureaucracy", sentence: "The problem of bureaucracy is that decision making takes time" },
-      { word: "angle", sentence: "To play pool well, it's important you understand the angle of the ball." },
-      { word: "superficial", sentence: "Don't be superficial and judge people on appearances." },
-      { word: "condemned", sentence: "His lack of education condemned him to a life of manual labour." },
-      { word: "spotless", sentence: "I just washed my car, and it is spotless!" },
-      { word: "deranged", sentence: "The man who stole my wallet was clearly deranged." },
-      { word: "beige", sentence: "The brown carpet is too dark. I would prefer it in beige." },
-      { word: "harmony", sentence: "The world would be a better place if everyone could live in harmony." },
-      { word: "glamorous", sentence: "The movie stars all looked glamorous on the red carpet." },
-      { word: "mistaken", sentence: "It was a case of mistaken identity. They arrested the wrong person." },
-      { word: "hospitable", sentence: "I visited my friend in a different country and he was very hospitable." },
-      { word: "boundless", sentence: "When I decided to leave my hometown, I felt the possibilities were boundless." },
-      { word: "whimsical", sentence: "He has a whimsical sense of humour." },
-      { word: "porter", sentence: "The porter at the train station helped me carry my bags." },
-      { word: "vague", sentence: "I didn't understand what he meant as his statement had been very vague." },
-      { word: "materialistic", sentence: "She always wants to show off by having the most up-to-date gadgets. She's so materialistic." },
-      { word: "library", sentence: "I visit the library often because I love to read." },
-      { word: "fascinated", sentence: "I'm fascinated by how machines work." },
-      { word: "noxious", sentence: "Miners need to be careful of noxious gasses while they are underground." },
-      { word: "ambulance", sentence: "If you feel very sick, you might need to call an ambulance." },
-      { word: "machinery", sentence: "The heavy machinery in the factory had to be replaced once it got rusty." },
-      { word: "conviction", sentence: "The prosecutor is hoping for a conviction." },
-      { word: "scissors", sentence: "He cut the paper with his scissors." },
-      { word: "euphoria", sentence: "I felt a sense of euphoria as I finally got to the top of the mountain." },
-      { word: "acquitted", sentence: "She was acquitted of the charges after new evidence was found" },
-      { word: "quicksand", sentence: "When you're walking in the jungle, be careful of quicksand or you might get stuck!" },
-      { word: "quiche", sentence: "I've run out of eggs, so I won't be able to bake a quiche today." },
-      { word: "ambidextrous", sentence: "He was ambidextrous since birth, but tended to use his right hand when writing." },
-      { word: "farmer", sentence: "The farmer drove his fruits and vegetables one hour to the market every week." },
-      { word: "doubtful", sentence: "It's doubtful that my team can win the match now that they've conceded two goals." },
-      { word: "synonymous", sentence: "His name was synonymous with wealth - everyone knew he had money." },
-      { word: "travel", sentence: "I love to travel to new and exciting places." },
-      { word: "placid", sentence: "The lake was placid, with no waves or any movement at all." },
-      { word: "biased", sentence: "My musical tastes are biased towards older, classic artists." },
-      { word: "accurate", sentence: "When doing math, you must be careful to be accurate or you will get the wrong answer." },
-      { word: "bruise", sentence: "You'll have a big bruise on your leg where you fell down." },
-      { word: "opaque", sentence: "The windows had become opaque with soot, and my view of the river was now completely obscured." },
-      { word: "direct", sentence: "A direct flight will take you where you want to go without stopping at a different airport." },
-      { word: "adorable", sentence: "The puppies were just adorable, but soon they would be huge, dangerous dogs." },
-      { word: "destination", sentence: "It is often said that the journey is more important than the destination." },
-      { word: "polite", sentence: "Please be polite when you meet new people - rudeness will get you nowhere!" },
-      { word: "delightful", sentence: "The weather has been delightful - sunny with a light breeze every day this week!" },
-      { word: "adjustment", sentence: "I made an adjustment to my stance, and now I can hit the ball much farther." },
-      { word: "glossy", sentence: "A glossy photo looks more professional than one printed on normal paper." },
-      { word: "blizzard", sentence: "Make sure you have enough food at home when the blizzard comes, or you might go hungry." },
-      { word: "expensive", sentence: "I never go to expensive restaurants, as I prefer to save my money." },
-      { word: "charming", sentence: "The prince was very charming, and won the love of the princess." },
-      { word: "bizarre", sentence: "I had a bizarre dream last night - it didn't make any sense!" },
-      { word: "stethoscope", sentence: "The doctor's stethoscope was always around his neck, except on that fateful day, the one time he truly needed it." },
-      { word: "muscle", sentence: "Every muscle in my body hurt after playing football all day." },
-      { word: "scrawny", sentence: "Even though he tried to exercise every day to get big and strong, he still looked scrawny." },
-      { word: "scandalous", sentence: "The news about my favorite movie star was simply scandolous! I can't believe she would do that!" },
-      { word: "umbrella", sentence: "Don't forget your umbrella - you never know when it might start raining!" },
-      { word: "screech", sentence: "The animal let out a loud screech, which you could hear a mile away." },
-      { word: "ambience", sentence: "The relaxed ambience of the restaurant made everyone feel very comfrotable." }
+      { word: "platform", sentence: "The train will leave from platform three." },
+      { word: "salmon", sentence: "A bear waits patiently to catch salmon swimming up river." },
+      { word: "property", sentence: "The sign on the gate says private property." },
+      { word: "fraction", sentence: "You can buy it online for a fraction of the cost." },
+      { word: "citizen", sentence: "He is an American citizen but his parents are both Mexican." },
+      { word: "reproduce", sentence: "The printer can reproduce the image clearly." },
+      { word: "replace", sentence: "It's not broken. Just replace the batteries." },
+      { word: "childish", sentence: "Stop being childish; act your age." },
+      { word: "scandal", sentence: "The newspaper released details of the scandal." },
+      { word: "grateful", sentence: "He was grateful for all of the support." },
+      { word: "orphan", sentence: "An orphan is someone with no parents." },
+      { word: "average", sentence: "An average person sleeps for about eight hours." },
+      { word: "chief", sentence: "The police chief is the highest ranking police officer in the city." },
+      { word: "iron", sentence: "It's important to iron your clothes after washing them." },
+      { word: "amnesia", sentence: "I must have amnesia, I don't remember anything!" },
+      { word: "wacky", sentence: "I wasn't expecting her wacky behaviour." },
+      { word: "calcium", sentence: "Eating yogurt every day gives your body the calcium it needs." },
+      { word: "felon", sentence: "A felon is someone convicted of a serious crime." },
+      { word: "experiment", sentence: "The scientist conducted an experiment to test his theory." },
+      { word: "quickest", sentence: "He won the race because he was the quickest." },
+      { word: "dictionary", sentence: "You can't use a dictionary during the spelling bee." },
+      { word: "collarbone", sentence: "When you break your collarbone it is very painful." },
+      { word: "simplify", sentence: "The teacher used a picture to simplify his explanation." },
+      { word: "puncture", sentence: "She had to change her bicycle tire after she had a puncture." },
+      { word: "handwriting", sentence: "I try to type because I have terrible handwriting." },
+      { word: "luxury", sentence: "We stayed in a five-star luxury hotel." },
+      { word: "refuse", sentence: "I'll refuse to speak to him again until he says sorry." },
+      { word: "report", sentence: "I watched a news report on TV." },
+      { word: "meteor", sentence: "We saw a meteor in the sky." },
+      { word: "thief", sentence: "A thief belongs in prison." },
+      { word: "policeman", sentence: "The policeman ran after the bag-snatcher." },
+      { word: "rotate", sentence: "The manager said she will rotate the players so everyone gets a game." },
+      { word: "proper", sentence: "What is the proper way to say this in Spanish?" },
+      { word: "absent", sentence: "The class was cancelled because the teacher was absent." },
+      { word: "mosquito", sentence: "My mosquito bite is really itchy." },
+      { word: "science", sentence: "If you want to be a doctor you need to do well in science." },
+      { word: "bubble", sentence: "The warm bubble bath was relaxing." },
+      { word: "service", sentence: "The service at the hotel was incredible." },
+      { word: "support", sentence: "She worked two jobs to support her family." },
+      { word: "cucumber", sentence: "I had tuna and cucumber sandwiches for lunch." },
+      { word: "country", sentence: "My ambition is to visit every country in Europe." },
+      { word: "fantasy", sentence: "I find fantasy novels really exciting." },
+      { word: "freedom", sentence: "The gladiator eventually won his freedom." },
+      { word: "reflect", sentence: "Sunlight can reflect off glass." },
+      { word: "nuclear", sentence: "Some people worry about the safety of nuclear power." },
+      { word: "manual", sentence: "The drone came with a very useful user manual." },
+      { word: "regular", sentence: "We ordered a regular sized, cheese pizza." },
+      { word: "decade", sentence: "A decade is a ten year period." },
+      { word: "conflict", sentence: "They solved their conflict through negotiations." },
+      { word: "comedy", sentence: "I love to watch stand up comedy." },
+      { word: "kidnap", sentence: "They threatened to kidnap the governor's daughter." },
+      { word: "customer", sentence: "They say that the customer is always right." },
+      { word: "record", sentence: "I have to record a short video presentation for my homework." },
+      { word: "ladder", sentence: "The firefighter used a ladder to reach the balcony." },
+      { word: "perform", sentence: "I can't wait to see the band perform live." },
+      { word: "crystal", sentence: "The gypsy looked into the crystal ball." },
+      { word: "harvest", sentence: "Farmers harvest their crops in late summer." },
+      { word: "silence", sentence: "Hush. Silence please." },
+      { word: "wooden", sentence: "A wooden house is not as strong as brick." },
+      { word: "sneeze", sentence: "Cover your mouth and nose when you sneeze." },
+      { word: "parent", sentence: "Being a parent is a big responsibility." },
+      { word: "divide", sentence: "Divide the sweets between the three of you." },
+      { word: "feather", sentence: "I found a feather under the bird's nest." },
+      { word: "quilt", sentence: "A thick quilt keeps me warm in bed." },
+      { word: "roast", sentence: "We will have roast chicken for dinner." },
+      { word: "mailbox", sentence: "The mailbox was empty because the postman hadn't been." },
+      { word: "peaceful", sentence: "I like living in the countryside because it is peaceful." },
+      { word: "elbow", sentence: "I hurt my elbow when I fell." },
+      { word: "pickle", sentence: "I always take the pickle out of my burger." },
+      { word: "centipede", sentence: "The centipede is an insect with many legs." },
+      { word: "skinny", sentence: "If you want to be skinny you must go on a diet." },
+      { word: "syrup", sentence: "Maple syrup tastes great on waffles." },
+      { word: "gymnast", sentence: "A gymnast has to be in very good shape." },
+      { word: "joke", sentence: "I didn't laugh at her joke because it wasn't funny." },
+      { word: "rubber", sentence: "Erasers are made of rubber." },
+      { word: "escape", sentence: "Our dog keeps trying to escape from the yard." },
+      { word: "cash", sentence: "I need some cash to pay for my lunch." },
+      { word: "couch", sentence: "My father likes to rest on the couch after dinner." },
+      { word: "chimpanzee", sentence: "A chimpanzee likes to climb trees." },
+      { word: "shellfish", sentence: "My cousin got very sick from eating shellfish." },
+      { word: "junkyard", sentence: "We went to the junkyard and got rid of our old furniture." },
+      { word: "toothpaste", sentence: "Some people don't like mint flavoured toothpaste." },
+      { word: "gorgeous", sentence: "The new princess is gorgeous." },
+      { word: "cherry", sentence: "Cherry pie is my favourite dessert." },
+      { word: "kayak", sentence: "A kayak is very difficult to steer in rough water." },
+      { word: "violin", sentence: "I'm learning to play the violin." },
+      { word: "sandpit", sentence: "We played in a sandpit at the park." },
+      { word: "lesson", sentence: "I have an extra math lesson after school." },
+      { word: "difficult", sentence: "This isn't difficult. It's quite easy." },
+      { word: "cheese", sentence: "The cheese was smelly because it was left out of the refrigerator." },
+      { word: "refund", sentence: "The T-shirt didn't fit me so I took it back to the store and got a refund." },
+      { word: "borrow", sentence: "I often borrow books from the library." },
+      { word: "umbrella", sentence: "Take your umbrella because the forecast says it will rain later." },
+      { word: "rubbish", sentence: "Please put your rubbish in the bin." },
+      { word: "spider", sentence: "A spider has eight legs." },
+      { word: "carbon", sentence: "We should all try to reduce our carbon footprint." },
+      { word: "planet", sentence: "Mercury is the closest planet to the sun." },
+      { word: "peanut", sentence: "I had a peanut and jelly sandwich." },
+      { word: "hospital", sentence: "I went to hospital when I broke my arm." },
+      { word: "mountain", sentence: "We reached the top of the mountain at sunrise." },
+      { word: "illness", sentence: "I didn't go to school because of my illness." },
+      { word: "castle", sentence: "A king and queen live in a castle." },
+      { word: "jungle", sentence: "The lion is the king of the jungle." },
+      { word: "dentist", sentence: "You should visit the dentist if you have toothache." },
+      { word: "elephant", sentence: "A baby elephant is called a calf." },
+      { word: "sausage", sentence: "He fed the dog a sausage." },
+      { word: "sandwich", sentence: "Take a sandwich in case you get hungry." },
+      { word: "helmet", sentence: "You must wear a helmet when you ride your bike." },
+      { word: "dinner", sentence: "I ate a big lunch so let's have dinner later." },
+      { word: "hammer", sentence: "Pass me the hammer, please. It's next to the screwdriver." },
+      { word: "resource", sentence: "Oil is a finite resource." },
+      { word: "password", sentence: "I forgot my email password." },
+      { word: "double", sentence: "There were double the number of people expected at the party." },
+      { word: "midnight", sentence: "At midnight they celebrated the new year." },
+      { word: "gravity", sentence: "Without Earth's gravity, we would all float away." },
+      { word: "kitchen", sentence: "The kitchen is next to the living room." },
+      { word: "chocolate", sentence: "Would you like chocolate or vanilla ice-cream?" },
+      { word: "scratch", sentence: "Don't get close to the cat. It might scratch you." },
+      { word: "soldier", sentence: "The brave soldier received a medal." },
+      { word: "library", sentence: "I borrowed a book from the library." }
     ];
 
     // ── URL builders ──────────────────────────────────────────────────────
@@ -471,7 +465,6 @@
       }
     }
 
-    // Status element contains HTML (label + optional badge).
     function setStatus(el, html, cls) {
       activeStatusEl = el;
       if (el) {
@@ -481,7 +474,6 @@
       }
     }
 
-    // Convenience: build a badge span.
     function badge(kind, text) {
       return `<span class="src-badge ${kind}">${text}</span>`;
     }
@@ -549,7 +541,6 @@
     }
 
     // ── Word audio with Oxford → Google TTS fallback ─────────────────────
-    //   onDone(source) where source = 'oxford' | 'tts' | 'failed'
     function playWordAudio(word, gen, statusEl, stepLabel, onDone) {
       setStatus(
         statusEl,
@@ -716,7 +707,6 @@
               playWordAudio(word, gen, statusEl, '3/3 · Word', (src2) => {
                 if (gen !== playbackGeneration) return;
 
-                // Decide the final summary badge
                 let finalBadge;
                 if (src1 === 'failed' && src2 === 'failed') {
                   finalBadge = badge('failed', 'Word audio unavailable');

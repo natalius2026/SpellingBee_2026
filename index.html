@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Spelling Bee Practice · UK Pronunciation</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,6 +63,7 @@
     .src-badge.oxford { background: #dbeafe; color: #1e40af; }
     .src-badge.google { background: #dcfce7; color: #166534; }
     .src-badge.streamelements { background: #ffedd5; color: #9a3412; }
+    .src-badge.dictionary { background: #ede9fe; color: #5b21b6; }
     .src-badge.browser { background: #fef3c7; color: #92400e; }
     .src-badge.loading { background: #f1f5f9; color: #64748b; font-style: italic; text-transform: none; font-weight: 500; letter-spacing: 0; }
     .src-badge.failed { background: #fee2e2; color: #991b1b; }
@@ -131,12 +133,24 @@
     <button id="testOxfordBtn" class="tool-btn" type="button">🔊 Test Oxford</button>
     <button id="testGoogleBtn" class="tool-btn" type="button">🔊 Test Google TTS</button>
     <button id="testSeBtn" class="tool-btn" type="button">🔊 Test StreamElements</button>
+    <button id="testBrowserBtn" class="tool-btn secondary" type="button">🔊 Test Browser voice</button>
     <span class="pref">
       Word audio:
       <select id="wordPref">
-        <option value="oxford" selected>Oxford (recorded)</option>
+        <option value="auto" selected>Auto (recorded first, then UK TTS)</option>
+        <option value="oxford">Oxford (recorded)</option>
+        <option value="dictionary">Free Dictionary UK (recorded)</option>
         <option value="google">Google TTS UK</option>
         <option value="streamelements">StreamElements UK</option>
+      </select>
+    </span>
+    <span class="pref">
+      Sentence audio:
+      <select id="sentencePref">
+        <option value="auto" selected>Auto (Google → StreamElements → Browser)</option>
+        <option value="google">Google TTS UK</option>
+        <option value="streamelements">StreamElements UK</option>
+        <option value="browser">Browser voice</option>
       </select>
     </span>
     <span id="speechStatus" class="tool-status"></span>
@@ -144,6 +158,7 @@
 
   <div class="legend">
     <span class="legend-item"><span class="src-badge oxford">Oxford UK</span> Real recording</span>
+    <span class="legend-item"><span class="src-badge dictionary">Free Dictionary UK</span> Real recording</span>
     <span class="legend-item"><span class="src-badge google">Google TTS</span> Google Translate UK</span>
     <span class="legend-item"><span class="src-badge streamelements">StreamElements</span> AWS Polly UK (Brian)</span>
     <span class="legend-item"><span class="src-badge browser">Browser voice</span> System voice</span>
@@ -153,8 +168,8 @@
   <div class="word-grid" id="wordGrid"></div>
 
   <p class="footer-note">
-    Word audio: <a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a> (UK) with TTS fallback.
-    Sentence audio: Google TTS UK, then StreamElements UK, then browser voice.
+    Word audio: recorded UK pronunciation (<a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a>, Free Dictionary API) with Google / StreamElements UK voices as automatic fallback.
+    Sentence audio: Google TTS UK, then StreamElements UK. If a source fails, the next one is tried automatically, and the browser's built-in voice is the last resort.
   </p>
 
   <script>
@@ -413,67 +428,64 @@
     document.getElementById('wordCount').textContent = WORDS.length + ' words';
 
     // ── URL builders ──────────────────────────────────────────────────────
-    function getOxfordAudioUrl(word) {
+    // Oxford file names: /<first letter>/<first 3 letters>/<first 5 letters, padded with _>/<word>__gb_1.mp3
+    // Words with several entries (record, report, refuse, support…) use <word>_1__gb_1.mp3 / _2__gb_1.mp3
+    function oxfordUrls(word) {
       const w = word.toLowerCase();
-      const first  = w[0];
-      const first3 = w.substring(0, 3);
-      const first5 = w.substring(0, 5);
-      return `https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/${first}/${first3}/${first5}/${w}__gb_1.mp3`;
+      const dir = w[0] + '/' + w.substring(0, 3).padEnd(3, '_') + '/' + w.substring(0, 5).padEnd(5, '_') + '/';
+      const base = 'https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/' + dir;
+      return [
+        base + w + '__gb_1.mp3',
+        base + w + '_1__gb_1.mp3',
+        base + w + '_2__gb_1.mp3'
+      ];
     }
-    function getOxfordAudioUrlPadded(word) {
+    function googleUrl(text) {
+      return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-GB'
+        + '&total=1&idx=0&textlen=' + text.length + '&q=' + encodeURIComponent(text);
+    }
+    function streamElementsUrl(text) {
+      return 'https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=' + encodeURIComponent(text);
+    }
+
+    // Free Dictionary API: returns JSON (CORS-enabled) that links to recorded UK pronunciations
+    const dictCache = new Map();
+    async function dictionaryUkUrl(word) {
       const w = word.toLowerCase();
-      const first  = w[0];
-      const first3 = w.substring(0, 3);
-      let first5 = w.substring(0, 5);
-      if (first5.length < 5) first5 = first5.padEnd(5, '_');
-      return `https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/${first}/${first3}/${first5}/${w}__gb_1.mp3`;
-    }
-    function getGoogleTtsUrl(text) {
-      return 'https://translate.google.com/translate_tts?ie=UTF-8'
-        + '&client=tw-ob&tl=en-GB&q=' + encodeURIComponent(text);
-    }
-    function getStreamElementsTtsUrl(text) {
-      return 'https://api.streamelements.com/kappa/v2/speech?voice=Brian'
-        + '&text=' + encodeURIComponent(text);
-    }
-
-    // ── User preference for word audio source ─────────────────────────────
-    let wordPref = 'oxford';
-    document.getElementById('wordPref').addEventListener('change', (e) => {
-      wordPref = e.target.value;
-    });
-
-    // ── Simple TTS blob cache ─────────────────────────────────────────────
-    const CACHE_NAME = 'spelling-bee-tts-v5';
-    const cacheApiAvailable = typeof caches !== 'undefined' && typeof caches.open === 'function';
-
-    async function readCachedGoogle(sentence) {
-      if (!cacheApiAvailable) return null;
+      if (dictCache.has(w)) return dictCache.get(w);
+      let url = null;
       try {
-        const cache = await caches.open(CACHE_NAME);
-        const resp = await cache.match(getGoogleTtsUrl(sentence));
-        if (!resp) return null;
-        const blob = await resp.blob();
-        return (blob && blob.size > 100) ? blob : null;
-      } catch (e) { return null; }
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 4000);
+        const r = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w), { signal: ctrl.signal });
+        clearTimeout(t);
+        if (r.ok) {
+          const data = await r.json();
+          const audios = [];
+          for (const entry of data) for (const p of (entry.phonetics || [])) if (p.audio) audios.push(p.audio);
+          url = audios.find(a => /-uk\.(mp3|ogg)/i.test(a)) || null;
+        }
+        failStreak.dictionary = 0;
+      } catch (e) {
+        failStreak.dictionary++;
+      }
+      dictCache.set(w, url);
+      return url;
     }
 
-    function backgroundCacheGoogle(sentence) {
-      if (!cacheApiAvailable) return;
-      fetch(getGoogleTtsUrl(sentence))
-        .then(r => { if (r.ok) return r.blob(); throw new Error('HTTP ' + r.status); })
-        .then(async (blob) => {
-          if (blob.size < 100) return;
-          const cache = await caches.open(CACHE_NAME);
-          const headers = new Headers({ 'Content-Type': 'audio/mpeg', 'Content-Length': String(blob.size) });
-          await cache.put(getGoogleTtsUrl(sentence), new Response(blob, { headers }));
-        })
-        .catch(() => { /* silent */ });
-    }
+    const LABELS = {
+      oxford: 'Oxford UK', dictionary: 'Free Dictionary UK', google: 'Google TTS',
+      streamelements: 'StreamElements', browser: 'Browser voice'
+    };
 
-    // ── Voice selection (browser voice, last resort) ──────────────────────
+    // ── User preferences ──────────────────────────────────────────────────
+    let wordPref = 'auto';
+    let sentencePref = 'auto';
+    document.getElementById('wordPref').addEventListener('change', (e) => { wordPref = e.target.value; });
+    document.getElementById('sentencePref').addEventListener('change', (e) => { sentencePref = e.target.value; });
+
+    // ── Browser voice (always-available last resort) ──────────────────────
     let ukVoice = null;
-
     function pickUKVoice() {
       if (typeof speechSynthesis === 'undefined') return;
       const voices = speechSynthesis.getVoices();
@@ -483,33 +495,57 @@
         voices.find(v => v.name && /uk|british|england/i.test(v.name)) ||
         voices.find(v => (v.lang || '').toLowerCase().startsWith('en')) || null;
     }
-
     if (typeof speechSynthesis !== 'undefined') {
       if (speechSynthesis.getVoices().length > 0) pickUKVoice();
       speechSynthesis.onvoiceschanged = pickUKVoice;
     }
 
     // ── Playback state ────────────────────────────────────────────────────
-    let activeAudio = null;
-    let activeUtterance = null;
+    // ONE shared <audio> element is reused for every clip. It is "unlocked" inside the
+    // click handler, so Safari/iOS (and strict Chrome settings) keep allowing playback
+    // for the later steps of the sequence, which start after asynchronous waits.
+    const player = new Audio();
+    player.preload = 'auto';
+    const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+
+    let playbackGeneration = 0;   // bumped by every Stop / new click; stale async work checks it
+    let activeCancel = null;      // cancels whatever clip or speech is currently playing
     let activeStatusEl = null;
     let activeBtn = null;
-    let playbackGeneration = 0;
+    let lastClipError = '';
+    let speechUnlocked = false;
+
+    const resolvedWord = new Map();           // word -> source that worked (reused for step 3)
+    // consecutive failures per source; used to skip a dead source in "Auto" mode
+    const failStreak = { oxford: 0, dictionary: 0, google: 0, streamelements: 0 };
+
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    function unlockAudio() {
+      try {
+        player.src = SILENT_WAV;
+        const p = player.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } catch (e) {}
+      if (!speechUnlocked && typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined') {
+        speechUnlocked = true;
+        try {
+          const u = new SpeechSynthesisUtterance(' ');
+          u.volume = 0;
+          speechSynthesis.speak(u);
+        } catch (e) {}
+      }
+    }
 
     function stopAll() {
       playbackGeneration++;
-      if (activeAudio) {
-        const a = activeAudio;
-        activeAudio = null;
-        try {
-          a.onended = null; a.onerror = null;
-          a.pause(); a.removeAttribute('src'); a.load();
-        } catch (e) {}
-      }
+      const cancel = activeCancel;
+      activeCancel = null;
+      if (cancel) { try { cancel(); } catch (e) {} }
+      try { player.pause(); } catch (e) {}
       if (typeof speechSynthesis !== 'undefined') {
         try { speechSynthesis.cancel(); } catch (e) {}
       }
-      activeUtterance = null;
       if (activeStatusEl) {
         activeStatusEl.innerHTML = '';
         activeStatusEl.classList.remove('playing');
@@ -526,246 +562,240 @@
         if (cls) el.classList.add(cls);
       }
     }
-
     function badge(kind, text) {
       return `<span class="src-badge ${kind}">${text}</span>`;
     }
 
-    function playAudioFile(source, gen, opts) {
+    // ── Play ONE audio clip and resolve only when it has really finished ──
+    // true  = played to the end
+    // false = failed / timed out / cancelled (the player is stopped, so nothing can
+    //         start late and overlap the next step)
+    function playClip(url, gen, opts) {
+      const { onStart, startTimeoutMs = 8000, maxMs = 60000 } = opts || {};
       return new Promise((resolve) => {
-        const { onStart, timeoutMs = 10000 } = opts || {};
-        let audio;
-        let blobUrlToRevoke = null;
-        try { audio = new Audio(); }
-        catch (e) { resolve(false); return; }
+        if (gen !== playbackGeneration) { resolve(false); return; }
+        lastClipError = '';
+        let done = false, started = false, startTimer = null, maxTimer = null;
 
-        if (source instanceof Blob) {
-          blobUrlToRevoke = URL.createObjectURL(source);
-          audio.src = blobUrlToRevoke;
-        } else {
-          audio.src = source;
-        }
-        audio.preload = 'auto';
-        activeAudio = audio;
-
-        let settled = false;
-        let started = false;
-        let watchdog = null;
-
-        const cleanup = () => {
-          if (watchdog) { clearTimeout(watchdog); watchdog = null; }
-          audio.removeEventListener('playing', handlePlaying);
-          audio.removeEventListener('ended', handleEnded);
-          audio.removeEventListener('error', handleError);
-        };
-
-        const settle = (ok) => {
-          if (settled) return;
-          settled = true;
-          cleanup();
-          if (activeAudio === audio) activeAudio = null;
-          if (blobUrlToRevoke) {
-            setTimeout(() => { try { URL.revokeObjectURL(blobUrlToRevoke); } catch (e) {} }, 500);
-          }
+        const finish = (ok) => {
+          if (done) return;
+          done = true;
+          clearTimeout(startTimer); clearTimeout(maxTimer);
+          player.removeEventListener('playing', onPlaying);
+          player.removeEventListener('ended', onEnded);
+          player.removeEventListener('error', onError);
+          if (activeCancel === cancel) activeCancel = null;
+          if (!ok) { try { player.pause(); } catch (e) {} }
           resolve(ok);
         };
-
-        function handlePlaying() {
+        const cancel = () => finish(false);
+        function onPlaying() {
           if (started) return;
           started = true;
+          clearTimeout(startTimer);
           if (gen === playbackGeneration && onStart) onStart();
+          // Safety net only: starts counting once audio is actually playing
+          maxTimer = setTimeout(() => finish(true), maxMs);
         }
-        function handleEnded() { setTimeout(() => settle(true), 220); }
-        function handleError() { settle(false); }
+        function onEnded() { finish(true); }
+        function onError() {
+          const e = player.error;
+          lastClipError = e
+            ? ({ 1: 'aborted', 2: 'network error', 3: 'decode error', 4: 'not found, blocked or unsupported' }[e.code] || ('error ' + e.code))
+            : 'error';
+          finish(false);
+        }
 
-        audio.addEventListener('playing', handlePlaying);
-        audio.addEventListener('ended', handleEnded);
-        audio.addEventListener('error', handleError);
+        player.addEventListener('playing', onPlaying);
+        player.addEventListener('ended', onEnded);
+        player.addEventListener('error', onError);
+        activeCancel = cancel;
 
-        watchdog = setTimeout(() => {
-          if (audio.currentTime > 0.5) settle(true);
-          else settle(false);
-        }, timeoutMs);
+        // Only the START of playback is time-limited, never the playback itself.
+        startTimer = setTimeout(() => { lastClipError = 'timed out'; finish(false); }, startTimeoutMs);
 
-        const p = audio.play();
-        if (p && typeof p.catch === 'function') p.catch(() => settle(false));
-      });
-    }
-
-    async function playWord(word, gen, statusEl, stepLabel) {
-      const oxfordUrls = [getOxfordAudioUrl(word), getOxfordAudioUrlPadded(word)];
-
-      const order = wordPref === 'google'
-        ? ['google', 'streamelements', 'oxford']
-        : wordPref === 'streamelements'
-          ? ['streamelements', 'google', 'oxford']
-          : ['oxford', 'google', 'streamelements'];
-
-      for (const provider of order) {
-        if (gen !== playbackGeneration) return 'stale';
-
-        if (provider === 'oxford') {
-          setStatus(statusEl, `${stepLabel} ${badge('loading', 'Oxford UK…')}`, 'playing');
-          for (const url of oxfordUrls) {
-            const ok = await playAudioFile(url, gen, {
-              onStart: () => {
-                if (gen !== playbackGeneration) return;
-                setStatus(statusEl, `${stepLabel} ${badge('oxford', 'Oxford UK')}`, 'playing');
-              },
-              timeoutMs: 6000
+        try {
+          player.src = url;
+          const p = player.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch((err) => {
+              if (err && err.name === 'AbortError') return; // interrupted by Stop / next clip
+              lastClipError = 'browser blocked playback (' + (err && err.name) + ')';
+              finish(false);
             });
-            if (ok) return 'oxford';
-            if (gen !== playbackGeneration) return 'stale';
           }
-        } else if (provider === 'google') {
-          setStatus(statusEl, `${stepLabel} ${badge('loading', 'Google TTS…')}`, 'playing');
-          const ok = await playAudioFile(getGoogleTtsUrl(word), gen, {
-            onStart: () => {
-              if (gen !== playbackGeneration) return;
-              setStatus(statusEl, `${stepLabel} ${badge('google', 'Google TTS')}`, 'playing');
-            },
-            timeoutMs: 8000
-          });
-          if (ok) { backgroundCacheGoogle(word); return 'google'; }
-        } else if (provider === 'streamelements') {
-          setStatus(statusEl, `${stepLabel} ${badge('loading', 'StreamElements…')}`, 'playing');
-          const ok = await playAudioFile(getStreamElementsTtsUrl(word), gen, {
-            onStart: () => {
-              if (gen !== playbackGeneration) return;
-              setStatus(statusEl, `${stepLabel} ${badge('streamelements', 'StreamElements')}`, 'playing');
-            },
-            timeoutMs: 8000
-          });
-          if (ok) return 'streamelements';
+        } catch (e) {
+          lastClipError = 'could not start';
+          finish(false);
         }
-      }
-
-      return 'failed';
+      });
     }
 
-    function speakBrowser(sentence, gen, statusEl, onDone) {
-      if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
-        onDone(); return;
-      }
-      if (!ukVoice) pickUKVoice();
-
-      let finished = false;
-      const finish = () => {
-        if (finished) return;
-        finished = true;
-        activeUtterance = null;
-        if (gen !== playbackGeneration) return;
-        onDone();
-      };
-
-      const u = new SpeechSynthesisUtterance(sentence);
-      u.lang = 'en-GB';
-      u.rate = 0.95;
-      if (ukVoice) u.voice = ukVoice;
-      u.onstart = () => {
-        if (gen !== playbackGeneration) return;
-        setStatus(statusEl, `2/3 · Sentence ${badge('browser', 'Browser voice')}`, 'playing');
-      };
-      u.onend = finish;
-      u.onerror = finish;
-
-      activeUtterance = u;
-      try { speechSynthesis.speak(u); } catch (e) { finish(); return; }
-
-      setTimeout(() => {
-        if (!finished) {
-          try { speechSynthesis.cancel(); } catch (e) {}
-          finish();
+    // ── Browser speech as a Promise that resolves when speaking has ended ─
+    function speakBrowser(text, gen, opts) {
+      const { rate = 0.9, onStart } = opts || {};
+      return new Promise((resolve) => {
+        if (gen !== playbackGeneration) { resolve(false); return; }
+        if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
+          lastClipError = 'browser has no speech engine';
+          resolve(false); return;
         }
-      }, 6000);
+        if (!ukVoice) pickUKVoice();
+
+        let done = false, started = false, startTimer = null, maxTimer = null;
+        const finish = (ok) => {
+          if (done) return;
+          done = true;
+          clearTimeout(startTimer); clearTimeout(maxTimer);
+          if (activeCancel === cancel) activeCancel = null;
+          resolve(ok);
+        };
+        const cancel = () => { try { speechSynthesis.cancel(); } catch (e) {} finish(false); };
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-GB';
+        u.rate = rate;
+        if (ukVoice) u.voice = ukVoice;
+        u.onstart = () => {
+          started = true;
+          clearTimeout(startTimer);
+          if (gen === playbackGeneration && onStart) onStart();
+        };
+        u.onend = () => finish(true);
+        u.onerror = () => finish(false);
+
+        activeCancel = cancel;
+        startTimer = setTimeout(() => { if (!started) { lastClipError = 'timed out'; cancel(); } }, 5000);
+        maxTimer = setTimeout(cancel, 5000 + text.length * 160);
+        try { speechSynthesis.speak(u); } catch (e) { finish(false); }
+      });
     }
 
-    async function playSentence(sentence, gen, statusEl, onDone) {
-      if (gen !== playbackGeneration) return;
+    // ── Source lists (tried in order until one really plays) ──────────────
+    function wordCandidates(word) {
+      const by = {
+        oxford: oxfordUrls(word).map(url => ({ provider: 'oxford', url })),
+        dictionary: [{ provider: 'dictionary', lazy: true }],   // URL is looked up when it's this source's turn
+        google: [{ provider: 'google', url: googleUrl(word) }],
+        streamelements: [{ provider: 'streamelements', url: streamElementsUrl(word) }],
+        browser: [{ provider: 'browser' }]
+      };
+      const orders = {
+        auto:           ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
+        oxford:         ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
+        dictionary:     ['dictionary', 'oxford', 'google', 'streamelements', 'browser'],
+        google:         ['google', 'streamelements', 'oxford', 'dictionary', 'browser'],
+        streamelements: ['streamelements', 'google', 'oxford', 'dictionary', 'browser']
+      };
+      let order = orders[wordPref] || orders.auto;
+      if (wordPref === 'auto') {
+        // skip recorded sources that have been failing completely (blocked / offline)
+        if (failStreak.oxford >= 9) order = order.filter(p => p !== 'oxford');
+        if (failStreak.dictionary >= 2) order = order.filter(p => p !== 'dictionary');
+      }
+      let list = order.flatMap(p => by[p]);
+      const known = resolvedWord.get(word);   // step 3 repeats exactly what step 1 used
+      if (known) list = [known, ...list.filter(c => !(c.provider === known.provider && c.url === known.url))];
+      return list;
+    }
 
-      const cached = await readCachedGoogle(sentence);
-      if (gen !== playbackGeneration) return;
-      if (cached) {
-        setStatus(statusEl, `2/3 · Sentence ${badge('loading', 'Cached…')}`, 'playing');
-        const ok = await playAudioFile(cached, gen, {
-          onStart: () => {
-            if (gen !== playbackGeneration) return;
-            setStatus(statusEl, `2/3 · Sentence ${badge('google', 'Cached TTS')}`, 'playing');
+    function sentenceCandidates(sentence) {
+      const g = { provider: 'google', url: googleUrl(sentence) };
+      const s = { provider: 'streamelements', url: streamElementsUrl(sentence) };
+      const b = { provider: 'browser' };
+      if (sentencePref === 'browser') return [b, g, s];
+      if (sentencePref === 'google') return [g, s, b];
+      if (sentencePref === 'streamelements') return [s, g, b];
+      // auto: a provider that keeps failing is pushed back so it doesn't delay every word
+      const online = [g, s].sort((x, y) => (failStreak[x.provider] >= 2) - (failStreak[y.provider] >= 2));
+      return [...online, b];
+    }
+
+    // Returns: the source that worked | false (all failed) | null (stopped)
+    // `log` collects why a source was skipped, so the card can show it afterwards
+    async function playCandidates(cands, text, gen, statusEl, stepLabel, speechRate, log) {
+      for (const c of cands) {
+        if (gen !== playbackGeneration) return null;
+        setStatus(statusEl, `${stepLabel} ${badge('loading', LABELS[c.provider] + '…')}`, 'playing');
+        const onStart = () => {
+          if (gen === playbackGeneration) {
+            setStatus(statusEl, `${stepLabel} ${badge(c.provider, LABELS[c.provider])}`, 'playing');
           }
-        });
-        if (ok) { onDone(); return; }
+        };
+
+        let url = c.url;
+        if (c.lazy) {
+          url = await dictionaryUkUrl(text);
+          if (gen !== playbackGeneration) return null;
+          if (!url) { log && log.push({ provider: c.provider, why: 'no UK recording' }); continue; }
+          c.url = url;
+        }
+
+        lastClipError = '';
+        const ok = c.provider === 'browser'
+          ? await speakBrowser(text, gen, { rate: speechRate, onStart })
+          : await playClip(url, gen, { onStart, startTimeoutMs: c.provider === 'oxford' ? 3500 : 8000 });
+        if (gen !== playbackGeneration) return null;
+        if (c.provider in failStreak && c.provider !== 'dictionary') {
+          failStreak[c.provider] = ok ? 0 : failStreak[c.provider] + 1;
+        }
+        if (ok) return c;
+        log && log.push({ provider: c.provider, why: lastClipError || 'failed' });
       }
-
-      if (gen !== playbackGeneration) return;
-      setStatus(statusEl, `2/3 · Sentence ${badge('loading', 'Google TTS…')}`, 'playing');
-      let ok = await playAudioFile(getGoogleTtsUrl(sentence), gen, {
-        onStart: () => {
-          if (gen !== playbackGeneration) return;
-          setStatus(statusEl, `2/3 · Sentence ${badge('google', 'Google TTS')}`, 'playing');
-        },
-        timeoutMs: 10000
-      });
-      if (ok) { backgroundCacheGoogle(sentence); onDone(); return; }
-
-      if (gen !== playbackGeneration) return;
-      setStatus(statusEl, `2/3 · Sentence ${badge('loading', 'StreamElements…')}`, 'playing');
-      ok = await playAudioFile(getStreamElementsTtsUrl(sentence), gen, {
-        onStart: () => {
-          if (gen !== playbackGeneration) return;
-          setStatus(statusEl, `2/3 · Sentence ${badge('streamelements', 'StreamElements')}`, 'playing');
-        },
-        timeoutMs: 10000
-      });
-      if (ok) { onDone(); return; }
-
-      if (gen !== playbackGeneration) return;
-      setStatus(statusEl, `2/3 · Sentence ${badge('loading', 'Browser voice…')}`, 'playing');
-      speakBrowser(sentence, gen, statusEl, onDone);
+      return false;
     }
 
+    async function playWord(word, gen, statusEl, stepLabel, log) {
+      const r = await playCandidates(wordCandidates(word), word, gen, statusEl, stepLabel, 0.8, log);
+      if (r) resolvedWord.set(word, r);
+      return r;
+    }
+
+    // ── The sequence: Word → Sentence → Word, strictly one after the other ─
     async function playSequence(word, sentence, statusEl, btn) {
       stopAll();
+      unlockAudio();                 // runs synchronously inside the click → keeps audio unlocked
       activeBtn = btn;
       btn.classList.add('playing');
       const gen = playbackGeneration;
+      const alive = () => gen === playbackGeneration;
 
-      const src1 = await playWord(word, gen, statusEl, '1/3 · Word');
-      if (gen !== playbackGeneration) return;
+      const log = [];
+      const first = await playWord(word, gen, statusEl, '1/3 · Word', log);
+      if (!alive()) return;
+      await sleep(500);
+      if (!alive()) return;
 
-      await new Promise(r => setTimeout(r, 350));
-      if (gen !== playbackGeneration) return;
+      const mid = await playCandidates(sentenceCandidates(sentence), sentence, gen, statusEl, '2/3 · Sentence', 0.9, log);
+      if (!alive()) return;
+      await sleep(500);
+      if (!alive()) return;
 
-      await new Promise(resolve => playSentence(sentence, gen, statusEl, resolve));
-      if (gen !== playbackGeneration) return;
+      const last = await playWord(word, gen, statusEl, '3/3 · Word', log);
+      if (!alive()) return;
 
-      await new Promise(r => setTimeout(r, 350));
-      if (gen !== playbackGeneration) return;
+      const problems = [];
+      if (!first || !last) problems.push('word');
+      if (!mid) problems.push('sentence');
+      const used = [...new Set([first, mid, last].filter(Boolean).map(c => c.provider))]
+        .map(p => badge(p, LABELS[p])).join('');
+      const skipped = [...new Set(log.map(a => `${LABELS[a.provider]}: ${a.why}`))].join(' · ');
+      const skippedHtml = skipped ? ` <span style="font-size:0.72rem;color:#94a3b8">(skipped ${skipped})</span>` : '';
+      const summary = problems.length
+        ? `✗ ${problems.join(' + ')} audio unavailable ${badge('failed', 'check connection')} ${used}${skippedHtml}`
+        : `✓ Done ${used}${skippedHtml}`;
 
-      const src2 = await playWord(word, gen, statusEl, '3/3 · Word');
-      if (gen !== playbackGeneration) return;
-
-      let finalBadge;
-      if (src1 === 'failed' && src2 === 'failed') {
-        finalBadge = badge('failed', 'Word audio unavailable');
-      } else if (src1 === 'oxford' || src2 === 'oxford') {
-        finalBadge = badge('oxford', 'Oxford UK');
-      } else if (src1 === 'google' || src2 === 'google') {
-        finalBadge = badge('google', 'Google TTS');
-      } else {
-        finalBadge = badge('streamelements', 'StreamElements');
-      }
-
-      setStatus(statusEl, `✓ Done ${finalBadge}`, 'playing');
+      setStatus(statusEl, summary, 'playing');
       btn.classList.remove('playing');
       activeBtn = null;
       setTimeout(() => {
-        if (gen !== playbackGeneration) return;
+        if (!alive()) return;
         if (activeStatusEl === statusEl) {
           statusEl.innerHTML = '';
           statusEl.classList.remove('playing');
           activeStatusEl = null;
         }
-      }, 2000);
+      }, (problems.length || skipped) ? 6000 : 2500);
     }
 
     // ── Build the UI ──────────────────────────────────────────────────────
@@ -801,7 +831,7 @@
       statusEl.className = 'status';
 
       btn.addEventListener('click', () => {
-        if (activeBtn === btn) return;
+        if (activeBtn === btn) { stopAll(); return; }   // click the playing word again = stop
         playSequence(word, sentence, statusEl, btn);
       });
 
@@ -811,47 +841,34 @@
 
     // ── Diagnostics ───────────────────────────────────────────────────────
     const speechStatus = document.getElementById('speechStatus');
-    const stopBtn = document.getElementById('stopBtn');
-    const testOxfordBtn = document.getElementById('testOxfordBtn');
-    const testGoogleBtn = document.getElementById('testGoogleBtn');
-    const testSeBtn = document.getElementById('testSeBtn');
-
     function showStatus(text, cls) {
       speechStatus.textContent = text;
       speechStatus.className = 'tool-status' + (cls ? ' ' + cls : '');
     }
 
-    stopBtn.addEventListener('click', () => {
+    async function runTest(name, url) {
       stopAll();
-      showStatus('⏹ Stopped.', 'pending');
-    });
-
-    testOxfordBtn.addEventListener('click', async () => {
-      showStatus('⏳ Testing Oxford…', 'pending');
-      const ok = await playAudioFile(getOxfordAudioUrl('dictionary'), playbackGeneration, {});
-      showStatus(ok
-        ? '✓ Oxford UK audio works.'
-        : '✗ Oxford URL failed — falling back to TTS.',
+      unlockAudio();
+      const gen = playbackGeneration;
+      showStatus('⏳ Testing ' + name + '…', 'pending');
+      const ok = url
+        ? await playClip(url, gen, { startTimeoutMs: 8000 })
+        : await speakBrowser('Testing one, two, three. The quick brown fox jumps over the lazy dog.', gen, {});
+      if (gen !== playbackGeneration) return;
+      if (ok && name === 'Oxford') failStreak.oxford = 0;
+      showStatus(ok ? '✓ ' + name + ' works.' : '✗ ' + name + ' failed (' + (lastClipError || 'unknown') + ').',
         ok ? 'ok' : 'error');
-    });
+    }
 
-    testGoogleBtn.addEventListener('click', async () => {
-      const sample = 'Testing one, two, three. The quick brown fox jumps over the lazy dog.';
-      showStatus('⏳ Testing Google TTS…', 'pending');
-      const ok = await playAudioFile(getGoogleTtsUrl(sample), playbackGeneration, {});
-      showStatus(ok ? '✓ Google TTS works.' : '✗ Google TTS failed (rate-limited or blocked).',
-        ok ? 'ok' : 'error');
-    });
-
-    testSeBtn.addEventListener('click', async () => {
-      const sample = 'Testing one, two, three. The quick brown fox jumps over the lazy dog.';
-      showStatus('⏳ Testing StreamElements…', 'pending');
-      const ok = await playAudioFile(getStreamElementsTtsUrl(sample), playbackGeneration, {});
-      showStatus(ok ? '✓ StreamElements works.' : '✗ StreamElements failed.',
-        ok ? 'ok' : 'error');
-    });
+    const SAMPLE = 'Testing one, two, three. The quick brown fox jumps over the lazy dog.';
+    document.getElementById('stopBtn').addEventListener('click', () => { stopAll(); showStatus('⏹ Stopped.', 'pending'); });
+    document.getElementById('testOxfordBtn').addEventListener('click', () => runTest('Oxford', oxfordUrls('dictionary')[0]));
+    document.getElementById('testGoogleBtn').addEventListener('click', () => runTest('Google TTS', googleUrl(SAMPLE)));
+    document.getElementById('testSeBtn').addEventListener('click', () => runTest('StreamElements', streamElementsUrl(SAMPLE)));
+    document.getElementById('testBrowserBtn').addEventListener('click', () => runTest('Browser voice', null));
 
     document.addEventListener('click', () => { if (!ukVoice) pickUKVoice(); }, { once: true });
+
   </script>
 </body>
 </html>

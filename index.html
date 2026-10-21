@@ -1,180 +1,610 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#fdf8f1">
+  <link rel="preconnect" href="https://www.oxfordlearnersdictionaries.com">
+  <link rel="preconnect" href="https://translate.google.com">
+  <link rel="preconnect" href="https://api.streamelements.com">
   <title>Spelling Bee Practice · UK Pronunciation</title>
   <style>
+    :root {
+      /* Backgrounds & surfaces */
+      --bg: #fdf8f1;
+      --card: #ffffff;
+      --text: #2d2a26;
+      --muted: #786e62;
+      --faint: #a9a196;
+      --line: #f0e6d8;
+      --head: #1c1917;
+      --chip: #fff8ee;
+      --hover: #fff3e0;
+
+      /* Accent — warm friendly orange */
+      --accent: #ea580c;
+      --accent-hover: #c2410c;
+      --accent-soft: #ffedd5;
+      --accent-ink: #9a3412;
+
+      /* Status */
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --warn: #d97706;
+
+      /* Source badge colours */
+      --c-oxford: #2563eb;
+      --c-dictionary: #7c3aed;
+      --c-google: #16a34a;
+      --c-streamelements: #ea580c;
+      --c-browser: #ca8a04;
+      --c-loading: #a9a196;
+      --c-failed: #dc2626;
+
+      /* Shadows — warm tinted */
+      --shadow-sm: 0 1px 3px rgba(180, 130, 80, 0.06);
+      --shadow: 0 2px 10px rgba(180, 130, 80, 0.08);
+      --shadow-lg: 0 8px 24px rgba(180, 130, 80, 0.12);
+      --shadow-xl: 0 24px 60px rgba(120, 90, 60, 0.22);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: #f5f7fb; color: #1e293b; padding: 2rem 1rem;
-      display: flex; flex-direction: column; align-items: center;
+      font-size: 16px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 200, 150, 0.22), transparent 38%),
+        radial-gradient(circle at 88% 12%, rgba(200, 220, 255, 0.22), transparent 38%),
+        radial-gradient(circle at 50% 98%, rgba(255, 210, 210, 0.18), transparent 42%),
+        var(--bg);
+      background-attachment: fixed;
+      padding: 1rem 1rem 3rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+      padding-bottom: max(3rem, env(safe-area-inset-bottom));
+      line-height: 1.55;
+      min-height: 100vh;
     }
-    h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.25rem; color: #0f172a; }
-    .subhead { font-size: 0.95rem; color: #64748b; margin-bottom: 1.25rem; text-align: center; max-width: 640px; line-height: 1.5; }
-    .subhead strong { color: #3b82f6; font-weight: 600; }
-    .tools {
-      margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem;
-      flex-wrap: wrap; justify-content: center; background: white;
-      border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.6rem 1rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 960px;
+    .wrap {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column;
     }
-    .tool-btn {
-      background: #3b82f6; color: white; border: none; border-radius: 8px;
-      padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: background 0.15s;
+    .page-head {
+      text-align: center;
+      margin-bottom: 1.25rem;
     }
-    .tool-btn:hover { background: #2563eb; }
-    .tool-btn.secondary { background: #64748b; }
-    .tool-btn.secondary:hover { background: #475569; }
-    .tool-btn.danger { background: #dc2626; }
-    .tool-btn.danger:hover { background: #b91c1c; }
-    .tool-status { font-size: 0.8rem; color: #64748b; }
-    .tool-status.error { color: #dc2626; }
-    .tool-status.ok { color: #16a34a; font-weight: 500; }
-    .tool-status.pending { color: #d97706; font-weight: 500; }
+    h1 {
+      font-size: 1.9rem; font-weight: 800;
+      color: var(--head);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .subhead {
+      font-size: 1rem; color: var(--muted);
+      max-width: 560px; margin: 0 auto;
+      line-height: 1.55;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap;
+    }
 
-    .pref {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.35rem 0.7rem; font-size: 0.8rem;
-      background: #f1f5f9; border-radius: 8px; color: #475569;
-      border: 1px solid #e2e8f0;
+    /* ── Toolbar ─────────────────────────────────────── */
+    .toolbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 251, 245, 0.92);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      backdrop-filter: blur(14px) saturate(1.3);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 0.6rem 0.7rem;
+      margin-bottom: 0.65rem;
+      box-shadow: var(--shadow);
     }
-    .pref select {
-      font-family: inherit; font-size: 0.8rem; font-weight: 600;
-      border: none; background: transparent; color: #1e40af;
-      cursor: pointer; padding: 0.15rem 0.25rem; outline: none;
+    .search-wrap {
+      position: relative; display: flex; align-items: center;
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+    @media (min-width: 720px) { .search-wrap { flex: 1 1 300px; } }
+    .search-icon {
+      position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; opacity: 0.5; pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      font-family: inherit; font-size: 1rem; color: var(--text);
+      background: var(--chip);
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0.7rem 2.7rem 0.7rem 2.6rem;
+      min-height: 2.9rem;
+      -webkit-appearance: none; appearance: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    #search:focus {
+      border-color: var(--accent);
+      background: #fff;
+      outline: none;
+    }
+    #search::placeholder { color: var(--faint); }
+    #search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+    .clear-btn {
+      position: absolute; right: 0.35rem; top: 50%; transform: translateY(-50%);
+      background: transparent; border: none; cursor: pointer;
+      font-size: 1rem; padding: 0.5rem; border-radius: 8px;
+      color: var(--muted); min-width: 2.2rem; min-height: 2.2rem;
+      display: flex; align-items: center; justify-content: center;
+      font-family: inherit;
+    }
+    .clear-btn:hover { background: var(--line); }
+    .clear-btn[hidden] { display: none; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      background: var(--accent);
+      color: #fff;
+      border: none; border-radius: 12px;
+      padding: 0.6rem 1rem;
+      font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      min-height: 2.9rem;
+      transition: filter 0.12s, transform 0.08s, background 0.12s;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 rgba(154, 52, 18, 0.15);
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: progress; }
+    .btn.danger {
+      background: #ef4444;
+      box-shadow: 0 2px 0 rgba(127, 29, 29, 0.15);
+    }
+    .btn.danger:hover { background: #dc2626; }
+    .btn.ghost {
+      background: var(--chip);
+      color: var(--text);
+      border: 1.5px solid var(--line);
+      box-shadow: none;
+    }
+    .btn.ghost:hover { background: var(--hover); border-color: #e5d5bd; }
+    .btn-label { display: inline; }
+    @media (max-width: 420px) {
+      .btn { padding: 0.6rem 0.75rem; }
+      .btn-label { display: none; }
     }
 
-    .legend {
-      display: flex; flex-wrap: wrap; gap: 0.85rem 1.25rem; justify-content: center;
-      align-items: center; margin-bottom: 1.75rem; padding: 0.5rem 1rem;
-      font-size: 0.78rem; color: #64748b; background: #eef2f7;
-      border-radius: 8px; max-width: 960px;
+    #listFilter {
+      font-family: inherit; font-size: 0.92rem; color: var(--text);
+      background: var(--chip);
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0.6rem 2rem 0.6rem 0.75rem;
+      min-height: 2.9rem;
+      max-width: 100%; min-width: 0;
+      flex: 0 1 auto;
+      -webkit-appearance: none; appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 1rem) 50%, calc(100% - 0.65rem) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .legend-item { display: inline-flex; align-items: center; gap: 0.4rem; }
-    .src-badge {
-      display: inline-block; font-size: 0.62rem; font-weight: 700;
-      padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem;
-      letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; white-space: nowrap;
-    }
-    .src-badge.oxford { background: #dbeafe; color: #1e40af; }
-    .src-badge.google { background: #dcfce7; color: #166534; }
-    .src-badge.streamelements { background: #ffedd5; color: #9a3412; }
-    .src-badge.dictionary { background: #ede9fe; color: #5b21b6; }
-    .src-badge.browser { background: #fef3c7; color: #92400e; }
-    .src-badge.loading { background: #f1f5f9; color: #64748b; font-style: italic; text-transform: none; font-weight: 500; letter-spacing: 0; }
-    .src-badge.failed { background: #fee2e2; color: #991b1b; }
+    #listFilter:focus { border-color: var(--accent); outline: none; }
 
+    .count-row {
+      display: flex; justify-content: flex-end;
+      padding: 0 0.35rem;
+      margin-bottom: 0.6rem;
+    }
+    .count {
+      font-size: 0.82rem; color: var(--muted); font-weight: 600;
+    }
+
+    /* ── Word cards ──────────────────────────────────── */
     .word-grid {
-      width: 100%; max-width: 1200px;
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+      gap: 0.85rem;
+      align-items: start;
     }
     .word-card {
-      background: white; border-radius: 12px; padding: 1rem 1.25rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 0.5rem;
-      transition: box-shadow 0.15s, border-color 0.15s;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 1rem 1.15rem;
+      border: 1.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 0.55rem;
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
     }
-    .word-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+    .word-card[hidden] { display: none; }
+    .word-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: #f5d8b5;
+    }
     .word-btn {
       display: flex; align-items: center; gap: 0.65rem;
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
-      padding: 0.55rem 0.85rem; font-size: 1.1rem; font-weight: 600;
-      color: #0f172a; cursor: pointer; width: 100%; text-align: left;
-      font-family: inherit; transition: background 0.12s, border-color 0.12s;
+      background: var(--chip);
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font-size: 1.18rem; font-weight: 700;
+      min-height: 3.2rem;
+      color: var(--head); cursor: pointer;
+      width: 100%; text-align: left;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s, transform 0.08s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .word-btn:hover { background: #eef2ff; border-color: #a5b4fc; }
-    .word-btn.playing { background: #dbeafe; border-color: #60a5fa; cursor: progress; }
+    .word-btn:hover {
+      background: var(--hover);
+      border-color: var(--accent);
+    }
+    .word-btn:active { transform: scale(0.985); }
+    .word-btn.playing {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.18);
+    }
     .word-btn .num {
-      flex-shrink: 0; width: 2.1rem; height: 1.9rem;
+      flex-shrink: 0;
+      min-width: 2rem; height: 1.85rem; padding: 0 0.35rem;
       display: flex; align-items: center; justify-content: center;
-      background: #e0e7ff; color: #3730a3; border-radius: 8px;
-      font-size: 0.75rem; font-weight: 700;
+      background: #fef3c7; color: #92400e;
+      border-radius: 8px;
+      font-size: 0.74rem; font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      transition: background 0.15s, color 0.15s;
     }
-    .word-btn.playing .num { background: #3b82f6; color: white; animation: pulse 1.2s ease-in-out infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
-    .word-btn .w { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .word-btn .icon { font-size: 1.15rem; opacity: 0.45; flex-shrink: 0; margin-left: auto; }
-    .word-btn:hover .icon { opacity: 0.85; }
-    .sentence { font-size: 0.9rem; line-height: 1.5; color: #475569; border-left: 3px solid #e2e8f0; padding-left: 0.75rem; }
+    .word-btn.playing .num {
+      background: var(--accent); color: #fff;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+    .word-btn .w {
+      flex: 1; min-width: 0;
+      line-height: 1.25;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    .word-btn .icon {
+      font-size: 1.1rem; opacity: 0.55; flex-shrink: 0; margin-left: auto;
+      transition: opacity 0.15s;
+    }
+    .word-btn:hover .icon, .word-btn.playing .icon { opacity: 0.95; }
+    .sentence {
+      font-size: 0.92rem; line-height: 1.5;
+      color: var(--muted);
+      border-left: 3px solid #fde3c8;
+      padding-left: 0.75rem;
+    }
     .status {
-      font-size: 0.78rem; color: #94a3b8; min-height: 1.4em; padding: 0 0.15rem;
-      word-break: break-word; display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem;
+      min-height: 1.4rem;
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 0.25rem 0.5rem;
+      font-size: 0.76rem; color: var(--faint);
+      word-break: break-word;
     }
-    .status.playing { color: #3b82f6; font-weight: 500; }
+    .step { display: inline-flex; align-items: center; gap: 0.25rem; opacity: 0.6; }
+    .step .dot {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.2rem; height: 1.2rem; border-radius: 50%;
+      font-size: 0.66rem; font-weight: 800;
+      background: var(--chip); color: var(--muted);
+      border: 1.5px solid var(--line);
+    }
+    .step.loading, .step.playing {
+      opacity: 1; color: var(--accent-ink); font-weight: 700;
+    }
+    .step.playing .dot {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+    .step.loading .dot { border-color: var(--accent); border-style: dashed; }
+    .step.done { opacity: 1; color: var(--ok); font-weight: 700; }
+    .step.done .dot { background: var(--ok); color: #fff; border-color: var(--ok); }
+    .step.failed { opacity: 1; color: var(--bad); font-weight: 700; }
+    .step.failed .dot { background: var(--bad); color: #fff; border-color: var(--bad); }
+    .summary-ok { color: var(--ok); font-weight: 700; }
+    .summary-bad { color: var(--bad); font-weight: 700; }
+    .note { font-size: 0.74rem; color: var(--faint); }
+
+    .src-badge {
+      display: inline-block;
+      font-size: 0.62rem; font-weight: 800; line-height: 1.5;
+      padding: 0.05rem 0.45rem; border-radius: 999px;
+      margin-left: 0.3rem;
+      letter-spacing: 0.03em; text-transform: uppercase;
+      vertical-align: middle; white-space: nowrap;
+      color: var(--c);
+      background: color-mix(in srgb, var(--c) 15%, transparent);
+    }
+    .src-badge.oxford { --c: var(--c-oxford); }
+    .src-badge.dictionary { --c: var(--c-dictionary); }
+    .src-badge.google { --c: var(--c-google); }
+    .src-badge.streamelements { --c: var(--c-streamelements); }
+    .src-badge.browser { --c: var(--c-browser); }
+    .src-badge.loading {
+      --c: var(--c-loading); text-transform: none;
+      font-style: italic; font-weight: 500; letter-spacing: 0;
+    }
+    .src-badge.failed { --c: var(--c-failed); }
+
+    .empty {
+      margin: 2rem 0; color: var(--muted); text-align: center;
+      font-size: 1rem;
+    }
     .footer-note {
-      margin-top: 2.5rem; font-size: 0.85rem; color: #94a3b8;
-      text-align: center; max-width: 620px; line-height: 1.5;
+      margin-top: 2.75rem;
+      font-size: 0.82rem; color: var(--faint);
+      text-align: center; line-height: 1.55;
+      max-width: 640px; margin-left: auto; margin-right: auto;
     }
-    .footer-note a { color: #3b82f6; text-decoration: none; }
+    .footer-note a { color: var(--accent-ink); text-decoration: none; font-weight: 600; }
+    .footer-note a:hover { text-decoration: underline; }
+
+    /* ── Settings dialog ─────────────────────────────── */
+    dialog {
+      display: none;
+      border: none; padding: 0; margin: auto;
+      background: var(--card); color: var(--text);
+      border-radius: 22px;
+      max-width: 640px;
+      width: calc(100% - 1.5rem);
+      max-height: calc(100vh - 1.5rem);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+    dialog[open] {
+      display: flex; flex-direction: column;
+    }
+    dialog::backdrop {
+      background: rgba(60, 40, 20, 0.4);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+    @media (max-width: 640px) {
+      dialog {
+        width: 100%; max-width: none;
+        max-height: 100vh; height: 100vh;
+        border-radius: 0;
+      }
+    }
+    .dialog-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.4rem;
+      border-bottom: 1.5px solid var(--line);
+      flex-shrink: 0;
+      background: var(--chip);
+    }
+    .dialog-header h2 {
+      font-size: 1.2rem; font-weight: 800; color: var(--head);
+    }
+    .dialog-body {
+      flex: 1; overflow-y: auto;
+      padding: 1.25rem 1.4rem 1.4rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+    .settings-section {
+      display: flex; flex-direction: column; gap: 0.7rem;
+    }
+    .settings-section h3 {
+      font-size: 0.82rem; font-weight: 800; color: var(--accent-ink);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 0.15rem;
+    }
+    .field {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .field-label {
+      font-size: 0.85rem; color: var(--muted); font-weight: 600;
+    }
+    .field select {
+      font-family: inherit; font-size: 0.95rem; color: var(--text);
+      background: var(--chip);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.6rem 2rem 0.6rem 0.75rem;
+      min-height: 2.65rem;
+      -webkit-appearance: none; appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 1rem) 50%, calc(100% - 0.65rem) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+    .field select:focus { border-color: var(--accent); outline: none; }
+    .field-actions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+    .diag-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.35rem;
+      font-size: 0.88rem;
+    }
+    .diag-list li.ok { color: var(--ok); font-weight: 600; }
+    .diag-list li.err { color: var(--bad); font-weight: 600; }
+    .diag-list li.wait { color: var(--warn); font-weight: 600; }
+    #dbgOut {
+      width: 100%;
+      font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+      background: var(--chip); color: var(--text);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.65rem;
+      margin-top: 0.5rem;
+    }
+    #dbgOut[hidden] { display: none; }
+    #speechStatus {
+      font-size: 0.82rem; color: var(--muted); font-weight: 600;
+    }
+    :focus-visible {
+      outline: 3px solid rgba(234, 88, 12, 0.5);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* ── Small screens ───────────────────────────────── */
     @media (max-width: 480px) {
-      body { padding: 1.25rem 0.75rem; }
-      h1 { font-size: 1.4rem; }
+      body { padding: 0.85rem 0.7rem 2.5rem; }
+      h1 { font-size: 1.55rem; }
+      .subhead { font-size: 0.92rem; }
       .word-grid { grid-template-columns: 1fr; }
-      .word-btn { font-size: 1rem; padding: 0.5rem 0.75rem; }
-      .word-btn .num { width: 1.8rem; height: 1.7rem; font-size: 0.7rem; }
+      .word-btn {
+        min-height: 3.6rem;
+        padding: 0.85rem 1rem;
+        font-size: 1.22rem;
+      }
+      .word-card { padding: 0.85rem 0.95rem; border-radius: 16px; }
+      .toolbar { padding: 0.5rem 0.55rem; border-radius: 16px; }
+      .dialog-header, .dialog-body { padding-left: 1rem; padding-right: 1rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .word-btn.playing .num { animation: none; }
+      * { transition: none !important; }
     }
   </style>
 </head>
 <body>
+<main class="wrap">
 
-  <h1>🐝 Spelling Bee Practice</h1>
-  <p class="subhead">
-    Click any word to hear <strong>word → sentence → word</strong>.
-    Each step shows a badge telling you <em>which engine</em> is speaking.
-  </p>
+  <header class="page-head">
+    <h1>🐝 Spelling Bee Practice</h1>
+    <p class="subhead">Tap any word to hear it, then a sentence, then the word again — all in British English.</p>
+  </header>
 
-  <div class="tools">
-    <button id="stopBtn" class="tool-btn danger" type="button">⏹ Stop</button>
-    <button id="testOxfordBtn" class="tool-btn" type="button">🔊 Test Oxford</button>
-    <button id="testGoogleBtn" class="tool-btn" type="button">🔊 Test Google TTS</button>
-    <button id="testSeBtn" class="tool-btn" type="button">🔊 Test StreamElements</button>
-    <button id="testBrowserBtn" class="tool-btn secondary" type="button">🔊 Test Browser voice</button>
-    <span class="pref">
-      Word audio:
-      <select id="wordPref">
-        <option value="auto" selected>Auto (recorded first, then UK TTS)</option>
-        <option value="oxford">Oxford (recorded)</option>
-        <option value="dictionary">Free Dictionary UK (recorded)</option>
-        <option value="google">Google TTS UK</option>
-        <option value="streamelements">StreamElements UK</option>
-      </select>
-    </span>
-    <span class="pref">
-      Sentence audio:
-      <select id="sentencePref">
-        <option value="auto" selected>Auto (Google → StreamElements → Browser)</option>
-        <option value="google">Google TTS UK</option>
-        <option value="streamelements">StreamElements UK</option>
-        <option value="browser">Browser voice</option>
-      </select>
-    </span>
-    <span id="speechStatus" class="tool-status"></span>
+  <div class="toolbar" role="toolbar" aria-label="Search and playback">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input id="search" type="search" placeholder="Search words…" aria-label="Search words"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button id="clearSearch" class="clear-btn" type="button" aria-label="Clear search" hidden>✕</button>
+    </div>
+    <select id="listFilter" aria-label="Word list"></select>
+    <button id="randomBtn" class="btn" type="button" aria-label="Play a random word">
+      <span aria-hidden="true">🎲</span><span class="btn-label">Random</span>
+    </button>
+    <button id="stopBtn" class="btn danger" type="button" aria-label="Stop playback">
+      <span aria-hidden="true">⏹</span><span class="btn-label">Stop</span>
+    </button>
+    <button id="settingsBtn" class="btn ghost" type="button" aria-label="Open settings">
+      <span aria-hidden="true">⚙️</span>
+    </button>
   </div>
 
-  <div class="legend">
-    <span class="legend-item"><span class="src-badge oxford">Oxford UK</span> Real recording</span>
-    <span class="legend-item"><span class="src-badge dictionary">Free Dictionary UK</span> Real recording</span>
-    <span class="legend-item"><span class="src-badge google">Google TTS</span> Google Translate UK</span>
-    <span class="legend-item"><span class="src-badge streamelements">StreamElements</span> AWS Polly UK (Brian)</span>
-    <span class="legend-item"><span class="src-badge browser">Browser voice</span> System voice</span>
-    <span class="legend-item"><strong id="wordCount"></strong></span>
-  </div>
+  <div class="count-row"><span id="count" class="count"></span></div>
 
   <div class="word-grid" id="wordGrid"></div>
+  <p class="empty" id="empty" hidden>No words match your search. Try a different spelling.</p>
+  <div id="sr" class="sr-only" role="status" aria-live="polite"></div>
 
   <p class="footer-note">
-    Word audio: recorded UK pronunciation (<a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a>, Free Dictionary API) with Google / StreamElements UK voices as automatic fallback.
-    Sentence audio: Google TTS UK, then StreamElements UK. If a source fails, the next one is tried automatically, and the browser's built-in voice is the last resort.
+    Audio from <a href="https://www.oxfordlearnersdictionaries.com" target="_blank" rel="noopener">Oxford Learner's Dictionaries</a>,
+    Free Dictionary API, Google TTS and StreamElements — with your browser's voice as a backup. All British English.
   </p>
+</main>
 
-  <script>
-    // ── Word data ──────────────────────────────────────────────────────────
-    const WORDS = [
+<dialog id="settingsDialog" aria-labelledby="settingsTitle">
+  <div class="dialog-header">
+    <h2 id="settingsTitle">Settings</h2>
+    <button id="closeSettings" class="btn ghost" type="button" aria-label="Close settings">✕</button>
+  </div>
+  <div class="dialog-body">
+
+    <section class="settings-section">
+      <h3>Playback</h3>
+      <label class="field">
+        <span class="field-label">Speed</span>
+        <select id="speed">
+          <option value="1">Normal</option>
+          <option value="0.85">Slower</option>
+          <option value="0.7">Slowest</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field-label">Pause between steps</span>
+        <select id="pause">
+          <option value="300">Short</option>
+          <option value="500" selected>Normal</option>
+          <option value="900">Long</option>
+          <option value="1500">Very long</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="settings-section">
+      <h3>Audio sources</h3>
+      <label class="field">
+        <span class="field-label">Word audio</span>
+        <select id="wordPref">
+          <option value="auto">Auto (recorded first, then UK TTS)</option>
+          <option value="oxford">Oxford (recorded)</option>
+          <option value="dictionary">Free Dictionary UK (recorded)</option>
+          <option value="google">Google TTS UK</option>
+          <option value="streamelements">StreamElements UK</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field-label">Sentence audio</span>
+        <select id="sentencePref">
+          <option value="auto">Auto (Google → StreamElements → Browser)</option>
+          <option value="google">Google TTS UK</option>
+          <option value="streamelements">StreamElements UK</option>
+          <option value="browser">Browser voice</option>
+        </select>
+      </label>
+      <div class="field-actions">
+        <button id="diagBtn" class="btn" type="button">🔊 Test all sources</button>
+        <button id="resetBtn" class="btn ghost" type="button">↺ Reset source memory</button>
+      </div>
+      <ul id="diag" class="diag-list" aria-live="polite"></ul>
+    </section>
+
+    <section class="settings-section">
+      <h3>Debug</h3>
+      <button id="copyBtn" class="btn ghost" type="button">📋 Copy debug log</button>
+      <textarea id="dbgOut" readonly hidden rows="8" aria-label="Debug log"></textarea>
+      <span id="speechStatus"></span>
+    </section>
+
+    <p class="note">
+      Word audio uses recorded UK pronunciation (Oxford, Free Dictionary) with Google or
+      StreamElements UK voices as automatic fallback. Sentence audio uses Google TTS UK,
+      then StreamElements, then your browser's voice. If a source fails, the next one is
+      tried automatically.
+    </p>
+  </div>
+</dialog>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════════════════
+//  Engine behaviour — locked to the preset that was verified working on
+//  Chrome (Web Audio unlock + zero delay before the first clip). Do not
+//  change these without re-testing the whole sequence on a fresh page load.
+// ══════════════════════════════════════════════════════════════════════════
+const ENGINE = {
+  unlock: 'webaudio',   // 'webaudio' | 'silent' | 'none'
+  firstDelay: 0         // ms added before step 1 starts
+};
+
+// ══════════════════════════════════════════════════════════════════════════
+//  Word data  (edit freely — each entry is { word, sentence })
+// ══════════════════════════════════════════════════════════════════════════
+const WORDS = [
       // ══════════════ NEW WORD LIST (120 words) ══════════════
       { word: "platform", sentence: "The train will leave from platform three." },
       { word: "salmon", sentence: "A bear waits patiently to catch salmon swimming up river." },
@@ -314,7 +744,7 @@
       { word: "Paragraph", sentence: "Write one paragraph explaining why you enjoyed the book." },
       { word: "Feminine", sentence: "The word feminine describes qualities associated with women or girls." },
 
-      // ══════════════ THESAURUS GROUP A (35 words) ══════════════
+      // ══════════════ THESAURUS GROUP A (33 words) ══════════════
       { word: "dinosaur", sentence: "I hope that some day we will be able to see a dinosaur at the zoo." },
       { word: "smash", sentence: "Please don't smash anything in the house with that rock!" },
       { word: "bouncy", sentence: "I wanted to jump on the bed, but it wasn't very bouncy." },
@@ -421,454 +851,861 @@
       { word: "expensive", sentence: "I never go to expensive restaurants, as I prefer to save my money." },
       { word: "stethoscope", sentence: "The doctor's stethoscope was always around his neck, except on that fateful day, the one time he truly needed it." },
       { word: "scandalous", sentence: "The news about my favorite movie star was simply scandalous! I can't believe she would do that!" },
-      { word: "ambience", sentence: "The relaxed ambience of the restaurant made everyone feel very comfortable." }
+      { word: "ambience", sentence: "The relaxed ambience of the restaurant made everyone feel very comfortable." },
+
+      // ══════════════ WORD PRACTICE · GROUP A GRADE 1-2 (35 words) ══════════════
+      { word: "Helicopter", sentence: "We saw a helicopter flying above the school playground." },
+      { word: "Magazine", sentence: "I read a children's magazine about animals and space." },
+      { word: "Staircase", sentence: "We walked carefully down the staircase to our classroom." },
+      { word: "Workshop", sentence: "We made a simple robot in a school workshop." },
+      { word: "Restaurant", sentence: "My family ate dinner at a small restaurant near our house." },
+      { word: "Crocodile", sentence: "The crocodile opened its huge mouth near the river." },
+      { word: "Eagle", sentence: "An eagle flew high above the trees." },
+      { word: "Shower", sentence: "I took a shower after playing outside on a hot day." },
+      { word: "Eraser", sentence: "She used an eraser to remove the incorrect answer from her worksheet." },
+      { word: "Queen", sentence: "The queen waved to the children during the parade." },
+      { word: "Sneakers", sentence: "I wore my sneakers for our school sports day." },
+      { word: "Ruler", sentence: "Use a ruler to draw a straight line across the page." },
+      { word: "Quiz", sentence: "Our teacher gave us a short quiz on vocabulary at the end of the lesson." },
+      { word: "Chair", sentence: "Please put the books on the chair beside the window." },
+      { word: "Doctor", sentence: "The doctor examined my throat and prescribed some medicine." },
+      { word: "Sleeveless", sentence: "She wore a sleeveless dress because the weather was very warm." },
+      { word: "Earthquake", sentence: "During the earthquake, the windows shook and everyone moved to a safe place." },
+      { word: "Camel", sentence: "A camel can survive for a long time in the desert with little water." },
+      { word: "Soup", sentence: "The hot soup helped warm us up on the rainy afternoon." },
+      { word: "Breakfast", sentence: "I usually eat eggs and fruit for breakfast before school." },
+      { word: "Badger", sentence: "A badger is a small animal that can dig holes in the ground." },
+      { word: "Notice", sentence: "Did you notice the rainbow appearing after the rain?" },
+      { word: "Adventure", sentence: "Our camping trip was a fun adventure." },
+      { word: "Toaster", sentence: "Put the bread in the toaster for a few minutes until it turns golden brown." },
+      { word: "Spinach", sentence: "My mother added fresh spinach to the omelette." },
+      { word: "Vanilla", sentence: "She chose vanilla ice cream instead of chocolate." },
+      { word: "Niece", sentence: "My niece likes drawing pictures and playing with dolls." },
+      { word: "Office", sentence: "Dad works in an office near the city center." },
+      { word: "Lantern", sentence: "We used a lantern to light our tent after it became dark." },
+      { word: "Rainbow", sentence: "A bright rainbow appeared in the sky after the storm." },
+      { word: "Bakery", sentence: "The smell of fresh bread filled the bakery early in the morning." },
+      { word: "Postcard", sentence: "I sent my cousin a postcard from our holiday." },
+      { word: "Flight", sentence: "Our flight was delayed because of heavy rain." },
+      { word: "Cottage", sentence: "We stayed in a little cottage beside a lake." },
+      { word: "Rice", sentence: "We ate warm rice with vegetables for lunch." },
+
+      // ══════════════ WORD PRACTICE · GROUP B GRADE 3-4 (28 words) ══════════════
+      { word: "Celebration", sentence: "The school held a celebration after the students won the competition." },
+      { word: "Thumbnail", sentence: "The video thumbnail showed a picture of the mountain we were going to climb." },
+      { word: "Supervisor", sentence: "My supervisor checked my work before I submitted the report." },
+      { word: "Bonus", sentence: "The company gave employees a bonus for reaching their annual target." },
+      { word: "Shield", sentence: "The knight carried a shield to protect himself during the battle." },
+      { word: "Virus", sentence: "Washing your hands regularly can help prevent the spread of a virus." },
+      { word: "Vegetable", sentence: "Broccoli is a vegetable that contains many important nutrients." },
+      { word: "Disappear", sentence: "The magician made the coin disappear from his hand." },
+      { word: "Human", sentence: "Every human needs food, water, and oxygen to survive." },
+      { word: "Request", sentence: "I submitted a request for a new library card." },
+      { word: "Walrus", sentence: "The walrus has long tusks and thick whiskers." },
+      { word: "Wallet", sentence: "I keep my identification card and bank cards in my wallet." },
+      { word: "Argument", sentence: "The two brothers had an argument about who should use the computer first." },
+      { word: "Bridge", sentence: "We crossed the bridge to reach the village on the other side of the river." },
+      { word: "Courage", sentence: "It took great courage to speak in front of such a large audience." },
+      { word: "Blouse", sentence: "She wore a white blouse with a blue skirt to the interview." },
+      { word: "Octagon", sentence: "A stop sign has the shape of an octagon." },
+      { word: "Thunderstorm", sentence: "We stayed indoors because a powerful thunderstorm was approaching." },
+      { word: "Written", sentence: "The instructions are written clearly on the first page." },
+      { word: "Earring", sentence: "She lost one earring while walking along the beach." },
+      { word: "Government", sentence: "The government announced a new program to support small businesses." },
+      { word: "Bandage", sentence: "The nurse put a bandage over the cut on my finger." },
+      { word: "Deliver", sentence: "The courier will deliver the package to our office tomorrow." },
+      { word: "Triangle", sentence: "A shape with three sides is called a triangle." },
+      { word: "Grammar", sentence: "Good grammar makes your writing clearer and easier to understand." },
+      { word: "Business", sentence: "She started a small business selling handmade cakes." },
+      { word: "Assistant", sentence: "The shop assistant helped me find the correct size." },
+      { word: "Cabbage", sentence: "My grandmother used fresh cabbage to make the soup." },
+
+      // ══════════════ WORD PRACTICE · GROUP C GRADE 5-6 (29 words) ══════════════
+      { word: "Juggle", sentence: "The performer can juggle five balls at the same time." },
+      { word: "Arrangement", sentence: "The flower arrangement was placed in the center of the dining table." },
+      { word: "Toffee", sentence: "The children shared a piece of sticky toffee after dinner." },
+      { word: "Tracksuit", sentence: "He wore a tracksuit while training at the sports center." },
+      { word: "Thicken", sentence: "Leave the sauce on the stove for a few minutes to thicken it." },
+      { word: "Raincoat", sentence: "I brought a raincoat because the weather forecast predicted heavy rain." },
+      { word: "Tonight", sentence: "We are going to watch a movie tonight after dinner." },
+      { word: "Puppet", sentence: "The children watched a puppet show at the school festival." },
+      { word: "Mascot", sentence: "The tiger is the official mascot of our school sports team." },
+      { word: "Apartment", sentence: "They rented an apartment near the university." },
+      { word: "Fierce", sentence: "The two teams had a fierce competition for the championship." },
+      { word: "Building", sentence: "The new office building has twenty floors." },
+      { word: "Gown", sentence: "She wore a beautiful gown to the formal ceremony." },
+      { word: "Ghost", sentence: "The old house was rumored to be haunted by a ghost." },
+      { word: "Frisbee", sentence: "We played Frisbee in the park on Saturday afternoon." },
+      { word: "Timetable", sentence: "Check the timetable to see when the next train leaves." },
+      { word: "Bewildered", sentence: "He looked bewildered when he realized that he had taken the wrong train." },
+      { word: "Strawberry", sentence: "She put a sliced strawberry on top of the cake." },
+      { word: "Korean", sentence: "We ordered Korean food for dinner." },
+      { word: "Salami", sentence: "He added slices of salami to the sandwich." },
+      { word: "Cushion", sentence: "I placed a soft cushion on the chair to make it more comfortable." },
+      { word: "Squash", sentence: "She bought a squash at the market to use in the soup." },
+      { word: "Mischievous", sentence: "The mischievous puppy kept hiding my socks around the house." },
+      { word: "Comfortable", sentence: "These shoes are very comfortable, even after walking for several hours." },
+      { word: "Movie", sentence: "We watched a movie together after finishing our homework." },
+      { word: "Exhausted", sentence: "After the long hike, everyone was completely exhausted." },
+      { word: "Situation", sentence: "The teacher helped the students handle the difficult situation." },
+      { word: "Outdoor", sentence: "The hotel has an outdoor swimming pool overlooking the sea." },
+      { word: "Shadow", sentence: "The tree cast a long shadow across the garden in the afternoon." },
+
+      // ══════════════ WORD PRACTICE · GROUP C WORD LIST (49 words) ══════════════
+      { word: "Lecture", sentence: "The long lecture on soil types was quite boring." },
+      { word: "Agricultural", sentence: "Canada has a large agricultural sector." },
+      { word: "Disturbed", sentence: "When the tree was cut down the squirrel's nest was disturbed." },
+      { word: "Extension", sentence: "I couldn't finish my homework on time so I asked for an extension." },
+      { word: "Formulate", sentence: "It took him a long time to formulate his evil plan." },
+      { word: "Synopsis", sentence: "She read a synopsis of the movie before watching it." },
+      { word: "Bloodstream", sentence: "Some medicines stay in your bloodstream for several days." },
+      { word: "Calibration", sentence: "The camera needs calibration to take clear photos." },
+      { word: "Ignorance", sentence: "We can overcome ignorance by learning as much as we can." },
+      { word: "Pleasant", sentence: "My idea of a pleasant day is 24 degrees and sunshine." },
+      { word: "Characteristic", sentence: "Honesty is an important characteristic in a friend." },
+      { word: "Conscious", sentence: "He hit his head when he fell, but stayed conscious." },
+      { word: "Conservation", sentence: "A conservation group is interested in preventing animal extinction." },
+      { word: "Friendliness", sentence: "Friendliness is the main reason many people choose dogs over cats." },
+      { word: "Application", sentence: "To get a job you first have to complete an application." },
+      { word: "Flamingo", sentence: "A flamingo can stand on one leg for a long time." },
+      { word: "Sharpener", sentence: "I always keep a sharpener in my pencil case." },
+      { word: "Opposite", sentence: "The library is opposite the park." },
+      { word: "Novel", sentence: "The new Harry Potter novel was released in July." },
+      { word: "Crunchy", sentence: "Crisps are crunchy." },
+      { word: "Criminal", sentence: "A criminal belongs in prison." },
+      { word: "Optician", sentence: "You go to the optician to have your eyes tested." },
+      { word: "Animation", sentence: "I like Disney animation." },
+      { word: "Pillow", sentence: "He likes to bring a pillow with him for long trips in the car." },
+      { word: "Blossom", sentence: "I love spring in Japan, when the cherry trees are in blossom." },
+      { word: "Activate", sentence: "You need a password to activate your account." },
+      { word: "Leaflet", sentence: "She handed me a leaflet about the new shop." },
+      { word: "Monopoly", sentence: "Monopoly is a world famous board game." },
+      { word: "Mystery", sentence: "Whoever broke the window remains a mystery." },
+      { word: "Society", sentence: "They discovered the remains of a traditional society." },
+      { word: "Agenda", sentence: "The director's agenda was full so they had to reschedule the meeting." },
+      { word: "Dribble", sentence: "In soccer school we learned how to dribble the ball." },
+      { word: "Withdraw", sentence: "Because of his injury he had to withdraw from the race." },
+      { word: "Tension", sentence: "When the tension became too much, the rope snapped." },
+      { word: "Prefer", sentence: "I prefer vacations to the beach rather than to cities." },
+      { word: "Surgeon", sentence: "The operation was performed by a world famous brain surgeon." },
+      { word: "Candidate", sentence: "My grandfather was once a presidential candidate." },
+      { word: "Ceremony", sentence: "The wedding ceremony was a beautiful moment." },
+      { word: "Blackmail", sentence: "When Alice caught her boss stealing she tried to blackmail her." },
+      { word: "Attraction", sentence: "The attraction of the painting was its simplicity." },
+      { word: "Determine", sentence: "I can't determine the answer to the question from this information." },
+      { word: "Gradient", sentence: "The color gradient ranged from bright yellow to deep purple." },
+      { word: "Character", sentence: "This old house has a lot of character." },
+      { word: "Seasonal", sentence: "Durian are a seasonal fruit." },
+      { word: "Insight", sentence: "The author of his biography had deep insight into his work." },
+      { word: "Isolation", sentence: "Scientists on Antarctica are used to a feeling of isolation." },
+      { word: "Species", sentence: "New species of animals are discovered all the time." },
+      { word: "Relaxation", sentence: "Just listening to the rain brings me a sense of relaxation." }
     ];
 
-    // Show word count
-    document.getElementById('wordCount').textContent = WORDS.length + ' words';
+const LIST_STARTS = [
+  { name: "New word list", start: 0 },
+  { name: "Thesaurus list · Section 1", start: 120 },
+  { name: "Thesaurus · Group A", start: 135 },
+  { name: "Thesaurus · Group B", start: 168 },
+  { name: "Thesaurus · Group C", start: 203 },
+  { name: "Word practice · Group A (Grade 1–2)", start: 238 },
+  { name: "Word practice · Group B (Grade 3–4)", start: 273 },
+  { name: "Word practice · Group C (Grade 5–6)", start: 301 },
+  { name: "Word practice · Group C word list", start: 330 }
+];
 
-    // ── URL builders ──────────────────────────────────────────────────────
-    // Oxford file names: /<first letter>/<first 3 letters>/<first 5 letters, padded with _>/<word>__gb_1.mp3
-    // Words with several entries (record, report, refuse, support…) use <word>_1__gb_1.mp3 / _2__gb_1.mp3
-    function oxfordUrls(word) {
-      const w = word.toLowerCase();
-      const dir = w[0] + '/' + w.substring(0, 3).padEnd(3, '_') + '/' + w.substring(0, 5).padEnd(5, '_') + '/';
-      const base = 'https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/' + dir;
-      return [
-        base + w + '__gb_1.mp3',
-        base + w + '_1__gb_1.mp3',
-        base + w + '_2__gb_1.mp3'
-      ];
-    }
-    function googleUrl(text) {
-      return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-GB'
-        + '&total=1&idx=0&textlen=' + text.length + '&q=' + encodeURIComponent(text);
-    }
-    function streamElementsUrl(text) {
-      return 'https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=' + encodeURIComponent(text);
-    }
+// ══════════════════════════════════════════════════════════════════════════
+//  Settings (remembered between visits; storage is optional)
+// ══════════════════════════════════════════════════════════════════════════
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('sbp.' + k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('sbp.' + k, String(v)); } catch (e) {} }
+};
+const settings = {
+  wordPref:     store.get('wordPref', 'auto'),
+  sentencePref: store.get('sentencePref', 'auto'),
+  speed:        parseFloat(store.get('speed', '1')) || 1,
+  pauseMs:      parseInt(store.get('pauseMs', '500'), 10) || 500
+};
 
-    // Free Dictionary API: returns JSON (CORS-enabled) that links to recorded UK pronunciations
-    const dictCache = new Map();
-    async function dictionaryUkUrl(word) {
-      const w = word.toLowerCase();
-      if (dictCache.has(w)) return dictCache.get(w);
-      let url = null;
+const LABELS = {
+  oxford: 'Oxford UK', dictionary: 'Free Dictionary UK', google: 'Google TTS',
+  streamelements: 'StreamElements', browser: 'Browser voice'
+};
+const REASON = {
+  timeout: 'no response (slow or blocked)', notfound: 'not found or blocked', network: 'network error',
+  decode: 'unreadable audio', blocked: 'browser blocked playback', stalled: 'stalled',
+  interrupted: 'interrupted', nospeech: 'no speech engine', nouk: 'no UK recording',
+  lookup: 'lookup failed', speech: 'speech error', maxtime: 'took too long'
+};
+
+function oxfordUrls(word) {
+  const w = word.toLowerCase();
+  const dir = w[0] + '/' + w.substring(0, 3).padEnd(3, '_') + '/' + w.substring(0, 5).padEnd(5, '_') + '/';
+  const base = 'https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/' + dir;
+  return [base + w + '__gb_1.mp3', base + w + '_1__gb_1.mp3', base + w + '_2__gb_1.mp3'];
+}
+function googleUrl(text) {
+  return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-GB'
+    + '&total=1&idx=0&textlen=' + text.length + '&q=' + encodeURIComponent(text);
+}
+function streamElementsUrl(text) {
+  return 'https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=' + encodeURIComponent(text);
+}
+
+const dictCache = new Map();
+function resolveDictionary(word) {
+  const w = word.toLowerCase();
+  if (!dictCache.has(w)) {
+    dictCache.set(w, (async () => {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 4000);
       try {
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), 4000);
         const r = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w), { signal: ctrl.signal });
-        clearTimeout(t);
-        if (r.ok) {
-          const data = await r.json();
-          const audios = [];
-          for (const entry of data) for (const p of (entry.phonetics || [])) if (p.audio) audios.push(p.audio);
-          url = audios.find(a => /-uk\.(mp3|ogg)/i.test(a)) || null;
-        }
-        failStreak.dictionary = 0;
+        if (r.status === 404) { noteResult('dictionary', true); return { url: null, error: false }; }
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        const audios = [];
+        for (const entry of data) for (const p of (entry.phonetics || [])) if (p.audio) audios.push(p.audio);
+        let url = audios.find(a => /(-uk\.(mp3|ogg)|_gb_\d)/i.test(a)) || null;
+        if (url && url.startsWith('//')) url = 'https:' + url;
+        noteResult('dictionary', true);
+        return { url, error: false };
       } catch (e) {
-        failStreak.dictionary++;
-      }
-      dictCache.set(w, url);
-      return url;
-    }
+        noteResult('dictionary', false);
+        dictCache.delete(w);
+        return { url: null, error: true };
+      } finally { clearTimeout(t); }
+    })());
+  }
+  return dictCache.get(w);
+}
 
-    const LABELS = {
-      oxford: 'Oxford UK', dictionary: 'Free Dictionary UK', google: 'Google TTS',
-      streamelements: 'StreamElements', browser: 'Browser voice'
-    };
+const health = { oxford: { fails: 0, at: 0 }, dictionary: { fails: 0, at: 0 }, google: { fails: 0, at: 0 }, streamelements: { fails: 0, at: 0 } };
+function isHealthy(p) { const h = health[p]; return !h || h.fails < 3 || Date.now() - h.at > 120000; }
+function noteResult(p, ok) {
+  const h = health[p]; if (!h) return;
+  if (ok) h.fails = 0; else { h.fails++; h.at = Date.now(); }
+}
 
-    // ── User preferences ──────────────────────────────────────────────────
-    let wordPref = 'auto';
-    let sentencePref = 'auto';
-    document.getElementById('wordPref').addEventListener('change', (e) => { wordPref = e.target.value; });
-    document.getElementById('sentencePref').addEventListener('change', (e) => { sentencePref = e.target.value; });
+const winners = new Map();
+const winnerKey = (kind, text) => kind + '|' + text.toLowerCase();
 
-    // ── Browser voice (always-available last resort) ──────────────────────
-    let ukVoice = null;
-    function pickUKVoice() {
-      if (typeof speechSynthesis === 'undefined') return;
-      const voices = speechSynthesis.getVoices();
-      ukVoice =
-        voices.find(v => v.lang === 'en-GB' || v.lang === 'en_GB') ||
-        voices.find(v => (v.lang || '').toLowerCase().startsWith('en-gb')) ||
-        voices.find(v => v.name && /uk|british|england/i.test(v.name)) ||
-        voices.find(v => (v.lang || '').toLowerCase().startsWith('en')) || null;
-    }
-    if (typeof speechSynthesis !== 'undefined') {
-      if (speechSynthesis.getVoices().length > 0) pickUKVoice();
-      speechSynthesis.onvoiceschanged = pickUKVoice;
-    }
+const WORD_ORDERS = {
+  auto:           ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
+  oxford:         ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
+  dictionary:     ['dictionary', 'oxford', 'google', 'streamelements', 'browser'],
+  google:         ['google', 'streamelements', 'oxford', 'dictionary', 'browser'],
+  streamelements: ['streamelements', 'google', 'oxford', 'dictionary', 'browser']
+};
+const SENTENCE_ORDERS = {
+  auto:           ['google', 'streamelements', 'browser'],
+  google:         ['google', 'streamelements', 'browser'],
+  streamelements: ['streamelements', 'google', 'browser'],
+  browser:        ['browser', 'google', 'streamelements']
+};
 
-    // ── Playback state ────────────────────────────────────────────────────
-    // ONE shared <audio> element is reused for every clip. It is "unlocked" inside the
-    // click handler, so Safari/iOS (and strict Chrome settings) keep allowing playback
-    // for the later steps of the sequence, which start after asynchronous waits.
-    const player = new Audio();
-    player.preload = 'auto';
-    const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+function buildCandidates(kind, text) {
+  const pref = kind === 'word' ? settings.wordPref : settings.sentencePref;
+  const orders = kind === 'word' ? WORD_ORDERS : SENTENCE_ORDERS;
+  let order = orders[pref] || orders.auto;
+  if (pref === 'auto') order = [...order].sort((a, b) => (isHealthy(a) ? 0 : 1) - (isHealthy(b) ? 0 : 1));
 
-    let playbackGeneration = 0;   // bumped by every Stop / new click; stale async work checks it
-    let activeCancel = null;      // cancels whatever clip or speech is currently playing
-    let activeStatusEl = null;
-    let activeBtn = null;
-    let lastClipError = '';
-    let speechUnlocked = false;
+  let list = [];
+  for (const p of order) {
+    if (p === 'oxford') oxfordUrls(text).forEach(url => list.push({ provider: p, group: p, url }));
+    else if (p === 'dictionary') list.push({ provider: p, group: p, lazy: true });
+    else if (p === 'google') list.push({ provider: p, group: p, url: googleUrl(text) });
+    else if (p === 'streamelements') list.push({ provider: p, group: p, url: streamElementsUrl(text) });
+    else if (p === 'browser') list.push({ provider: p, group: p, speech: true });
+  }
+  const w = winners.get(winnerKey(kind, text));
+  if (w && Date.now() - w.at < 600000) {
+    const rest = list.filter(c => !(c.provider === w.provider && (w.speech || c.url === w.url || (c.lazy && w.provider === 'dictionary'))));
+    list = [{ provider: w.provider, group: w.group, url: w.url, speech: w.speech }, ...rest];
+  }
+  return list;
+}
 
-    const resolvedWord = new Map();           // word -> source that worked (reused for step 3)
-    // consecutive failures per source; used to skip a dead source in "Auto" mode
-    const failStreak = { oxford: 0, dictionary: 0, google: 0, streamelements: 0 };
+function startTimeoutFor(provider) {
+  return provider === 'oxford' ? 4000 : 6000;
+}
 
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// ══════════════════════════════════════════════════════════════════════════
+//  Browser voice (last-resort fallback)
+// ══════════════════════════════════════════════════════════════════════════
+let ukVoice = null;
+function pickUKVoice() {
+  if (typeof speechSynthesis === 'undefined') return;
+  const voices = speechSynthesis.getVoices();
+  ukVoice =
+    voices.find(v => v.lang === 'en-GB' || v.lang === 'en_GB') ||
+    voices.find(v => (v.lang || '').toLowerCase().startsWith('en-gb')) ||
+    voices.find(v => v.name && /uk|british|england/i.test(v.name)) ||
+    voices.find(v => (v.lang || '').toLowerCase().startsWith('en')) || null;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  if (speechSynthesis.getVoices().length > 0) pickUKVoice();
+  speechSynthesis.onvoiceschanged = pickUKVoice;
+}
 
-    function unlockAudio() {
+// ══════════════════════════════════════════════════════════════════════════
+//  Playback engine v8 (parent-friendly, preset 1 locked)
+//
+//  • Web Audio unlock on first user gesture — never plays a silent <audio>
+//    element, so it can't collide with step 1's real audio element.
+//  • Fresh <audio> per attempt: no event can leak between clips.
+//  • Never call load() after src; never call play() before canplay /
+//    loadeddata / readyState ≥ 2; retry AbortError once.
+//  • A step is "finished" only when its audio really ends. Timeouts only
+//    guard the START of a clip, never its length.
+//  • Every tap / Stop creates a new "run"; cancelRun() fires dispose() for
+//    every in-flight attempt, which pauses and clears its element.
+// ══════════════════════════════════════════════════════════════════════════
+const T0 = performance.now();
+const dbgLines = [];
+function dbg(msg) {
+  dbgLines.push(((performance.now() - T0) / 1000).toFixed(2) + 's ' + msg);
+  if (dbgLines.length > 800) dbgLines.shift();
+}
+dbg('page loaded · engine v8 (preset 1 locked) · ' + navigator.userAgent);
+
+let unlocked = false, speechUnlocked = false, unlockCtx = null;
+function unlockAudio() {
+  if (!unlocked && ENGINE.unlock !== 'none') {
+    unlocked = true;
+    if (ENGINE.unlock === 'webaudio') {
       try {
-        player.src = SILENT_WAV;
-        const p = player.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      } catch (e) {}
-      if (!speechUnlocked && typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined') {
-        speechUnlocked = true;
-        try {
-          const u = new SpeechSynthesisUtterance(' ');
-          u.volume = 0;
-          speechSynthesis.speak(u);
-        } catch (e) {}
-      }
-    }
-
-    function stopAll() {
-      playbackGeneration++;
-      const cancel = activeCancel;
-      activeCancel = null;
-      if (cancel) { try { cancel(); } catch (e) {} }
-      try { player.pause(); } catch (e) {}
-      if (typeof speechSynthesis !== 'undefined') {
-        try { speechSynthesis.cancel(); } catch (e) {}
-      }
-      if (activeStatusEl) {
-        activeStatusEl.innerHTML = '';
-        activeStatusEl.classList.remove('playing');
-        activeStatusEl = null;
-      }
-      if (activeBtn) { activeBtn.classList.remove('playing'); activeBtn = null; }
-    }
-
-    function setStatus(el, html, cls) {
-      activeStatusEl = el;
-      if (el) {
-        el.innerHTML = html;
-        el.classList.remove('playing');
-        if (cls) el.classList.add(cls);
-      }
-    }
-    function badge(kind, text) {
-      return `<span class="src-badge ${kind}">${text}</span>`;
-    }
-
-    // ── Play ONE audio clip and resolve only when it has really finished ──
-    // true  = played to the end
-    // false = failed / timed out / cancelled (the player is stopped, so nothing can
-    //         start late and overlap the next step)
-    function playClip(url, gen, opts) {
-      const { onStart, startTimeoutMs = 8000, maxMs = 60000 } = opts || {};
-      return new Promise((resolve) => {
-        if (gen !== playbackGeneration) { resolve(false); return; }
-        lastClipError = '';
-        let done = false, started = false, startTimer = null, maxTimer = null;
-
-        const finish = (ok) => {
-          if (done) return;
-          done = true;
-          clearTimeout(startTimer); clearTimeout(maxTimer);
-          player.removeEventListener('playing', onPlaying);
-          player.removeEventListener('ended', onEnded);
-          player.removeEventListener('error', onError);
-          if (activeCancel === cancel) activeCancel = null;
-          if (!ok) { try { player.pause(); } catch (e) {} }
-          resolve(ok);
-        };
-        const cancel = () => finish(false);
-        function onPlaying() {
-          if (started) return;
-          started = true;
-          clearTimeout(startTimer);
-          if (gen === playbackGeneration && onStart) onStart();
-          // Safety net only: starts counting once audio is actually playing
-          maxTimer = setTimeout(() => finish(true), maxMs);
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) {
+          unlockCtx = new Ctx();
+          if (unlockCtx.state === 'suspended') unlockCtx.resume();
+          const buf = unlockCtx.createBuffer(1, 1, 22050);
+          const src = unlockCtx.createBufferSource();
+          src.buffer = buf;
+          src.connect(unlockCtx.destination);
+          src.start(0);
+          dbg('unlock: Web Audio primed');
         }
-        function onEnded() { finish(true); }
-        function onError() {
-          const e = player.error;
-          lastClipError = e
-            ? ({ 1: 'aborted', 2: 'network error', 3: 'decode error', 4: 'not found, blocked or unsupported' }[e.code] || ('error ' + e.code))
-            : 'error';
-          finish(false);
-        }
+      } catch (e) { dbg('unlock: Web Audio failed ' + (e && e.message)); }
+    } else if (ENGINE.unlock === 'silent') {
+      try {
+        const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+        const u = new Audio();
+        u.preload = 'auto';
+        u.src = SILENT_WAV;
+        u.addEventListener('ended', () => {
+          try { u.removeAttribute('src'); u.load(); } catch (e) {}
+        }, { once: true });
+        const p = u.play();
+        if (p && p.catch) p.catch(() => {});
+        dbg('unlock: silent WAV playing');
+      } catch (e) { dbg('unlock: silent WAV failed ' + (e && e.message)); }
+    }
+  }
+  if (!speechUnlocked && typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined') {
+    speechUnlocked = true;
+    try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}
+  }
+}
 
-        player.addEventListener('playing', onPlaying);
-        player.addEventListener('ended', onEnded);
-        player.addEventListener('error', onError);
-        activeCancel = cancel;
+let runCounter = 0;
+let current = null;
 
-        // Only the START of playback is time-limited, never the playback itself.
-        startTimer = setTimeout(() => { lastClipError = 'timed out'; finish(false); }, startTimeoutMs);
+function newRun(ui) {
+  const run = {
+    id: ++runCounter, cancelled: false, interrupted: false, ui,
+    rate: settings.speed, notes: [], disposers: new Set(), utterance: null
+  };
+  run.onCancel = (fn) => { run.disposers.add(fn); return () => run.disposers.delete(fn); };
+  return run;
+}
+function cancelRun(run) {
+  if (!run || run.cancelled) return;
+  run.cancelled = true;
+  for (const fn of [...run.disposers]) { try { fn(); } catch (e) {} }
+  run.disposers.clear();
+}
+function wait(run, ms) {
+  return new Promise((resolve) => {
+    if (run.cancelled) { resolve(false); return; }
+    let off = null;
+    const t = setTimeout(() => { if (off) off(); resolve(true); }, ms);
+    off = run.onCancel(() => { clearTimeout(t); resolve(false); });
+  });
+}
+function stopAll() {
+  const run = current;
+  current = null;
+  cancelRun(run);
+  if (typeof speechSynthesis !== 'undefined') { try { speechSynthesis.cancel(); } catch (e) {} }
+  if (run && run.ui) run.ui.reset();
+}
 
-        try {
-          player.src = url;
-          const p = player.play();
-          if (p && typeof p.catch === 'function') {
-            p.catch((err) => {
-              if (err && err.name === 'AbortError') return; // interrupted by Stop / next clip
-              lastClipError = 'browser blocked playback (' + (err && err.name) + ')';
-              finish(false);
-            });
+function attemptClip(run, url, opts) {
+  const { startTimeout = 8000, rate = 1, tag = 'clip', onStart = null, delay = 0 } = opts || {};
+  return new Promise((resolve) => {
+    if (run.cancelled) { resolve({ ok: false, reason: 'cancelled' }); return; }
+    const el = new Audio();
+    el.preload = 'auto';
+    el.autoplay = false;
+    el.setAttribute('playsinline', '');
+
+    let settled = false, started = false, playRequested = false, gateOpen = false;
+    let startTimer = null, pauseTimer = null, watch = null;
+    let lastTime = -1, stuck = 0;
+
+    const fmt = (ev) => {
+      const d = isFinite(el.duration) ? el.duration.toFixed(2) : '?';
+      return `${tag} ${ev} t=${el.currentTime.toFixed(2)}/${d} ready=${el.readyState} net=${el.networkState}` +
+        (ev === 'error' && el.error ? ' code=' + el.error.code : '');
+    };
+    const TRACE = ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'waiting', 'stalled', 'abort'];
+    const trace = (e) => dbg(fmt(e.type));
+
+    const cleanup = () => {
+      clearTimeout(startTimer); clearTimeout(pauseTimer); clearInterval(watch);
+      el.removeEventListener('playing', onPlaying);
+      el.removeEventListener('ended', onEnded);
+      el.removeEventListener('error', onError);
+      el.removeEventListener('pause', onPause);
+      el.removeEventListener('canplay', onReady);
+      el.removeEventListener('loadeddata', onReady);
+      TRACE.forEach(ev => el.removeEventListener(ev, trace));
+    };
+    const finish = (ok, reason) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      dbg(`${tag} → ${ok ? 'OK' : 'FAILED'} (${reason}) t=${el.currentTime.toFixed(2)}/${isFinite(el.duration) ? el.duration.toFixed(2) : '?'}`);
+      try { el.pause(); } catch (e) {}
+      try { el.removeAttribute('src'); el.load(); } catch (e) {}
+      dispose();
+      resolve({ ok, reason });
+    };
+    const dispose = run.onCancel(() => finish(false, 'cancelled'));
+
+    function onPlaying() {
+      if (started) return;
+      started = true;
+      clearTimeout(startTimer);
+      dbg(fmt('playing'));
+      if (!run.cancelled && onStart) onStart();
+      watch = setInterval(() => {
+        if (el.paused || el.ended) return;
+        if (el.currentTime === lastTime) { if (++stuck >= 8) finish(false, 'stalled'); }
+        else { lastTime = el.currentTime; stuck = 0; }
+      }, 1000);
+    }
+    function onEnded() { dbg(fmt('ended')); finish(true, 'ended'); }
+    function onError() {
+      dbg(fmt('error'));
+      const c = el.error && el.error.code;
+      finish(false, c === 2 ? 'network' : c === 3 ? 'decode' : 'notfound');
+    }
+    function onPause() {
+      if (!started) return;
+      dbg(fmt('pause'));
+      clearTimeout(pauseTimer);
+      pauseTimer = setTimeout(() => { if (!settled && el.paused && !el.ended) finish(false, 'interrupted'); }, 600);
+    }
+    function onReady() {
+      dbg(fmt('ready'));
+      if (gateOpen) requestPlay();
+    }
+    function requestPlay() {
+      if (settled || run.cancelled || playRequested) return;
+      playRequested = true;
+      attemptPlay(1);
+    }
+    function attemptPlay(attempt) {
+      if (settled || run.cancelled) return;
+      try {
+        el.playbackRate = rate;
+        const p = el.play();
+        if (p && p.catch) p.catch((err) => {
+          if (settled || run.cancelled) return;
+          const name = err && err.name;
+          dbg(`${tag} play() rejected: ${name} (try ${attempt})`);
+          if (name === 'AbortError' && attempt < 2) {
+            setTimeout(() => attemptPlay(attempt + 1), 80);
+            return;
           }
-        } catch (e) {
-          lastClipError = 'could not start';
-          finish(false);
-        }
-      });
+          finish(false, name === 'NotAllowedError' ? 'blocked' : 'notfound');
+        });
+      } catch (e) { finish(false, 'notfound'); }
     }
 
-    // ── Browser speech as a Promise that resolves when speaking has ended ─
-    function speakBrowser(text, gen, opts) {
-      const { rate = 0.9, onStart } = opts || {};
-      return new Promise((resolve) => {
-        if (gen !== playbackGeneration) { resolve(false); return; }
-        if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
-          lastClipError = 'browser has no speech engine';
-          resolve(false); return;
-        }
-        if (!ukVoice) pickUKVoice();
+    el.addEventListener('playing', onPlaying);
+    el.addEventListener('ended', onEnded);
+    el.addEventListener('error', onError);
+    el.addEventListener('pause', onPause);
+    el.addEventListener('canplay', onReady);
+    el.addEventListener('loadeddata', onReady);
+    TRACE.forEach(ev => el.addEventListener(ev, trace));
 
-        let done = false, started = false, startTimer = null, maxTimer = null;
-        const finish = (ok) => {
-          if (done) return;
-          done = true;
-          clearTimeout(startTimer); clearTimeout(maxTimer);
-          if (activeCancel === cancel) activeCancel = null;
-          resolve(ok);
-        };
-        const cancel = () => { try { speechSynthesis.cancel(); } catch (e) {} finish(false); };
+    startTimer = setTimeout(() => finish(false, 'timeout'), delay + startTimeout);
 
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'en-GB';
-        u.rate = rate;
-        if (ukVoice) u.voice = ukVoice;
-        u.onstart = () => {
-          started = true;
-          clearTimeout(startTimer);
-          if (gen === playbackGeneration && onStart) onStart();
-        };
-        u.onend = () => finish(true);
-        u.onerror = () => finish(false);
+    try {
+      dbg(`${tag} load ${url.length > 90 ? url.slice(0, 90) + '…' : url}${delay > 0 ? ' (plays in ' + Math.round(delay) + ' ms)' : ''}`);
+      el.defaultPlaybackRate = rate;
+      el.src = url;
+    } catch (e) { finish(false, 'notfound'); return; }
 
-        activeCancel = cancel;
-        startTimer = setTimeout(() => { if (!started) { lastClipError = 'timed out'; cancel(); } }, 5000);
-        maxTimer = setTimeout(cancel, 5000 + text.length * 160);
-        try { speechSynthesis.speak(u); } catch (e) { finish(false); }
-      });
+    (async () => {
+      if (delay > 0 && !(await wait(run, delay))) return;
+      if (settled || run.cancelled) return;
+      gateOpen = true;
+      if (el.readyState >= 2) requestPlay();
+    })();
+  });
+}
+
+async function speakBrowser(run, text, opts) {
+  const { rate = 0.9, onStart = null, delay = 0 } = opts || {};
+  if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined') {
+    return { ok: false, reason: 'nospeech' };
+  }
+  if (!(await wait(run, Math.max(60, delay)))) return { ok: false, reason: 'cancelled' };
+  if (!ukVoice) pickUKVoice();
+  return new Promise((resolve) => {
+    let settled = false, started = false;
+    const timers = [];
+    const finish = (ok, reason) => {
+      if (settled) return;
+      settled = true; timers.forEach(clearTimeout); dispose(); resolve({ ok, reason });
+    };
+    const dispose = run.onCancel(() => { try { speechSynthesis.cancel(); } catch (e) {} finish(false, 'cancelled'); });
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB'; u.rate = rate;
+    if (ukVoice) u.voice = ukVoice;
+    u.onstart = () => { started = true; if (!run.cancelled && onStart) onStart(); };
+    u.onend = () => finish(true, 'ended');
+    u.onerror = (e) => finish(false, e && (e.error === 'interrupted' || e.error === 'canceled') ? 'cancelled' : 'speech');
+    run.utterance = u;
+    timers.push(setTimeout(() => { if (!started) { try { speechSynthesis.cancel(); } catch (e) {} finish(false, 'timeout'); } }, 5000));
+    timers.push(setTimeout(() => { try { speechSynthesis.cancel(); } catch (e) {} finish(started, 'maxtime'); }, 8000 + text.length * 150));
+    try { speechSynthesis.speak(u); } catch (e) { finish(false, 'speech'); }
+  });
+}
+
+async function playStep(run, step) {
+  const { kind, text, idx, cands, delay = 0 } = step;
+  const ui = run.ui;
+  const playAt = performance.now() + delay;
+  const skip = new Set(), failedGroups = new Set();
+
+  for (const c of cands) {
+    if (run.cancelled) return null;
+    if (skip.has(c.group)) continue;
+    if (ui) ui.step(idx, 'loading', c.provider);
+
+    let url = c.url;
+    if (c.lazy) {
+      const d = await resolveDictionary(text);
+      if (run.cancelled) return null;
+      if (!d.url) { run.notes.push(LABELS.dictionary + ': ' + (d.error ? REASON.lookup : REASON.nouk)); continue; }
+      url = d.url;
     }
 
-    // ── Source lists (tried in order until one really plays) ──────────────
-    function wordCandidates(word) {
-      const by = {
-        oxford: oxfordUrls(word).map(url => ({ provider: 'oxford', url })),
-        dictionary: [{ provider: 'dictionary', lazy: true }],   // URL is looked up when it's this source's turn
-        google: [{ provider: 'google', url: googleUrl(word) }],
-        streamelements: [{ provider: 'streamelements', url: streamElementsUrl(word) }],
-        browser: [{ provider: 'browser' }]
-      };
-      const orders = {
-        auto:           ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
-        oxford:         ['oxford', 'dictionary', 'google', 'streamelements', 'browser'],
-        dictionary:     ['dictionary', 'oxford', 'google', 'streamelements', 'browser'],
-        google:         ['google', 'streamelements', 'oxford', 'dictionary', 'browser'],
-        streamelements: ['streamelements', 'google', 'oxford', 'dictionary', 'browser']
-      };
-      let order = orders[wordPref] || orders.auto;
-      if (wordPref === 'auto') {
-        // skip recorded sources that have been failing completely (blocked / offline)
-        if (failStreak.oxford >= 9) order = order.filter(p => p !== 'oxford');
-        if (failStreak.dictionary >= 2) order = order.filter(p => p !== 'dictionary');
-      }
-      let list = order.flatMap(p => by[p]);
-      const known = resolvedWord.get(word);   // step 3 repeats exactly what step 1 used
-      if (known) list = [known, ...list.filter(c => !(c.provider === known.provider && c.url === known.url))];
-      return list;
+    const tag = (kind === 'word' ? 'W' : 'S') + (idx + 1) + ':' + c.provider;
+    const started = () => { if (!run.cancelled && ui) ui.step(idx, 'playing', c.provider); };
+    const r = c.speech
+      ? await speakBrowser(run, text, { rate: (kind === 'word' ? 0.8 : 0.9) * run.rate, onStart: started, delay: Math.max(0, playAt - performance.now()) })
+      : await attemptClip(run, url, { startTimeout: startTimeoutFor(c.provider), rate: run.rate, tag, onStart: started, delay: Math.max(0, playAt - performance.now()) });
+
+    if (run.cancelled) return null;
+    if (r.reason === 'interrupted') { run.interrupted = true; return null; }
+    if (r.ok) {
+      failedGroups.forEach(g => { if (g !== c.group) noteResult(g, false); });
+      noteResult(c.group, true);
+      winners.set(winnerKey(kind, text), { provider: c.provider, group: c.group, url, speech: !!c.speech, at: Date.now() });
+      if (ui) ui.step(idx, 'done', c.provider);
+      return { provider: c.provider, group: c.group, url, speech: !!c.speech };
     }
+    run.notes.push(LABELS[c.provider] + ': ' + (REASON[r.reason] || r.reason));
+    failedGroups.add(c.group);
+    if (r.reason === 'timeout') skip.add(c.group);
+  }
+  failedGroups.forEach(g => noteResult(g, false));
+  if (ui) ui.step(idx, 'failed');
+  return false;
+}
 
-    function sentenceCandidates(sentence) {
-      const g = { provider: 'google', url: googleUrl(sentence) };
-      const s = { provider: 'streamelements', url: streamElementsUrl(sentence) };
-      const b = { provider: 'browser' };
-      if (sentencePref === 'browser') return [b, g, s];
-      if (sentencePref === 'google') return [g, s, b];
-      if (sentencePref === 'streamelements') return [s, g, b];
-      // auto: a provider that keeps failing is pushed back so it doesn't delay every word
-      const online = [g, s].sort((x, y) => (failStreak[x.provider] >= 2) - (failStreak[y.provider] >= 2));
-      return [...online, b];
-    }
+async function playSequence(index, ui) {
+  stopAll();
+  unlockAudio();
+  const { word, sentence } = WORDS[index];
+  const run = newRun(ui);
+  current = run;
+  ui.begin();
+  say('Playing ' + word);
+  dbg(`=== tap #${index + 1} "${word}" · firstDelay ${ENGINE.firstDelay} ms · speed ${settings.speed} · pause ${settings.pauseMs} ms · word:${settings.wordPref} sentence:${settings.sentencePref} ===`);
+  const dead = () => run.cancelled || run.interrupted;
 
-    // Returns: the source that worked | false (all failed) | null (stopped)
-    // `log` collects why a source was skipped, so the card can show it afterwards
-    async function playCandidates(cands, text, gen, statusEl, stepLabel, speechRate, log) {
-      for (const c of cands) {
-        if (gen !== playbackGeneration) return null;
-        setStatus(statusEl, `${stepLabel} ${badge('loading', LABELS[c.provider] + '…')}`, 'playing');
-        const onStart = () => {
-          if (gen === playbackGeneration) {
-            setStatus(statusEl, `${stepLabel} ${badge(c.provider, LABELS[c.provider])}`, 'playing');
-          }
-        };
+  const w1 = await playStep(run, { kind: 'word', text: word, idx: 0, cands: buildCandidates('word', word), delay: ENGINE.firstDelay });
+  if (dead()) return finishRun(run, null);
 
-        let url = c.url;
-        if (c.lazy) {
-          url = await dictionaryUkUrl(text);
-          if (gen !== playbackGeneration) return null;
-          if (!url) { log && log.push({ provider: c.provider, why: 'no UK recording' }); continue; }
-          c.url = url;
-        }
+  const mid = await playStep(run, { kind: 'sentence', text: sentence, idx: 1, cands: buildCandidates('sentence', sentence), delay: settings.pauseMs });
+  if (dead()) return finishRun(run, null);
 
-        lastClipError = '';
-        const ok = c.provider === 'browser'
-          ? await speakBrowser(text, gen, { rate: speechRate, onStart })
-          : await playClip(url, gen, { onStart, startTimeoutMs: c.provider === 'oxford' ? 3500 : 8000 });
-        if (gen !== playbackGeneration) return null;
-        if (c.provider in failStreak && c.provider !== 'dictionary') {
-          failStreak[c.provider] = ok ? 0 : failStreak[c.provider] + 1;
-        }
-        if (ok) return c;
-        log && log.push({ provider: c.provider, why: lastClipError || 'failed' });
-      }
-      return false;
-    }
+  let w3 = false;
+  if (w1) w3 = await playStep(run, { kind: 'word', text: word, idx: 2, cands: buildCandidates('word', word), delay: settings.pauseMs });
+  else ui.step(2, 'failed');
+  if (dead()) return finishRun(run, null);
 
-    async function playWord(word, gen, statusEl, stepLabel, log) {
-      const r = await playCandidates(wordCandidates(word), word, gen, statusEl, stepLabel, 0.8, log);
-      if (r) resolvedWord.set(word, r);
-      return r;
-    }
+  finishRun(run, { w1, mid, w3 });
+}
 
-    // ── The sequence: Word → Sentence → Word, strictly one after the other ─
-    async function playSequence(word, sentence, statusEl, btn) {
+function finishRun(run, result) {
+  if (current === run) current = null;
+  const ui = run.ui;
+  if (!ui) return;
+  if (!result) {
+    if (run.interrupted) {
       stopAll();
-      unlockAudio();                 // runs synchronously inside the click → keeps audio unlocked
-      activeBtn = btn;
-      btn.classList.add('playing');
-      const gen = playbackGeneration;
-      const alive = () => gen === playbackGeneration;
-
-      const log = [];
-      const first = await playWord(word, gen, statusEl, '1/3 · Word', log);
-      if (!alive()) return;
-      await sleep(500);
-      if (!alive()) return;
-
-      const mid = await playCandidates(sentenceCandidates(sentence), sentence, gen, statusEl, '2/3 · Sentence', 0.9, log);
-      if (!alive()) return;
-      await sleep(500);
-      if (!alive()) return;
-
-      const last = await playWord(word, gen, statusEl, '3/3 · Word', log);
-      if (!alive()) return;
-
-      const problems = [];
-      if (!first || !last) problems.push('word');
-      if (!mid) problems.push('sentence');
-      const used = [...new Set([first, mid, last].filter(Boolean).map(c => c.provider))]
-        .map(p => badge(p, LABELS[p])).join('');
-      const skipped = [...new Set(log.map(a => `${LABELS[a.provider]}: ${a.why}`))].join(' · ');
-      const skippedHtml = skipped ? ` <span style="font-size:0.72rem;color:#94a3b8">(skipped ${skipped})</span>` : '';
-      const summary = problems.length
-        ? `✗ ${problems.join(' + ')} audio unavailable ${badge('failed', 'check connection')} ${used}${skippedHtml}`
-        : `✓ Done ${used}${skippedHtml}`;
-
-      setStatus(statusEl, summary, 'playing');
-      btn.classList.remove('playing');
-      activeBtn = null;
-      setTimeout(() => {
-        if (!alive()) return;
-        if (activeStatusEl === statusEl) {
-          statusEl.innerHTML = '';
-          statusEl.classList.remove('playing');
-          activeStatusEl = null;
-        }
-      }, (problems.length || skipped) ? 6000 : 2500);
+      ui.message('<span class="summary-bad">⏸ Interrupted — tap the word to try again</span>', 4000);
+      say('Playback interrupted');
     }
+    return;
+  }
+  const { w1, mid, w3 } = result;
+  const problems = [];
+  if (!w1 || !w3) problems.push('word');
+  if (!mid) problems.push('sentence');
+  const used = [...new Set([w1, mid, w3].filter(Boolean).map(c => c.provider))].map(p => badge(p, LABELS[p])).join('');
+  const notes = [...new Set(run.notes)].join(' · ');
+  const noteHtml = notes ? ` <span class="note">(${notes})</span>` : '';
+  if (problems.length) {
+    ui.message(`<span class="summary-bad">✗ ${problems.join(' + ')} audio unavailable</span> ${used}${noteHtml}`, 9000);
+    say('Audio unavailable for ' + problems.join(' and '));
+  } else {
+    ui.message(`<span class="summary-ok">✓ Done</span> ${used}${noteHtml}`, notes ? 7000 : 2500);
+    say('Done');
+  }
+}
 
-    // ── Build the UI ──────────────────────────────────────────────────────
-    const grid = document.getElementById('wordGrid');
+// ══════════════════════════════════════════════════════════════════════════
+//  UI
+// ══════════════════════════════════════════════════════════════════════════
+const $ = (id) => document.getElementById(id);
+const badge = (kind, text) => `<span class="src-badge ${kind}">${text}</span>`;
+const srEl = $('sr');
+function say(text) { srEl.textContent = ''; setTimeout(() => { srEl.textContent = text; }, 30); }
 
-    WORDS.forEach(({ word, sentence }, index) => {
-      const card = document.createElement('div');
-      card.className = 'word-card';
+const STEP_NAMES = ['Word', 'Sentence', 'Word'];
 
-      const btn = document.createElement('button');
-      btn.className = 'word-btn';
-      btn.type = 'button';
+function makeCardUI(btn, statusEl) {
+  let st = [{ s: 'pending' }, { s: 'pending' }, { s: 'pending' }];
+  let timer = null, token = 0;
+  const render = () => {
+    statusEl.innerHTML = st.map((x, i) => {
+      const dot = x.s === 'done' ? '✓' : x.s === 'failed' ? '✗' : String(i + 1);
+      let extra = '';
+      if (x.s === 'loading') extra = badge('loading', (LABELS[x.p] || '') + '…');
+      else if (x.s === 'playing') extra = badge(x.p, LABELS[x.p]);
+      return `<span class="step ${x.s}"><span class="dot">${dot}</span>${STEP_NAMES[i]}${extra}</span>`;
+    }).join('');
+  };
+  return {
+    begin() {
+      token++; clearTimeout(timer);
+      st = [{ s: 'pending' }, { s: 'pending' }, { s: 'pending' }];
+      btn.classList.add('playing'); btn.setAttribute('aria-pressed', 'true');
+      render();
+    },
+    step(i, s, p) { st[i] = { s, p }; render(); },
+    message(html, ms) {
+      btn.classList.remove('playing'); btn.setAttribute('aria-pressed', 'false');
+      statusEl.innerHTML = html;
+      const my = ++token;
+      clearTimeout(timer);
+      timer = setTimeout(() => { if (my === token) statusEl.innerHTML = ''; }, ms);
+    },
+    reset() {
+      token++; clearTimeout(timer);
+      btn.classList.remove('playing'); btn.setAttribute('aria-pressed', 'false');
+      statusEl.innerHTML = '';
+    },
+    isPlaying() { return btn.classList.contains('playing'); }
+  };
+}
 
-      const numEl = document.createElement('span');
-      numEl.className = 'num';
-      numEl.textContent = String(index + 1);
+const listOf = (i) => { let n = 0; for (let k = 0; k < LIST_STARTS.length; k++) if (i >= LIST_STARTS[k].start) n = k; return n; };
+const grid = $('wordGrid');
+const cards = [];
 
-      const wordEl = document.createElement('span');
-      wordEl.className = 'w';
-      wordEl.textContent = word;
+WORDS.forEach(({ word, sentence }, index) => {
+  const card = document.createElement('div');
+  card.className = 'word-card';
 
-      const iconEl = document.createElement('span');
-      iconEl.className = 'icon';
-      iconEl.textContent = '🔊';
+  const btn = document.createElement('button');
+  btn.className = 'word-btn'; btn.type = 'button';
+  btn.setAttribute('aria-pressed', 'false');
+  btn.setAttribute('aria-label', 'Play ' + word + ', then its sentence, then the word again');
 
-      btn.appendChild(numEl); btn.appendChild(wordEl); btn.appendChild(iconEl);
+  const numEl = document.createElement('span'); numEl.className = 'num'; numEl.textContent = String(index + 1);
+  const wordEl = document.createElement('span'); wordEl.className = 'w'; wordEl.textContent = word;
+  const iconEl = document.createElement('span'); iconEl.className = 'icon'; iconEl.textContent = '🔊'; iconEl.setAttribute('aria-hidden', 'true');
+  btn.append(numEl, wordEl, iconEl);
 
-      const sentenceEl = document.createElement('div');
-      sentenceEl.className = 'sentence';
-      sentenceEl.textContent = sentence;
+  const sentenceEl = document.createElement('div'); sentenceEl.className = 'sentence'; sentenceEl.textContent = sentence;
+  const statusEl = document.createElement('div'); statusEl.className = 'status';
 
-      const statusEl = document.createElement('div');
-      statusEl.className = 'status';
+  const ui = makeCardUI(btn, statusEl);
+  btn.addEventListener('click', () => {
+    if (ui.isPlaying()) { stopAll(); return; }
+    playSequence(index, ui);
+  });
 
-      btn.addEventListener('click', () => {
-        if (activeBtn === btn) { stopAll(); return; }   // click the playing word again = stop
-        playSequence(word, sentence, statusEl, btn);
-      });
+  card.append(btn, sentenceEl, statusEl);
+  grid.appendChild(card);
+  cards.push({ el: card, index, ui, list: listOf(index), text: (word + ' ' + sentence).toLowerCase() });
+});
 
-      card.appendChild(btn); card.appendChild(sentenceEl); card.appendChild(statusEl);
-      grid.appendChild(card);
-    });
+// ── Search + list filter + count ─────────────────────────────────────────
+const searchEl = $('search'), listFilter = $('listFilter'), countEl = $('count'), emptyEl = $('empty');
+const clearSearchBtn = $('clearSearch');
+const listCounts = LIST_STARTS.map((l, k) => (k + 1 < LIST_STARTS.length ? LIST_STARTS[k + 1].start : WORDS.length) - l.start);
+listFilter.innerHTML = `<option value="all">All lists (${WORDS.length})</option>`
+  + LIST_STARTS.map((l, k) => `<option value="${k}">${l.name} (${listCounts[k]})</option>`).join('');
 
-    // ── Diagnostics ───────────────────────────────────────────────────────
-    const speechStatus = document.getElementById('speechStatus');
-    function showStatus(text, cls) {
-      speechStatus.textContent = text;
-      speechStatus.className = 'tool-status' + (cls ? ' ' + cls : '');
+function applyFilter() {
+  const q = searchEl.value.trim().toLowerCase(), li = listFilter.value;
+  let n = 0;
+  for (const c of cards) {
+    const show = (li === 'all' || String(c.list) === li) && (!q || c.text.includes(q));
+    c.el.hidden = !show;
+    if (show) n++;
+  }
+  countEl.textContent = n === WORDS.length ? WORDS.length + ' words' : n + ' of ' + WORDS.length + ' words';
+  emptyEl.hidden = n > 0;
+  clearSearchBtn.hidden = searchEl.value.length === 0;
+}
+searchEl.addEventListener('input', applyFilter);
+listFilter.addEventListener('change', applyFilter);
+clearSearchBtn.addEventListener('click', () => {
+  searchEl.value = '';
+  applyFilter();
+  searchEl.focus();
+});
+applyFilter();
+
+// ── Settings controls ────────────────────────────────────────────────────
+function bindSelect(id, key, parse) {
+  const el = $(id);
+  const saved = String(settings[key]);
+  if ([...el.options].some(o => o.value === saved)) el.value = saved;
+  else settings[key] = parse ? parse(el.value) : el.value;
+  el.addEventListener('change', () => {
+    settings[key] = parse ? parse(el.value) : el.value;
+    store.set(key, el.value);
+    if (key === 'wordPref' || key === 'sentencePref') winners.clear();
+  });
+}
+bindSelect('wordPref', 'wordPref');
+bindSelect('sentencePref', 'sentencePref');
+bindSelect('speed', 'speed', parseFloat);
+bindSelect('pause', 'pauseMs', (v) => parseInt(v, 10));
+
+// ── Toolbar buttons ──────────────────────────────────────────────────────
+$('stopBtn').addEventListener('click', () => { stopAll(); });
+$('randomBtn').addEventListener('click', () => {
+  const visible = cards.filter(c => !c.el.hidden);
+  if (!visible.length) {
+    showStatus('No words to play. Try clearing the search.');
+    return;
+  }
+  const pick = visible[Math.floor(Math.random() * visible.length)];
+  stopAll();
+  pick.el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  playSequence(pick.index, pick.ui);
+});
+
+// Escape stops playback, unless the Settings dialog is open.
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (settingsDialog.open) return;
+  stopAll();
+});
+window.addEventListener('pagehide', stopAll);
+
+// First tap anywhere unlocks audio (needed by iPhone / Safari and by Chrome
+// for the Web Audio gate).
+['click', 'touchend'].forEach(evt => document.addEventListener(evt, () => {
+  unlockAudio();
+  if (!ukVoice) pickUKVoice();
+}, { once: true, capture: true }));
+
+// ── Settings dialog ──────────────────────────────────────────────────────
+const settingsDialog = $('settingsDialog');
+$('settingsBtn').addEventListener('click', () => {
+  if (typeof settingsDialog.showModal === 'function') settingsDialog.showModal();
+  else settingsDialog.setAttribute('open', '');
+});
+$('closeSettings').addEventListener('click', () => {
+  if (typeof settingsDialog.close === 'function') settingsDialog.close();
+  else settingsDialog.removeAttribute('open');
+});
+settingsDialog.addEventListener('click', (e) => {
+  if (e.target === settingsDialog) $('closeSettings').click();
+});
+
+// ── Diagnostics ──────────────────────────────────────────────────────────
+const diagList = $('diag'), diagBtn = $('diagBtn'), speechStatus = $('speechStatus');
+function showStatus(text) { speechStatus.textContent = text; }
+
+async function runDiagnostics() {
+  stopAll(); unlockAudio();
+  const run = newRun(null);
+  current = run;
+  diagBtn.disabled = true;
+  diagList.innerHTML = '';
+  const SAMPLE = 'Testing one, two, three.';
+  const tests = [
+    { name: 'Oxford UK (word)', provider: 'oxford', url: oxfordUrls('dictionary')[0] },
+    { name: 'Free Dictionary UK (word)', provider: 'dictionary', lazy: 'dictionary' },
+    { name: 'Google TTS UK', provider: 'google', url: googleUrl(SAMPLE) },
+    { name: 'StreamElements UK', provider: 'streamelements', url: streamElementsUrl(SAMPLE) },
+    { name: 'Browser voice (' + (ukVoice ? ukVoice.name + ', ' + ukVoice.lang : 'no English voice found') + ')', provider: 'browser', speech: true }
+  ];
+  try {
+    for (const t of tests) {
+      if (run.cancelled) break;
+      const li = document.createElement('li');
+      li.className = 'wait'; li.textContent = '⏳ ' + t.name + '…';
+      diagList.appendChild(li);
+      const t0 = performance.now();
+      let r;
+      if (t.lazy) {
+        const d = await resolveDictionary(t.lazy);
+        if (run.cancelled) break;
+        r = d.url ? await attemptClip(run, d.url, { startTimeout: 6000, tag: 'diag:dictionary' }) : { ok: false, reason: d.error ? 'lookup' : 'nouk' };
+      } else if (t.speech) r = await speakBrowser(run, SAMPLE, {});
+      else r = await attemptClip(run, t.url, { startTimeout: 8000, tag: 'diag:' + t.provider });
+      if (run.cancelled) { li.className = 'err'; li.textContent = '⏹ ' + t.name + ' — stopped'; break; }
+      const secs = ((performance.now() - t0) / 1000).toFixed(1);
+      li.className = r.ok ? 'ok' : 'err';
+      li.textContent = r.ok ? '✓ ' + t.name + ' — works (' + secs + ' s)' : '✗ ' + t.name + ' — ' + (REASON[r.reason] || r.reason);
+      if (r.ok && health[t.provider]) health[t.provider].fails = 0;
     }
-
-    async function runTest(name, url) {
-      stopAll();
-      unlockAudio();
-      const gen = playbackGeneration;
-      showStatus('⏳ Testing ' + name + '…', 'pending');
-      const ok = url
-        ? await playClip(url, gen, { startTimeoutMs: 8000 })
-        : await speakBrowser('Testing one, two, three. The quick brown fox jumps over the lazy dog.', gen, {});
-      if (gen !== playbackGeneration) return;
-      if (ok && name === 'Oxford') failStreak.oxford = 0;
-      showStatus(ok ? '✓ ' + name + ' works.' : '✗ ' + name + ' failed (' + (lastClipError || 'unknown') + ').',
-        ok ? 'ok' : 'error');
-    }
-
-    const SAMPLE = 'Testing one, two, three. The quick brown fox jumps over the lazy dog.';
-    document.getElementById('stopBtn').addEventListener('click', () => { stopAll(); showStatus('⏹ Stopped.', 'pending'); });
-    document.getElementById('testOxfordBtn').addEventListener('click', () => runTest('Oxford', oxfordUrls('dictionary')[0]));
-    document.getElementById('testGoogleBtn').addEventListener('click', () => runTest('Google TTS', googleUrl(SAMPLE)));
-    document.getElementById('testSeBtn').addEventListener('click', () => runTest('StreamElements', streamElementsUrl(SAMPLE)));
-    document.getElementById('testBrowserBtn').addEventListener('click', () => runTest('Browser voice', null));
-
-    document.addEventListener('click', () => { if (!ukVoice) pickUKVoice(); }, { once: true });
-
-  </script>
+  } finally {
+    if (current === run) current = null;
+    diagBtn.disabled = false;
+  }
+}
+diagBtn.addEventListener('click', runDiagnostics);
+$('copyBtn').addEventListener('click', async () => {
+  const out = $('dbgOut'), text = dbgLines.join('\n');
+  out.hidden = false; out.value = text; out.focus(); out.select();
+  try { await navigator.clipboard.writeText(text); showStatus('✓ Debug log copied.'); }
+  catch (e) { showStatus('Select the text below and copy it.'); }
+});
+$('resetBtn').addEventListener('click', () => {
+  Object.values(health).forEach(h => { h.fails = 0; h.at = 0; });
+  winners.clear(); dictCache.clear();
+  showStatus('✓ Source memory cleared — every source will be tried again.');
+});
+</script>
 </body>
 </html>

@@ -12,45 +12,23 @@
   <title>Spelling Bee Practice · UK Pronunciation</title>
   <style>
     :root {
-      --bg: #fdf8f1;
-      --card: #ffffff;
-      --text: #2d2a26;
-      --muted: #786e62;
-      --faint: #a9a196;
-      --line: #f0e6d8;
-      --head: #1c1917;
-      --chip: #fff8ee;
-      --hover: #fff3e0;
-
-      --accent: #ea580c;
-      --accent-hover: #c2410c;
-      --accent-soft: #ffedd5;
-      --accent-ink: #9a3412;
-
-      --ok: #16a34a;
-      --bad: #dc2626;
-      --warn: #d97706;
-
-      --c-oxford: #2563eb;
-      --c-dictionary: #7c3aed;
-      --c-google: #16a34a;
-      --c-streamelements: #ea580c;
-      --c-browser: #ca8a04;
-      --c-loading: #a9a196;
-      --c-failed: #dc2626;
-
+      --bg: #fdf8f1; --card: #ffffff; --text: #2d2a26; --muted: #786e62; --faint: #a9a196;
+      --line: #f0e6d8; --head: #1c1917; --chip: #fff8ee; --hover: #fff3e0;
+      --accent: #ea580c; --accent-hover: #c2410c; --accent-soft: #ffedd5; --accent-ink: #9a3412;
+      --ok: #16a34a; --bad: #dc2626; --warn: #d97706;
+      --c-oxford: #2563eb; --c-dictionary: #7c3aed; --c-google: #16a34a;
+      --c-streamelements: #ea580c; --c-browser: #ca8a04;
+      --c-loading: #a9a196; --c-failed: #dc2626;
       --shadow-sm: 0 1px 3px rgba(180, 130, 80, 0.06);
       --shadow: 0 2px 10px rgba(180, 130, 80, 0.08);
       --shadow-lg: 0 8px 24px rgba(180, 130, 80, 0.12);
       --shadow-xl: 0 24px 60px rgba(120, 90, 60, 0.22);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      font-size: 16px;
-      color: var(--text);
+      font-size: 16px; color: var(--text);
       background:
         radial-gradient(circle at 12% 8%, rgba(255, 200, 150, 0.22), transparent 38%),
         radial-gradient(circle at 88% 12%, rgba(200, 220, 255, 0.22), transparent 38%),
@@ -61,247 +39,138 @@
       padding-left: max(1rem, env(safe-area-inset-left));
       padding-right: max(1rem, env(safe-area-inset-right));
       padding-bottom: max(3rem, env(safe-area-inset-bottom));
-      line-height: 1.55;
-      min-height: 100vh;
+      line-height: 1.55; min-height: 100vh;
     }
-    .wrap {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; flex-direction: column;
-    }
-    .page-head {
-      text-align: center;
-      margin-bottom: 1.25rem;
-    }
-    h1 {
-      font-size: 1.9rem; font-weight: 800;
-      color: var(--head);
-      margin-bottom: 0.4rem;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-    }
-    .subhead {
-      font-size: 1rem; color: var(--muted);
-      max-width: 560px; margin: 0 auto;
-      line-height: 1.55;
-    }
-    .sr-only {
-      position: absolute; width: 1px; height: 1px; overflow: hidden;
-      clip: rect(0 0 0 0); white-space: nowrap;
-    }
-
+    .wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; }
+    .page-head { text-align: center; margin-bottom: 1.25rem; }
+    h1 { font-size: 1.9rem; font-weight: 800; color: var(--head); margin-bottom: 0.4rem; letter-spacing: -0.02em; line-height: 1.15; }
+    .subhead { font-size: 1rem; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.55; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .toolbar {
-      position: sticky; top: 0; z-index: 20;
-      display: flex; flex-wrap: wrap; align-items: center;
-      gap: 0.55rem;
-      background: rgba(255, 251, 245, 0.92);
-      -webkit-backdrop-filter: blur(14px) saturate(1.3);
-      backdrop-filter: blur(14px) saturate(1.3);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 0.6rem 0.7rem;
-      margin-bottom: 0.65rem;
-      box-shadow: var(--shadow);
+      position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: center;
+      gap: 0.55rem; background: rgba(255, 251, 245, 0.92);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+      border: 1px solid var(--line); border-radius: 18px; padding: 0.6rem 0.7rem;
+      margin-bottom: 0.65rem; box-shadow: var(--shadow);
     }
-    .search-wrap {
-      position: relative; display: flex; align-items: center;
-      flex: 1 1 100%;
-      min-width: 0;
-    }
+    .search-wrap { position: relative; display: flex; align-items: center; flex: 1 1 100%; min-width: 0; }
     @media (min-width: 720px) { .search-wrap { flex: 1 1 300px; } }
-    .search-icon {
-      position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%);
-      font-size: 1rem; opacity: 0.5; pointer-events: none;
-    }
+    .search-icon { position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.5; pointer-events: none; }
     #search {
-      width: 100%;
-      font-family: inherit; font-size: 1rem; color: var(--text);
-      background: var(--chip);
-      border: 1.5px solid var(--line);
-      border-radius: 12px;
-      padding: 0.7rem 2.7rem 0.7rem 2.6rem;
-      min-height: 2.9rem;
-      -webkit-appearance: none; appearance: none;
-      transition: border-color 0.15s, background 0.15s;
+      width: 100%; font-family: inherit; font-size: 1rem; color: var(--text);
+      background: var(--chip); border: 1.5px solid var(--line); border-radius: 12px;
+      padding: 0.7rem 2.7rem 0.7rem 2.6rem; min-height: 2.9rem;
+      -webkit-appearance: none; appearance: none; transition: border-color 0.15s, background 0.15s;
     }
-    #search:focus {
-      border-color: var(--accent);
-      background: #fff;
-      outline: none;
-    }
+    #search:focus { border-color: var(--accent); background: #fff; outline: none; }
     #search::placeholder { color: var(--faint); }
     #search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
     .clear-btn {
       position: absolute; right: 0.35rem; top: 50%; transform: translateY(-50%);
-      background: transparent; border: none; cursor: pointer;
-      font-size: 1rem; padding: 0.5rem; border-radius: 8px;
-      color: var(--muted); min-width: 2.2rem; min-height: 2.2rem;
-      display: flex; align-items: center; justify-content: center;
-      font-family: inherit;
+      background: transparent; border: none; cursor: pointer; font-size: 1rem;
+      padding: 0.5rem; border-radius: 8px; color: var(--muted);
+      min-width: 2.2rem; min-height: 2.2rem; display: flex; align-items: center; justify-content: center; font-family: inherit;
     }
     .clear-btn:hover { background: var(--line); }
     .clear-btn[hidden] { display: none; }
-
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
-      background: var(--accent);
-      color: #fff;
-      border: none; border-radius: 12px;
-      padding: 0.6rem 1rem;
-      font-size: 0.92rem; font-weight: 700;
-      cursor: pointer; font-family: inherit;
-      min-height: 2.9rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 12px;
+      padding: 0.6rem 1rem; font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; min-height: 2.9rem;
       transition: filter 0.12s, transform 0.08s, background 0.12s;
-      white-space: nowrap;
-      box-shadow: 0 2px 0 rgba(154, 52, 18, 0.15);
+      white-space: nowrap; box-shadow: 0 2px 0 rgba(154, 52, 18, 0.15);
     }
     .btn:hover { background: var(--accent-hover); }
     .btn:active { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.5; cursor: progress; }
-    .btn.danger {
-      background: #ef4444;
-      box-shadow: 0 2px 0 rgba(127, 29, 29, 0.15);
-    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.danger { background: #ef4444; box-shadow: 0 2px 0 rgba(127, 29, 29, 0.15); }
     .btn.danger:hover { background: #dc2626; }
-    .btn.ghost {
-      background: var(--chip);
-      color: var(--text);
-      border: 1.5px solid var(--line);
-      box-shadow: none;
-    }
+    .btn.ghost { background: var(--chip); color: var(--text); border: 1.5px solid var(--line); box-shadow: none; }
     .btn.ghost:hover { background: var(--hover); border-color: #e5d5bd; }
     .btn-label { display: inline; }
-    @media (max-width: 420px) {
-      .btn { padding: 0.6rem 0.75rem; }
-      .btn-label { display: none; }
-    }
-
+    @media (max-width: 480px) { .btn { padding: 0.6rem 0.75rem; } .btn-label { display: none; } }
     #listFilter {
       font-family: inherit; font-size: 0.92rem; color: var(--text);
-      background: var(--chip);
-      border: 1.5px solid var(--line);
-      border-radius: 12px;
-      padding: 0.6rem 2rem 0.6rem 0.75rem;
-      min-height: 2.9rem;
-      max-width: 100%; min-width: 0;
-      flex: 0 1 auto;
-      -webkit-appearance: none; appearance: none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background: var(--chip); border: 1.5px solid var(--line); border-radius: 12px;
+      padding: 0.6rem 2rem 0.6rem 0.75rem; min-height: 2.9rem;
+      max-width: 100%; min-width: 0; flex: 0 1 auto; -webkit-appearance: none; appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
       background-position: calc(100% - 1rem) 50%, calc(100% - 0.65rem) 50%;
-      background-size: 5px 5px, 5px 5px;
-      background-repeat: no-repeat;
-      font-weight: 600;
-      cursor: pointer;
+      background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+      font-weight: 600; cursor: pointer;
     }
     #listFilter:focus { border-color: var(--accent); outline: none; }
-
-    .count-row {
-      display: flex; justify-content: flex-end;
-      padding: 0 0.35rem;
-      margin-bottom: 0.6rem;
-    }
-    .count {
-      font-size: 0.82rem; color: var(--muted); font-weight: 600;
-    }
-
-    .word-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
-      gap: 0.85rem;
-      align-items: start;
-    }
+    .count-row { display: flex; justify-content: flex-end; padding: 0 0.35rem; margin-bottom: 0.6rem; }
+    .count { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: 0.85rem; align-items: start; }
     .word-card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 1rem 1.15rem;
-      border: 1.5px solid var(--line);
-      box-shadow: var(--shadow-sm);
+      background: var(--card); border-radius: 18px; padding: 1rem 1.15rem;
+      border: 1.5px solid var(--line); box-shadow: var(--shadow-sm);
       display: flex; flex-direction: column; gap: 0.55rem;
-      transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+      transition: box-shadow 0.2s, border-color 0.2s; position: relative;
     }
     .word-card[hidden] { display: none; }
-    .word-card:hover {
-      box-shadow: var(--shadow-lg);
-      border-color: #f5d8b5;
+    .word-card:hover { box-shadow: var(--shadow-lg); border-color: #f5d8b5; }
+    .word-card.custom { border-color: #c7d9f0; background: linear-gradient(180deg, #fff 0%, #f8faff 100%); }
+    .word-card.custom:hover { border-color: #7ba7e0; }
+    @keyframes flashCard {
+      0% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.65); }
+      60% { box-shadow: 0 0 0 10px rgba(234, 88, 12, 0); }
+      100% { box-shadow: var(--shadow-sm); }
     }
+    .word-card.flash { animation: flashCard 1.6s ease-out; }
+    .card-del {
+      position: absolute; top: 0.55rem; right: 0.55rem;
+      width: 1.9rem; height: 1.9rem; border-radius: 50%;
+      background: rgba(220, 38, 38, 0.08); color: #dc2626;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      cursor: pointer; font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0.65; transition: opacity 0.15s, background 0.15s;
+      z-index: 2; font-family: inherit; line-height: 1;
+    }
+    .card-del:hover { opacity: 1; background: rgba(220, 38, 38, 0.15); }
     .word-btn {
       display: flex; align-items: center; gap: 0.65rem;
-      background: var(--chip);
-      border: 1.5px solid var(--line);
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
-      font-size: 1.18rem; font-weight: 700;
-      min-height: 3.2rem;
-      color: var(--head); cursor: pointer;
-      width: 100%; text-align: left;
-      font-family: inherit;
+      background: var(--chip); border: 1.5px solid var(--line); border-radius: 12px;
+      padding: 0.8rem 1rem; font-size: 1.18rem; font-weight: 700; min-height: 3.2rem;
+      color: var(--head); cursor: pointer; width: 100%; text-align: left; font-family: inherit;
       transition: background 0.15s, border-color 0.15s, transform 0.08s;
       -webkit-tap-highlight-color: transparent;
     }
-    .word-btn:hover {
-      background: var(--hover);
-      border-color: var(--accent);
-    }
+    .word-btn:hover { background: var(--hover); border-color: var(--accent); }
     .word-btn:active { transform: scale(0.985); }
-    .word-btn.playing {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.18);
-    }
+    .word-btn.playing { background: var(--accent-soft); border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.18); }
     .word-btn .num {
-      flex-shrink: 0;
-      min-width: 2rem; height: 1.85rem; padding: 0 0.35rem;
+      flex-shrink: 0; min-width: 2rem; height: 1.85rem; padding: 0 0.35rem;
       display: flex; align-items: center; justify-content: center;
-      background: #fef3c7; color: #92400e;
-      border-radius: 8px;
-      font-size: 0.74rem; font-weight: 800;
-      font-variant-numeric: tabular-nums;
+      background: #fef3c7; color: #92400e; border-radius: 8px;
+      font-size: 0.74rem; font-weight: 800; font-variant-numeric: tabular-nums;
       transition: background 0.15s, color 0.15s;
     }
-    .word-btn.playing .num {
-      background: var(--accent); color: #fff;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
+    .word-card.custom .word-btn .num { background: #dbeafe; color: #1e40af; }
+    .word-btn.playing .num { background: var(--accent); color: #fff; animation: pulse 1.2s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
-    .word-btn .w {
-      flex: 1; min-width: 0;
-      line-height: 1.25;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .word-btn .icon {
-      font-size: 1.1rem; opacity: 0.55; flex-shrink: 0; margin-left: auto;
-      transition: opacity 0.15s;
-    }
+    .word-btn .w { flex: 1; min-width: 0; line-height: 1.25; overflow-wrap: break-word; word-break: break-word; }
+    .word-btn .icon { font-size: 1.1rem; opacity: 0.55; flex-shrink: 0; margin-left: auto; }
     .word-btn:hover .icon, .word-btn.playing .icon { opacity: 0.95; }
-    .sentence {
-      font-size: 0.92rem; line-height: 1.5;
-      color: var(--muted);
-      border-left: 3px solid #fde3c8;
-      padding-left: 0.75rem;
-    }
+    .sentence { font-size: 0.92rem; line-height: 1.5; color: var(--muted); border-left: 3px solid #fde3c8; padding-left: 0.75rem; }
+    .word-card.custom .sentence { border-left-color: #dbeafe; }
     .status {
-      min-height: 1.4rem;
-      display: flex; align-items: center; flex-wrap: wrap;
-      gap: 0.25rem 0.5rem;
-      font-size: 0.76rem; color: var(--faint);
-      word-break: break-word;
+      min-height: 1.4rem; display: flex; align-items: center; flex-wrap: wrap;
+      gap: 0.25rem 0.5rem; font-size: 0.76rem; color: var(--faint); word-break: break-word;
     }
     .step { display: inline-flex; align-items: center; gap: 0.25rem; opacity: 0.6; }
     .step .dot {
       display: inline-flex; align-items: center; justify-content: center;
       width: 1.2rem; height: 1.2rem; border-radius: 50%;
       font-size: 0.66rem; font-weight: 800;
-      background: var(--chip); color: var(--muted);
-      border: 1.5px solid var(--line);
+      background: var(--chip); color: var(--muted); border: 1.5px solid var(--line);
     }
-    .step.loading, .step.playing {
-      opacity: 1; color: var(--accent-ink); font-weight: 700;
-    }
-    .step.playing .dot {
-      background: var(--accent); color: #fff; border-color: var(--accent);
-    }
+    .step.loading, .step.playing { opacity: 1; color: var(--accent-ink); font-weight: 700; }
+    .step.playing .dot { background: var(--accent); color: #fff; border-color: var(--accent); }
     .step.loading .dot { border-color: var(--accent); border-style: dashed; }
     .step.done { opacity: 1; color: var(--ok); font-weight: 700; }
     .step.done .dot { background: var(--ok); color: #fff; border-color: var(--ok); }
@@ -310,15 +179,11 @@
     .summary-ok { color: var(--ok); font-weight: 700; }
     .summary-bad { color: var(--bad); font-weight: 700; }
     .note { font-size: 0.74rem; color: var(--faint); }
-
     .src-badge {
-      display: inline-block;
-      font-size: 0.62rem; font-weight: 800; line-height: 1.5;
-      padding: 0.05rem 0.45rem; border-radius: 999px;
-      margin-left: 0.3rem;
-      letter-spacing: 0.03em; text-transform: uppercase;
-      vertical-align: middle; white-space: nowrap;
-      color: var(--c);
+      display: inline-block; font-size: 0.62rem; font-weight: 800; line-height: 1.5;
+      padding: 0.05rem 0.45rem; border-radius: 999px; margin-left: 0.3rem;
+      letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle;
+      white-space: nowrap; color: var(--c);
       background: color-mix(in srgb, var(--c) 15%, transparent);
     }
     .src-badge.oxford { --c: var(--c-oxford); }
@@ -326,151 +191,106 @@
     .src-badge.google { --c: var(--c-google); }
     .src-badge.streamelements { --c: var(--c-streamelements); }
     .src-badge.browser { --c: var(--c-browser); }
-    .src-badge.loading {
-      --c: var(--c-loading); text-transform: none;
-      font-style: italic; font-weight: 500; letter-spacing: 0;
-    }
+    .src-badge.loading { --c: var(--c-loading); text-transform: none; font-style: italic; font-weight: 500; letter-spacing: 0; }
     .src-badge.failed { --c: var(--c-failed); }
-
-    .empty {
-      margin: 2rem 0; color: var(--muted); text-align: center;
-      font-size: 1rem;
-    }
+    .empty { margin: 2rem 0; color: var(--muted); text-align: center; font-size: 1rem; }
     .footer-note {
-      margin-top: 2.75rem;
-      font-size: 0.82rem; color: var(--faint);
-      text-align: center; line-height: 1.55;
-      max-width: 640px; margin-left: auto; margin-right: auto;
+      margin-top: 2.75rem; font-size: 0.82rem; color: var(--faint);
+      text-align: center; line-height: 1.55; max-width: 640px;
+      margin-left: auto; margin-right: auto;
     }
     .footer-note a { color: var(--accent-ink); text-decoration: none; font-weight: 600; }
     .footer-note a:hover { text-decoration: underline; }
-
     dialog {
-      display: none;
-      border: none; padding: 0; margin: auto;
-      background: var(--card); color: var(--text);
-      border-radius: 22px;
-      max-width: 640px;
-      width: calc(100% - 1.5rem);
-      max-height: calc(100vh - 1.5rem);
-      box-shadow: var(--shadow-xl);
-      overflow: hidden;
+      display: none; border: none; padding: 0; margin: auto;
+      background: var(--card); color: var(--text); border-radius: 22px;
+      max-width: 640px; width: calc(100% - 1.5rem);
+      max-height: calc(100vh - 1.5rem); box-shadow: var(--shadow-xl); overflow: hidden;
     }
-    dialog[open] {
-      display: flex; flex-direction: column;
-    }
-    dialog::backdrop {
-      background: rgba(60, 40, 20, 0.4);
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-    }
+    dialog[open] { display: flex; flex-direction: column; }
+    dialog::backdrop { background: rgba(60, 40, 20, 0.4); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
     @media (max-width: 640px) {
-      dialog {
-        width: 100%; max-width: none;
-        max-height: 100vh; height: 100vh;
-        border-radius: 0;
-      }
+      dialog { width: 100%; max-width: none; max-height: 100vh; height: 100vh; border-radius: 0; }
     }
     .dialog-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 1.4rem;
-      border-bottom: 1.5px solid var(--line);
-      flex-shrink: 0;
-      background: var(--chip);
+      padding: 1.1rem 1.4rem; border-bottom: 1.5px solid var(--line);
+      flex-shrink: 0; background: var(--chip);
     }
-    .dialog-header h2 {
-      font-size: 1.2rem; font-weight: 800; color: var(--head);
-    }
+    .dialog-header h2 { font-size: 1.2rem; font-weight: 800; color: var(--head); }
     .dialog-body {
-      flex: 1; overflow-y: auto;
-      padding: 1.25rem 1.4rem 1.4rem;
-      display: flex; flex-direction: column; gap: 1.5rem;
+      flex: 1; overflow-y: auto; padding: 1.25rem 1.4rem 1.4rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
     }
-    .settings-section {
-      display: flex; flex-direction: column; gap: 0.7rem;
-    }
+    .dialog-hint { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+    .dialog-hint strong { color: var(--accent-ink); }
+    .settings-section { display: flex; flex-direction: column; gap: 0.7rem; }
     .settings-section h3 {
       font-size: 0.82rem; font-weight: 800; color: var(--accent-ink);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 0.15rem;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem;
     }
-    .field {
-      display: flex; flex-direction: column; gap: 0.35rem;
-    }
-    .field-label {
-      font-size: 0.85rem; color: var(--muted); font-weight: 600;
-    }
-    .field select {
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+    .field input[type="text"], .field select {
       font-family: inherit; font-size: 0.95rem; color: var(--text);
-      background: var(--chip);
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      padding: 0.6rem 2rem 0.6rem 0.75rem;
-      min-height: 2.65rem;
+      background: var(--chip); border: 1.5px solid var(--line); border-radius: 10px;
+      padding: 0.65rem 0.8rem; min-height: 2.7rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .field input[type="text"]:focus { border-color: var(--accent); background: #fff; outline: none; }
+    .field select {
       -webkit-appearance: none; appearance: none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
       background-position: calc(100% - 1rem) 50%, calc(100% - 0.65rem) 50%;
-      background-size: 5px 5px, 5px 5px;
-      background-repeat: no-repeat;
-      cursor: pointer;
+      background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+      padding-right: 2rem; cursor: pointer;
     }
     .field select:focus { border-color: var(--accent); outline: none; }
-    .field-actions {
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-      margin-top: 0.35rem;
+    .add-status {
+      font-size: 0.85rem; font-weight: 600; min-height: 1.4rem;
+      padding: 0.55rem 0.75rem; border-radius: 10px; line-height: 1.4;
     }
-    .diag-list {
-      list-style: none;
-      display: flex; flex-direction: column; gap: 0.35rem;
-      font-size: 0.88rem;
+    .add-status.ok { color: #15803d; background: #dcfce7; border: 1px solid #bbf7d0; }
+    .add-status.err { color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca; }
+    .add-status:empty { padding: 0; border: 0; background: transparent; }
+    .field-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.35rem; }
+    .advanced-details { margin-top: 0.35rem; }
+    .advanced-details summary {
+      cursor: pointer; color: var(--muted); font-weight: 600;
+      font-size: 0.85rem; padding: 0.4rem 0;
     }
+    .advanced-details[open] summary { color: var(--accent-ink); }
+    .diag-list { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.88rem; }
     .diag-list li.ok { color: var(--ok); font-weight: 600; }
     .diag-list li.err { color: var(--bad); font-weight: 600; }
     .diag-list li.wait { color: var(--warn); font-weight: 600; }
     #dbgOut {
-      width: 100%;
-      font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
-      background: var(--chip); color: var(--text);
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      padding: 0.65rem;
-      margin-top: 0.5rem;
+      width: 100%; font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+      background: var(--chip); color: var(--text); border: 1.5px solid var(--line);
+      border-radius: 10px; padding: 0.65rem; margin-top: 0.5rem;
     }
     #dbgOut[hidden] { display: none; }
-    #speechStatus {
-      font-size: 0.82rem; color: var(--muted); font-weight: 600;
-    }
-    :focus-visible {
-      outline: 3px solid rgba(234, 88, 12, 0.5);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-
+    #speechStatus { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    :focus-visible { outline: 3px solid rgba(234, 88, 12, 0.5); outline-offset: 2px; border-radius: 6px; }
     @media (max-width: 480px) {
       body { padding: 0.85rem 0.7rem 2.5rem; }
       h1 { font-size: 1.55rem; }
       .subhead { font-size: 0.92rem; }
       .word-grid { grid-template-columns: 1fr; }
-      .word-btn {
-        min-height: 3.6rem;
-        padding: 0.85rem 1rem;
-        font-size: 1.22rem;
-      }
+      .word-btn { min-height: 3.6rem; padding: 0.85rem 1rem; font-size: 1.22rem; }
       .word-card { padding: 0.85rem 0.95rem; border-radius: 16px; }
       .toolbar { padding: 0.5rem 0.55rem; border-radius: 16px; }
       .dialog-header, .dialog-body { padding-left: 1rem; padding-right: 1rem; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .word-btn.playing .num { animation: none; }
+      .word-btn.playing .num, .word-card.flash { animation: none; }
       * { transition: none !important; }
     }
   </style>
 </head>
 <body>
 <main class="wrap">
-
   <header class="page-head">
     <h1>🐝 Spelling Bee Practice</h1>
     <p class="subhead">Tap any word to hear it, then a sentence, then the word again — all in British English.</p>
@@ -490,13 +310,15 @@
     <button id="stopBtn" class="btn danger" type="button" aria-label="Stop playback">
       <span aria-hidden="true">⏹</span><span class="btn-label">Stop</span>
     </button>
+    <button id="addWordBtn" class="btn ghost" type="button" aria-label="Add a new word (teacher tool)">
+      <span aria-hidden="true">➕</span><span class="btn-label">Add word</span>
+    </button>
     <button id="settingsBtn" class="btn ghost" type="button" aria-label="Open settings">
       <span aria-hidden="true">⚙️</span>
     </button>
   </div>
 
   <div class="count-row"><span id="count" class="count"></span></div>
-
   <div class="word-grid" id="wordGrid"></div>
   <p class="empty" id="empty" hidden>No words match your search. Try a different spelling, or change the list above.</p>
   <div id="sr" class="sr-only" role="status" aria-live="polite"></div>
@@ -507,13 +329,57 @@
   </p>
 </main>
 
+<dialog id="addWordDialog" aria-labelledby="addWordTitle">
+  <div class="dialog-header">
+    <h2 id="addWordTitle">➕ Add a new word</h2>
+    <button id="closeAddWord" class="btn ghost" type="button" aria-label="Close">✕</button>
+  </div>
+  <div class="dialog-body">
+    <p class="dialog-hint">
+      <strong>Teacher tool.</strong> Words you add here are saved <strong>only in this browser</strong> —
+      they will not be seen by anyone else unless you export them and share the file.
+      Use the <em>Test this word</em> button to check that it plays before saving.
+    </p>
+    <label class="field">
+      <span class="field-label">Word</span>
+      <input id="newWordInput" type="text" placeholder="e.g. photosynthesis"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="30">
+    </label>
+    <label class="field">
+      <span class="field-label">Example sentence</span>
+      <input id="newSentenceInput" type="text" placeholder="e.g. Plants use photosynthesis to make their food."
+             autocomplete="off" autocapitalize="sentences" spellcheck="true" maxlength="250">
+    </label>
+    <div id="addWordStatus" class="add-status" role="status" aria-live="polite"></div>
+    <div class="field-actions">
+      <button id="testWordBtn" class="btn ghost" type="button">🔊 Test this word</button>
+      <button id="saveWordBtn" class="btn" type="button" disabled>✓ Save word</button>
+    </div>
+    <details class="advanced-details">
+      <summary>Export, import &amp; bulk delete</summary>
+      <p class="note" style="margin-bottom:0.7rem">
+        <strong>Export</strong> creates a JSON file you can back up or send to the site owner so
+        they can review and deploy it for all students. <strong>Import</strong> only affects this
+        browser — only open files from someone you trust.
+      </p>
+      <div class="field-actions">
+        <button id="exportBtn" class="btn ghost" type="button">📤 Export my words</button>
+        <label class="btn ghost" style="cursor:pointer; position:relative">
+          📥 Import from file
+          <input id="importFile" type="file" accept="application/json,.json" hidden>
+        </label>
+        <button id="clearCustomBtn" class="btn danger" type="button">🗑 Delete all my words</button>
+      </div>
+    </details>
+  </div>
+</dialog>
+
 <dialog id="settingsDialog" aria-labelledby="settingsTitle">
   <div class="dialog-header">
-    <h2 id="settingsTitle">Settings</h2>
+    <h2 id="settingsTitle">⚙️ Settings</h2>
     <button id="closeSettings" class="btn ghost" type="button" aria-label="Close settings">✕</button>
   </div>
   <div class="dialog-body">
-
     <section class="settings-section">
       <h3>Playback</h3>
       <label class="field">
@@ -534,7 +400,6 @@
         </select>
       </label>
     </section>
-
     <section class="settings-section">
       <h3>Audio sources</h3>
       <label class="field">
@@ -562,14 +427,12 @@
       </div>
       <ul id="diag" class="diag-list" aria-live="polite"></ul>
     </section>
-
     <section class="settings-section">
       <h3>Debug</h3>
       <button id="copyBtn" class="btn ghost" type="button">📋 Copy debug log</button>
       <textarea id="dbgOut" readonly hidden rows="8" aria-label="Debug log"></textarea>
       <span id="speechStatus"></span>
     </section>
-
     <p class="note">
       Word audio uses recorded UK pronunciation (Oxford, Free Dictionary) with Google or
       StreamElements UK voices as automatic fallback. Sentence audio uses Google TTS UK,
@@ -582,18 +445,15 @@
 <script>
 'use strict';
 
-const ENGINE = {
-  unlock: 'webaudio',
-  firstDelay: 0
-};
+const ENGINE = { unlock: 'webaudio', firstDelay: 0 };
 
 // ══════════════════════════════════════════════════════════════════════════
-//  Word data  (edit freely — each entry is { word, sentence })
-//  The first list is the official competition list from the
-//  Master Spelling Bee Study Guide; it is selected by default.
+//  BASE_WORDS — hardcoded lists. Order matters: it defines list boundaries.
+//  Default landing list = index 0 (Spelling Bee Real — Competition Words).
 // ══════════════════════════════════════════════════════════════════════════
-const WORDS = [
-  // ══════════════ 🏆 SPELLING BEE REAL — COMPETITION WORDS (170 words) ══════════════
+const BASE_WORDS = [
+
+  // ══════════════ 🏆 SPELLING BEE REAL — COMPETITION WORDS (170) ══════════════
   { word: "Abide", sentence: "I will abide by your rules." },
   { word: "Abjure", sentence: "She decided to abjure junk food after a health scare." },
   { word: "Absence", sentence: "Her absence was noticed by everyone in the classroom." },
@@ -764,6 +624,550 @@ const WORDS = [
   { word: "Violence", sentence: "Peaceful protests should never escalate into acts of violence." },
   { word: "Voracious", sentence: "Teenagers often have voracious appetites after participating in outdoor sports." },
   { word: "Weird", sentence: "I didn't particularly enjoy the novel because the plot felt too weird." },
+
+  // ══════════════ 🥉 INTERMEDIATE LEVEL (177 unique words) ══════════════
+  { word: "accommodate", sentence: "The hall can accommodate two hundred guests." },
+  { word: "necessary", sentence: "It is necessary to bring a pencil to the test." },
+  { word: "separate", sentence: "Please separate the paper from the plastic." },
+  { word: "silhouette", sentence: "The mountain's silhouette stood against the sunset." },
+  { word: "bureaucracy", sentence: "The new law cut through unnecessary bureaucracy." },
+  { word: "conscientious", sentence: "She is a conscientious worker who checks every detail." },
+  { word: "questionnaire", sentence: "Please fill in the questionnaire before you leave." },
+  { word: "miscellaneous", sentence: "The box held miscellaneous items like buttons and string." },
+  { word: "surveillance", sentence: "The bank is watched by surveillance cameras." },
+  { word: "occurrence", sentence: "A rainbow is a beautiful occurrence after rain." },
+  { word: "embarrass", sentence: "Please don't embarrass me in front of my friends." },
+  { word: "inoculate", sentence: "The doctor will inoculate the children against the flu." },
+  { word: "millennium", sentence: "The new millennium began in the year two thousand." },
+  { word: "mischievous", sentence: "The mischievous puppy chewed my school shoes." },
+  { word: "privilege", sentence: "It is a privilege to meet you." },
+  { word: "conscience", sentence: "Her conscience told her to return the lost wallet." },
+  { word: "foreign", sentence: "She studies a foreign language at school." },
+  { word: "guarantee", sentence: "The shop offers a one-year guarantee on the kettle." },
+  { word: "rhythm", sentence: "The drummer kept a steady rhythm throughout the song." },
+  { word: "pneumonia", sentence: "He was ill with pneumonia for two long weeks." },
+  { word: "fluorescent", sentence: "The fluorescent lights hummed softly in the classroom." },
+  { word: "souvenir", sentence: "I bought a souvenir from the gift shop." },
+  { word: "maintenance", sentence: "The car needs regular maintenance to stay safe." },
+  { word: "gauge", sentence: "Use the gauge to measure the pressure in the tyre." },
+  { word: "license", sentence: "You need a license to drive a car." },
+  { word: "apparent", sentence: "It was apparent that she was upset." },
+  { word: "bureau", sentence: "The wooden bureau has three deep drawers." },
+  { word: "conscious", sentence: "He was conscious during the whole operation." },
+  { word: "entrepreneur", sentence: "She is a young entrepreneur with a new business." },
+  { word: "hierarchy", sentence: "The company has a very clear hierarchy." },
+  { word: "liaison", sentence: "She acts as a liaison between the two teams." },
+  { word: "mediocre", sentence: "The food was mediocre, nothing special." },
+  { word: "discipline", sentence: "Good discipline helps students learn." },
+  { word: "acquiesce", sentence: "He had to acquiesce to their demands." },
+  { word: "perseverance", sentence: "She showed great perseverance in learning the piano." },
+  { word: "reminisce", sentence: "Grandma likes to reminisce about her childhood." },
+  { word: "pharaoh", sentence: "The pharaoh ruled ancient Egypt." },
+  { word: "plagiarism", sentence: "Copying someone else's work is called plagiarism." },
+  { word: "camouflage", sentence: "The soldier wore camouflage in the forest." },
+  { word: "chauffeur", sentence: "The chauffeur drove the family to the airport." },
+  { word: "colloquial", sentence: "Slang is a colloquial form of speech." },
+  { word: "exacerbate", sentence: "Stress can exacerbate the illness." },
+  { word: "exhilarate", sentence: "The mountain view exhilarated the hikers." },
+  { word: "idiosyncrasy", sentence: "The way she hums is a charming idiosyncrasy." },
+  { word: "maneuver", sentence: "The driver had to maneuver around the fallen tree." },
+  { word: "superfluous", sentence: "Avoid adding superfluous details to your answer." },
+  { word: "vacuum", sentence: "Please vacuum the carpet in the living room." },
+  { word: "aesthetic", sentence: "The garden has a beautiful aesthetic." },
+  { word: "acknowledgment", sentence: "The book begins with an acknowledgment to her editor." },
+  { word: "handkerchief", sentence: "He wiped his nose with a handkerchief." },
+  { word: "knickknack", sentence: "The shelf was full of little knickknacks." },
+  { word: "nauseous", sentence: "I feel nauseous when I read in the car." },
+  { word: "whimsical", sentence: "The book has a whimsical sense of humour." },
+  { word: "xylophone", sentence: "She plays the xylophone in the school band." },
+  { word: "annihilate", sentence: "The flood could annihilate the small village." },
+  { word: "archaeology", sentence: "He studies archaeology at university." },
+  { word: "belligerent", sentence: "The belligerent man shouted at everyone in the queue." },
+  { word: "counterintuitive", sentence: "It sounds counterintuitive but it is actually true." },
+  { word: "debilitate", sentence: "The illness can debilitate a person for months." },
+  { word: "deteriorate", sentence: "The old building began to deteriorate over time." },
+  { word: "dilapidated", sentence: "They bought a dilapidated house and fixed it up." },
+  { word: "dissonance", sentence: "The dissonance in the music was completely intentional." },
+  { word: "echelon", sentence: "She reached the top echelon of her profession." },
+  { word: "euphemism", sentence: "He used a euphemism to avoid saying died." },
+  { word: "flabbergasted", sentence: "I was flabbergasted by the surprising news." },
+  { word: "hierarchical", sentence: "The hierarchical system limits open communication." },
+  { word: "iridescent", sentence: "The iridescent soap bubble shimmered in the light." },
+  { word: "juggernaut", sentence: "The team is a juggernaut in the local league." },
+  { word: "juxtaposition", sentence: "The juxtaposition of colours was striking." },
+  { word: "malevolent", sentence: "He gave her a malevolent smile." },
+  { word: "mnemonic", sentence: "The mnemonic helped her remember the order of the planets." },
+  { word: "paraphernalia", sentence: "The camera bag held all the paraphernalia." },
+  { word: "philharmonic", sentence: "The philharmonic orchestra played beautifully." },
+  { word: "receive", sentence: "I hope to receive a letter from you soon." },
+  { word: "believe", sentence: "I believe she will succeed in her exams." },
+  { word: "achieve", sentence: "You can achieve your goals with hard work." },
+  { word: "ceiling", sentence: "The ceiling is painted a soft cream colour." },
+  { word: "niece", sentence: "My niece is six years old and loves drawing." },
+  { word: "weird", sentence: "That is a weird coincidence." },
+  { word: "seize", sentence: "Please seize the opportunity to try something new." },
+  { word: "leisure", sentence: "She reads books in her leisure time." },
+  { word: "protein", sentence: "Eggs are a good source of protein." },
+  { word: "caffeine", sentence: "Coffee contains caffeine, so it can keep you awake." },
+  { word: "neighbor", sentence: "My neighbor has a very friendly dog." },
+  { word: "weight", sentence: "The weight of the package was two kilos." },
+  { word: "freight", sentence: "The train carried freight across the country." },
+  { word: "sleigh", sentence: "The children rode a sleigh through the snow." },
+  { word: "vein", sentence: "The nurse found a vein in his arm." },
+  { word: "reign", sentence: "The queen's reign lasted for many years." },
+  { word: "feign", sentence: "He tried to feign illness to stay home." },
+  { word: "heir", sentence: "The prince is the heir to the throne." },
+  { word: "their", sentence: "The children forgot their backpacks at school." },
+  { word: "there", sentence: "The library is over there, next to the park." },
+  { word: "where", sentence: "Where did you put the keys?" },
+  { word: "were", sentence: "They were at the park yesterday afternoon." },
+  { word: "which", sentence: "Which flavour of ice cream do you prefer?" },
+  { word: "witch", sentence: "The witch flew on a broomstick." },
+  { word: "whether", sentence: "I don't know whether to stay or go." },
+  { word: "weather", sentence: "The weather is lovely today." },
+  { word: "desert", sentence: "The Sahara is a vast desert in Africa." },
+  { word: "dessert", sentence: "We had ice cream for dessert." },
+  { word: "principal", sentence: "The school principal gave a speech at assembly." },
+  { word: "principle", sentence: "She has strong moral principles." },
+  { word: "stationary", sentence: "The car was stationary at the red traffic light." },
+  { word: "stationery", sentence: "She bought new stationery for the school year." },
+  { word: "capital", sentence: "Paris is the capital of France." },
+  { word: "capitol", sentence: "The capitol building is in Washington." },
+  { word: "affect", sentence: "Loud noises affect my concentration." },
+  { word: "effect", sentence: "The medicine had a quick effect on my headache." },
+  { word: "accept", sentence: "Please accept my apologies for being late." },
+  { word: "except", sentence: "Everyone came to the party except Tom." },
+  { word: "advice", sentence: "She gave me some good advice about studying." },
+  { word: "advise", sentence: "I advise you to read the instructions carefully." },
+  { word: "device", sentence: "The phone is a very useful device." },
+  { word: "devise", sentence: "Let's devise a plan together." },
+  { word: "practise", sentence: "You must practise your spelling every day." },
+  { word: "practice", sentence: "Practice makes perfect, so keep going." },
+  { word: "prophecy", sentence: "The prophecy foretold the rise of a great king." },
+  { word: "prophesy", sentence: "The oracle will prophesy the fate of the kingdom." },
+  { word: "allusion", sentence: "The poem makes an allusion to the Bible." },
+  { word: "illusion", sentence: "The mirror creates an illusion of more space." },
+  { word: "elusion", sentence: "The thief's elusion of the police lasted for days." },
+  { word: "elusive", sentence: "The rare bird remained elusive all afternoon." },
+  { word: "allude", sentence: "He alluded to the scandal without naming it." },
+  { word: "elude", sentence: "The fox managed to elude the hunters." },
+  { word: "complaisant", sentence: "She was complaisant and agreed to every suggestion." },
+  { word: "complacent", sentence: "Don't be complacent about your success; keep working." },
+  { word: "complement", sentence: "The wine complements the meal perfectly." },
+  { word: "compliment", sentence: "She received a compliment on her new dress." },
+  { word: "council", sentence: "The town council meets every month." },
+  { word: "counsel", sentence: "The lawyer gave wise counsel to her client." },
+  { word: "discrete", sentence: "The two problems are discrete and separate." },
+  { word: "discreet", sentence: "Please be discreet about this private matter." },
+  { word: "eminent", sentence: "An eminent scientist gave the lecture." },
+  { word: "imminent", sentence: "A thunderstorm is imminent, so take an umbrella." },
+  { word: "ensure", sentence: "Please ensure the door is locked." },
+  { word: "insure", sentence: "You should insure your house against fire." },
+  { word: "farther", sentence: "The shop is farther down the road than I thought." },
+  { word: "further", sentence: "We need further information before we decide." },
+  { word: "fewer", sentence: "There are fewer students in this class this year." },
+  { word: "less", sentence: "I have less time today than yesterday." },
+  { word: "good", sentence: "She is a good student and works hard." },
+  { word: "well", sentence: "He did very well on the spelling test." },
+  { word: "imply", sentence: "Are you implying that I am wrong?" },
+  { word: "infer", sentence: "We can infer from the evidence that he was there." },
+  { word: "lay", sentence: "Please lay the book on the table." },
+  { word: "lie", sentence: "I need to lie down for a few minutes." },
+  { word: "raise", sentence: "Please raise your hand if you know the answer." },
+  { word: "rise", sentence: "The sun will rise in the east." },
+  { word: "set", sentence: "Please set the plate on the table." },
+  { word: "sit", sentence: "Please sit down and relax." },
+  { word: "than", sentence: "She is taller than her brother." },
+  { word: "then", sentence: "First wash your hands, then dry them." },
+  { word: "who", sentence: "Who is at the door?" },
+  { word: "whom", sentence: "To whom should I address the letter?" },
+  { word: "whose", sentence: "Whose book is this on the table?" },
+  { word: "who's", sentence: "Who's coming to the party tonight?" },
+  { word: "your", sentence: "Please bring your notebook to class." },
+  { word: "you're", sentence: "You're going to love this movie." },
+  { word: "its", sentence: "The cat licked its paw." },
+  { word: "it's", sentence: "It's raining outside, so bring a coat." },
+  { word: "they're", sentence: "They're going to the beach this weekend." },
+  { word: "to", sentence: "Let's go to the park." },
+  { word: "too", sentence: "I want to come too, if that's alright." },
+  { word: "two", sentence: "There are two apples on the table." },
+  { word: "loose", sentence: "The screw on the chair is loose." },
+  { word: "lose", sentence: "Don't lose your ticket on the way home." },
+  { word: "chose", sentence: "She chose the red dress for the party." },
+  { word: "choose", sentence: "Please choose a book to read tonight." },
+  { word: "passed", sentence: "He passed the test with flying colours." },
+  { word: "past", sentence: "In the past, we had no internet at all." },
+  { word: "quiet", sentence: "Please be quiet in the library." },
+  { word: "quite", sentence: "The test was quite easy this time." },
+  { word: "quit", sentence: "He decided to quit smoking for his health." },
+  { word: "sense", sentence: "She has a wonderful sense of humour." },
+  { word: "since", sentence: "I have lived here since twenty fifteen." },
+
+  // ══════════════ 🥈 ADVANCED LEVEL (~290 unique words) ══════════════
+  { word: "onomatopoeia", sentence: "Buzz and hiss are examples of onomatopoeia." },
+  { word: "ephemeral", sentence: "The beauty of the cherry blossom is ephemeral." },
+  { word: "surreptitious", sentence: "He gave a surreptitious glance at his watch." },
+  { word: "quintessential", sentence: "That cake is the quintessential British dessert." },
+  { word: "perspicacious", sentence: "Her perspicacious remark cut through the confusion." },
+  { word: "verisimilitude", sentence: "The novel's verisimilitude makes it feel real." },
+  { word: "anachronism", sentence: "A clock in a Roman play is an anachronism." },
+  { word: "antediluvian", sentence: "His antediluvian opinions belong to another era." },
+  { word: "chrysanthemum", sentence: "The garden was full of yellow chrysanthemums." },
+  { word: "denouement", sentence: "The denouement of the film surprised everyone." },
+  { word: "effervescent", sentence: "Her effervescent personality cheered us all up." },
+  { word: "ignominious", sentence: "He suffered an ignominious defeat in the final." },
+  { word: "insouciance", sentence: "She faced the difficult news with insouciance." },
+  { word: "legerdemain", sentence: "The magician's legerdemain amazed the audience." },
+  { word: "machination", sentence: "The plot was the machination of a jealous rival." },
+  { word: "obsequious", sentence: "The obsequious waiter bowed at every opportunity." },
+  { word: "prestidigitation", sentence: "His prestidigitation with cards is world famous." },
+  { word: "rendezvous", sentence: "They agreed on a secret rendezvous by the lake." },
+  { word: "camaraderie", sentence: "The team has a wonderful sense of camaraderie." },
+  { word: "bourgeois", sentence: "The film mocks bourgeois values of the time." },
+  { word: "cacophony", sentence: "A cacophony of car horns filled the street." },
+  { word: "capricious", sentence: "The weather here is famously capricious." },
+  { word: "deleterious", sentence: "Smoking has a deleterious effect on health." },
+  { word: "ebullient", sentence: "The ebullient crowd cheered at the victory." },
+  { word: "esoteric", sentence: "The lecture was full of esoteric references." },
+  { word: "fastidious", sentence: "He is fastidious about keeping his desk tidy." },
+  { word: "fortuitous", sentence: "Meeting her was entirely fortuitous." },
+  { word: "garrulous", sentence: "The garrulous old man talked for hours." },
+  { word: "grandiloquent", sentence: "His grandiloquent speech impressed the crowd." },
+  { word: "hegemony", sentence: "The empire's hegemony lasted for centuries." },
+  { word: "iconoclast", sentence: "She is an iconoclast who questions every rule." },
+  { word: "laconic", sentence: "His laconic reply told us little." },
+  { word: "magnanimous", sentence: "The winner was magnanimous in victory." },
+  { word: "mellifluous", sentence: "Her mellifluous voice soothed the whole room." },
+  { word: "nefarious", sentence: "They plotted a nefarious scheme in secret." },
+  { word: "panacea", sentence: "Exercise is not a panacea for every health problem." },
+  { word: "pernicious", sentence: "The pernicious rumour spread quickly." },
+  { word: "quixotic", sentence: "His quixotic plans always end in failure." },
+  { word: "recalcitrant", sentence: "The recalcitrant student refused to apologise." },
+  { word: "sycophant", sentence: "The sycophant praised the boss at every meeting." },
+  { word: "ubiquitous", sentence: "Mobile phones are now ubiquitous in schools." },
+  { word: "vicissitude", sentence: "The vicissitudes of life make us stronger." },
+  { word: "abstruse", sentence: "The theorem was too abstruse for most students." },
+  { word: "acumen", sentence: "Her business acumen made the company a success." },
+  { word: "bombastic", sentence: "The bombastic speech lasted an hour." },
+  { word: "demagogue", sentence: "The demagogue stirred up anger at the rally." },
+  { word: "harangue", sentence: "The teacher delivered a long harangue about behaviour." },
+  { word: "impetuous", sentence: "His impetuous decision cost him the job." },
+  { word: "jettison", sentence: "The crew had to jettison cargo to stay afloat." },
+  { word: "kaleidoscope", sentence: "The sunset was a kaleidoscope of colours." },
+  { word: "lucrative", sentence: "She turned her hobby into a lucrative business." },
+  { word: "obfuscate", sentence: "The report tried to obfuscate the truth." },
+  { word: "obstreperous", sentence: "The obstreperous child refused to sit still." },
+  { word: "querulous", sentence: "The querulous old man complained about everything." },
+  { word: "reticent", sentence: "He was reticent about his past." },
+  { word: "soliloquy", sentence: "Hamlet's soliloquy is one of the most famous in drama." },
+  { word: "taciturn", sentence: "The taciturn farmer rarely said a word." },
+  { word: "truculent", sentence: "The truculent customer shouted at the cashier." },
+  { word: "winsome", sentence: "Her winsome smile charmed everyone she met." },
+  { word: "zealous", sentence: "He is a zealous supporter of the local team." },
+  { word: "insouciant", sentence: "The insouciant boy ignored the warning entirely." },
+  { word: "pulchritudinous", sentence: "The pulchritudinous garden was full of roses." },
+  { word: "sesquipedalian", sentence: "His sesquipedalian prose is hard to read." },
+  { word: "logorrhea", sentence: "The speech was pure logorrhea with no real meaning." },
+  { word: "defenestration", sentence: "The famous defenestration of Prague started a war." },
+  { word: "grandiloquence", sentence: "His grandiloquence impressed the younger students." },
+  { word: "gubernatorial", sentence: "The gubernatorial election takes place next month." },
+  { word: "heinous", sentence: "The crime was truly heinous." },
+  { word: "idiosyncrasy", sentence: "Wearing odd socks is one of his idiosyncrasies." },
+  { word: "incarceration", sentence: "The judge ordered ten years of incarceration." },
+  { word: "indictment", sentence: "The grand jury handed down an indictment today." },
+  { word: "chiaroscuro", sentence: "The painting uses chiaroscuro to add depth." },
+  { word: "cognizant", sentence: "She was fully cognizant of the risks involved." },
+  { word: "cryptozoology", sentence: "Cryptozoology studies creatures that may not exist." },
+  { word: "diphthong", sentence: "The sound in coin is a diphthong." },
+  { word: "epistemology", sentence: "Epistemology asks how we know what we know." },
+  { word: "equanimity", sentence: "She accepted the news with remarkable equanimity." },
+  { word: "fatuous", sentence: "His fatuous remarks annoyed everyone in the room." },
+  { word: "blandishment", sentence: "The seller used blandishments to win our trust." },
+  { word: "bougainvillea", sentence: "The bougainvillea grew over the garden wall." },
+  { word: "carcinogenic", sentence: "Cigarettes contain many carcinogenic chemicals." },
+  { word: "labyrinthine", sentence: "The labyrinthine corridors confused every visitor." },
+  { word: "abstemious", sentence: "He lived an abstemious life, avoiding all treats." },
+  { word: "acerbity", sentence: "Her acerbity made her many enemies." },
+  { word: "acquiesce", sentence: "He had to acquiesce to the committee's decision." },
+  { word: "acrimony", sentence: "The divorce was full of acrimony." },
+  { word: "adjudicate", sentence: "An independent judge will adjudicate the dispute." },
+  { word: "admonition", sentence: "The teacher gave a stern admonition about the rule." },
+  { word: "adversary", sentence: "She faced her old adversary in the final round." },
+  { word: "affable", sentence: "The affable host made everyone feel welcome." },
+  { word: "alacrity", sentence: "He accepted the offer with surprising alacrity." },
+  { word: "amiable", sentence: "The amiable teacher is loved by all her students." },
+  { word: "anomaly", sentence: "The reading was an anomaly, not the norm." },
+  { word: "antipathy", sentence: "He felt a strong antipathy to crowded places." },
+  { word: "apocryphal", sentence: "The story about the pirate is probably apocryphal." },
+  { word: "arbitrary", sentence: "The rule seemed arbitrary and unfair." },
+  { word: "arduous", sentence: "The climb to the summit was an arduous task." },
+  { word: "assiduous", sentence: "Her assiduous study habits paid off in the exam." },
+  { word: "astute", sentence: "An astute investor notices small changes." },
+  { word: "auspicious", sentence: "It was an auspicious start to the new year." },
+  { word: "avarice", sentence: "His avarice led him to cheat his partners." },
+  { word: "bellicose", sentence: "The bellicose speech alarmed neighbouring countries." },
+  { word: "benevolent", sentence: "The benevolent donor gave generously to charity." },
+  { word: "brevity", sentence: "The editor asked for brevity in the report." },
+  { word: "cajole", sentence: "She tried to cajole her son into eating vegetables." },
+  { word: "candor", sentence: "His candor about the problem impressed everyone." },
+  { word: "catharsis", sentence: "Writing the poem gave her a sense of catharsis." },
+  { word: "caustic", sentence: "His caustic remarks hurt her feelings." },
+  { word: "circumspect", sentence: "The lawyer advised him to be circumspect." },
+  { word: "clandestine", sentence: "They held clandestine meetings in the cellar." },
+  { word: "coalesce", sentence: "The small groups began to coalesce into one team." },
+  { word: "cogent", sentence: "She presented a cogent argument for the change." },
+  { word: "commensurate", sentence: "The pay should be commensurate with the work." },
+  { word: "complacent", sentence: "Don't become complacent about your progress." },
+  { word: "conciliatory", sentence: "The manager made a conciliatory gesture." },
+  { word: "condescending", sentence: "His condescending tone upset the students." },
+  { word: "conflagration", sentence: "The small fire grew into a conflagration." },
+  { word: "conundrum", sentence: "The puzzle is a real conundrum." },
+  { word: "copious", sentence: "She drank copious amounts of water after the run." },
+  { word: "corroborate", sentence: "Two witnesses corroborate her story." },
+  { word: "credulous", sentence: "The credulous child believed every joke." },
+  { word: "cursory", sentence: "He gave the report only a cursory glance." },
+  { word: "dearth", sentence: "There is a dearth of skilled workers in the town." },
+  { word: "debacle", sentence: "The concert was a complete debacle." },
+  { word: "decorum", sentence: "The guests behaved with perfect decorum." },
+  { word: "demure", sentence: "She gave a demure smile and looked away." },
+  { word: "deride", sentence: "The other team derided our attempt." },
+  { word: "despot", sentence: "The despot ruled with fear and violence." },
+  { word: "didactic", sentence: "The film was too didactic for our taste." },
+  { word: "diffident", sentence: "The diffident boy whispered his answer." },
+  { word: "dilatory", sentence: "His dilatory behaviour cost him the deadline." },
+  { word: "discern", sentence: "I could barely discern the path in the fog." },
+  { word: "disparage", sentence: "Do not disparage others' hard work." },
+  { word: "disseminate", sentence: "The school disseminates news through email." },
+  { word: "dogmatic", sentence: "He is too dogmatic to accept another view." },
+  { word: "duplicity", sentence: "The spy was known for his duplicity." },
+  { word: "eclectic", sentence: "She has eclectic taste in music." },
+  { word: "effrontery", sentence: "The boy had the effrontery to argue with the head teacher." },
+  { word: "egregious", sentence: "It was an egregious mistake in the report." },
+  { word: "elucidate", sentence: "Please elucidate your answer with an example." },
+  { word: "emulate", sentence: "Young players hope to emulate the champion." },
+  { word: "enervate", sentence: "The heat can enervate even the strongest." },
+  { word: "engender", sentence: "Her kindness engenders respect among the students." },
+  { word: "enigma", sentence: "The disappearance remains a complete enigma." },
+  { word: "equivocate", sentence: "The witness tried to equivocate on the stand." },
+  { word: "erudite", sentence: "Her erudite lecture covered every angle." },
+  { word: "eulogy", sentence: "The eulogy moved everyone to tears." },
+  { word: "exculpate", sentence: "New evidence exculpated the accused man." },
+  { word: "exigent", sentence: "Exigent circumstances forced a quick decision." },
+  { word: "exonerate", sentence: "The inquiry exonerated the accused teacher." },
+  { word: "extol", sentence: "The head teacher extolled the team's achievements." },
+  { word: "facetious", sentence: "Stop being facetious and answer the question." },
+  { word: "fallacious", sentence: "His argument was based on a fallacious claim." },
+  { word: "fervent", sentence: "She is a fervent supporter of the cause." },
+  { word: "florid", sentence: "The speaker's florid prose was too ornate." },
+  { word: "flout", sentence: "Those who flout the rules face consequences." },
+  { word: "foment", sentence: "The pamphlet tried to foment unrest in the town." },
+  { word: "fractious", sentence: "The fractious child refused to sit still." },
+  { word: "frugal", sentence: "Grandma is frugal and never wastes food." },
+  { word: "furtive", sentence: "He gave a furtive look around the classroom." },
+  { word: "germane", sentence: "Your point is not germane to the discussion." },
+  { word: "gregarious", sentence: "The gregarious puppy played with every dog in the park." },
+  { word: "guile", sentence: "The fox used guile to escape the trap." },
+  { word: "hackneyed", sentence: "The phrase is hackneyed and needs replacing." },
+  { word: "hedonist", sentence: "He was a hedonist who lived only for pleasure." },
+  { word: "heresy", sentence: "In the past, such ideas were treated as heresy." },
+  { word: "hiatus", sentence: "The show returned after a short hiatus." },
+  { word: "hyperbole", sentence: "Saying you've told me a million times is hyperbole." },
+  { word: "impecunious", sentence: "The impecunious artist lived in a tiny flat." },
+  { word: "impervious", sentence: "This coat is impervious to rain." },
+  { word: "implacable", sentence: "The implacable judge refused every appeal." },
+  { word: "inchoate", sentence: "The plans are still inchoate and vague." },
+  { word: "incorrigible", sentence: "The incorrigible prankster never stopped joking." },
+  { word: "indefatigable", sentence: "Her indefatigable energy impressed everyone." },
+  { word: "indolent", sentence: "The indolent cat slept all afternoon." },
+  { word: "ineffable", sentence: "The view from the summit was ineffable." },
+  { word: "inexorable", sentence: "The inexorable march of time cannot be stopped." },
+  { word: "ingenuous", sentence: "Her ingenuous smile put everyone at ease." },
+  { word: "inimical", sentence: "The policy was inimical to the town's interests." },
+  { word: "innocuous", sentence: "The little joke was completely innocuous." },
+  { word: "insidious", sentence: "The disease is insidious and hard to detect." },
+  { word: "insipid", sentence: "The soup was insipid and flavourless." },
+  { word: "insolent", sentence: "The insolent student talked back to the teacher." },
+  { word: "intrepid", sentence: "The intrepid explorer crossed the desert alone." },
+  { word: "inveigle", sentence: "He tried to inveigle me into helping him." },
+  { word: "irascible", sentence: "The irascible old man shouted at everyone." },
+  { word: "languid", sentence: "The warm afternoon made everyone feel languid." },
+  { word: "laudatory", sentence: "Her laudatory comments lifted his spirits." },
+  { word: "lethargic", sentence: "I feel lethargic after a big lunch." },
+  { word: "lucid", sentence: "Her explanation was clear and lucid." },
+  { word: "lugubrious", sentence: "The lugubrious music matched the sad scene." },
+  { word: "malinger", sentence: "The soldier was accused of malingering to avoid duty." },
+  { word: "mendacious", sentence: "The witness gave a mendacious account." },
+  { word: "mercurial", sentence: "His mercurial moods change by the hour." },
+  { word: "meticulous", sentence: "She keeps meticulous notes on every experiment." },
+  { word: "misanthrope", sentence: "The old misanthrope avoided all company." },
+  { word: "mitigate", sentence: "New trees can help mitigate the heat in cities." },
+  { word: "mollify", sentence: "The apology helped mollify the angry customer." },
+  { word: "morose", sentence: "He was morose after the defeat." },
+  { word: "multifarious", sentence: "The library offers multifarious activities." },
+  { word: "mundane", sentence: "Even mundane tasks deserve care and attention." },
+  { word: "myriad", sentence: "The night sky holds a myriad of stars." },
+  { word: "nadir", sentence: "The team hit its nadir after ten losses in a row." },
+  { word: "nascent", sentence: "The project is still in its nascent stages." },
+  { word: "nebulous", sentence: "His plans for the summer are still nebulous." },
+  { word: "nonchalant", sentence: "He gave a nonchalant shrug at the news." },
+  { word: "obdurate", sentence: "The obdurate official refused to reconsider." },
+  { word: "obstinate", sentence: "The obstinate child refused to apologise." },
+  { word: "obtuse", sentence: "He can be remarkably obtuse about others' feelings." },
+  { word: "officious", sentence: "The officious guard checked every bag twice." },
+  { word: "onerous", sentence: "The duty was an onerous responsibility." },
+  { word: "opulent", sentence: "The palace was opulent and full of gold." },
+  { word: "ostentatious", sentence: "The diamond ring was entirely ostentatious." },
+  { word: "paragon", sentence: "She is a paragon of patience and kindness." },
+  { word: "pariah", sentence: "The traitor became a pariah in the town." },
+  { word: "partisan", sentence: "The report was too partisan to be trusted." },
+  { word: "paucity", sentence: "There is a paucity of evidence for the claim." },
+  { word: "pedantic", sentence: "His pedantic comments slowed every meeting." },
+  { word: "penchant", sentence: "She has a penchant for expensive shoes." },
+  { word: "penurious", sentence: "The penurious family rarely ate out." },
+  { word: "perfidious", sentence: "The perfidious ally broke every promise." },
+  { word: "perfunctory", sentence: "He gave the report a perfunctory glance." },
+  { word: "petulant", sentence: "The petulant child stamped his foot." },
+  { word: "phlegmatic", sentence: "The phlegmatic goalkeeper never panicked." },
+  { word: "pithy", sentence: "Her pithy comment captured the whole issue." },
+  { word: "placate", sentence: "Nothing could placate the angry crowd." },
+  { word: "platitude", sentence: "His speech was full of empty platitudes." },
+  { word: "plethora", sentence: "There is a plethora of books to choose from." },
+  { word: "pragmatic", sentence: "She took a pragmatic approach to the problem." },
+  { word: "precipitous", sentence: "The path had a precipitous drop on one side." },
+  { word: "precocious", sentence: "The precocious child could read at age three." },
+  { word: "predilection", sentence: "He has a predilection for spicy food." },
+  { word: "proclivity", sentence: "She has a proclivity for detail and order." },
+  { word: "prodigal", sentence: "The prodigal son returned home after years." },
+  { word: "profligate", sentence: "The profligate king drained the treasury." },
+  { word: "prosaic", sentence: "His writing is solid but rather prosaic." },
+  { word: "protean", sentence: "The actor's protean talent lets him play any role." },
+  { word: "prudent", sentence: "It is prudent to save for a rainy day." },
+  { word: "pugnacious", sentence: "The pugnacious boxer never backed down." },
+  { word: "quandary", sentence: "She was in a quandary about which offer to accept." },
+  { word: "rancor", sentence: "The dispute left deep rancor between the families." },
+  { word: "recondite", sentence: "The lecture was full of recondite references." },
+  { word: "redolent", sentence: "The kitchen was redolent with fresh bread." },
+  { word: "relegate", sentence: "The coach had to relegate him to the bench." },
+  { word: "remiss", sentence: "I would be remiss if I forgot to thank you." },
+  { word: "reprehensible", sentence: "The behaviour was utterly reprehensible." },
+  { word: "rescind", sentence: "The company had to rescind the unfair rule." },
+  { word: "reverent", sentence: "The crowd was reverent during the ceremony." },
+  { word: "rhetoric", sentence: "Good rhetoric can change minds." },
+  { word: "sagacious", sentence: "The sagacious judge saw through the lies." },
+  { word: "salient", sentence: "The report highlighted the salient points." },
+  { word: "sanctimonious", sentence: "His sanctimonious tone irritated everyone." },
+  { word: "sanguine", sentence: "She is sanguine about the chances of success." },
+  { word: "sardonic", sentence: "He gave a sardonic smile at the joke." },
+  { word: "scathing", sentence: "The review was scathing and direct." },
+  { word: "scrupulous", sentence: "She is scrupulous about keeping records." },
+  { word: "servile", sentence: "The servile assistant agreed with everything." },
+  { word: "solicitous", sentence: "The solicitous host kept checking we were comfortable." },
+  { word: "somnolent", sentence: "The warm classroom made everyone somnolent." },
+  { word: "spurious", sentence: "The claim was based on spurious evidence." },
+  { word: "staid", sentence: "The meeting had a staid, formal atmosphere." },
+  { word: "stolid", sentence: "His stolid expression revealed nothing." },
+  { word: "strident", sentence: "The strident voice could be heard down the street." },
+  { word: "stymie", sentence: "The bad weather stymied our plans." },
+  { word: "succinct", sentence: "Please keep your answer succinct." },
+  { word: "tangential", sentence: "Your question is tangential to the topic." },
+  { word: "tenacious", sentence: "The tenacious detective never gave up." },
+  { word: "timorous", sentence: "The timorous cat hid under the bed." },
+  { word: "torpid", sentence: "The torpid heat made everyone slow." },
+  { word: "tractable", sentence: "The problem is tractable with the right tools." },
+  { word: "trenchant", sentence: "Her trenchant criticism was hard to ignore." },
+  { word: "unctuous", sentence: "His unctuous manner was hard to trust." },
+  { word: "upbraid", sentence: "The coach upbraided the team for their attitude." },
+  { word: "usurp", sentence: "The general tried to usurp the king." },
+  { word: "vacillate", sentence: "He vacillated between the two options for days." },
+  { word: "vapid", sentence: "The show was vapid and forgettable." },
+  { word: "vehement", sentence: "He gave a vehement denial of the charge." },
+  { word: "venerable", sentence: "The venerable old teacher was much loved." },
+  { word: "verbose", sentence: "His verbose writing needed trimming." },
+  { word: "vex", sentence: "The constant noise began to vex everyone." },
+  { word: "vicarious", sentence: "She enjoys vicarious thrills through adventure films." },
+  { word: "vilify", sentence: "The press tried to vilify the young athlete." },
+  { word: "vindictive", sentence: "The vindictive ex spread rumours about her." },
+  { word: "virtuoso", sentence: "The pianist is a true virtuoso." },
+  { word: "virulent", sentence: "The virulent infection required strong medicine." },
+  { word: "vitriolic", sentence: "The argument became vitriolic and personal." },
+  { word: "vociferous", sentence: "The vociferous crowd demanded an encore." },
+  { word: "volatile", sentence: "The stock market can be volatile." },
+  { word: "wan", sentence: "She looked wan and tired after the illness." },
+  { word: "wary", sentence: "Be wary of offers that seem too good." },
+  { word: "wily", sentence: "The wily fox escaped the trap again." },
+
+  // ══════════════ 🥇 CHAMPIONSHIP LEVEL (71 unique words) ══════════════
+  { word: "cymotrichous", sentence: "Cymotrichous means having wavy hair." },
+  { word: "autochthonous", sentence: "The autochthonous people have lived here for millennia." },
+  { word: "scherenschnitte", sentence: "Scherenschnitte is the German art of paper cutting." },
+  { word: "Ursprache", sentence: "Ursprache refers to a reconstructed ancestral language." },
+  { word: "appoggiatura", sentence: "The singer added an appoggiatura to the melody." },
+  { word: "knaidel", sentence: "A knaidel is a small dumpling in Jewish cooking." },
+  { word: "smaragdine", sentence: "The smaragdine gem glowed in the sunlight." },
+  { word: "maculature", sentence: "Maculature is the waste paper in printing." },
+  { word: "Laodicean", sentence: "A Laodicean attitude is indifferent to politics." },
+  { word: "stromuhr", sentence: "A stromuhr is an instrument for measuring blood flow." },
+  { word: "stichomythia", sentence: "Stichomythia is a rapid exchange in Greek drama." },
+  { word: "feuilleton", sentence: "The feuilleton appeared in the newspaper's cultural section." },
+  { word: "nunatak", sentence: "A nunatak is a peak above an ice sheet." },
+  { word: "Feldenkrais", sentence: "The Feldenkrais method teaches gentle movement." },
+  { word: "gesellschaft", sentence: "Gesellschaft describes a society bound by laws." },
+  { word: "koinonia", sentence: "Koinonia refers to spiritual community in Greek." },
+  { word: "marocain", sentence: "Marocain is a thin crepe fabric." },
+  { word: "prospicience", sentence: "Prospicience means looking to the future." },
+  { word: "euonym", sentence: "Euonym is a name well suited to its subject." },
+  { word: "vivisepulture", sentence: "Vivisepulture means burial while still alive." },
+  { word: "odontalgia", sentence: "Odontalgia means toothache." },
+  { word: "elucubrate", sentence: "To elucubrate is to work by lamplight." },
+  { word: "crustaceology", sentence: "Crustaceology is the study of crabs and lobsters." },
+  { word: "psammophile", sentence: "A psammophile is an organism that loves sand." },
+  { word: "bromocriptine", sentence: "Bromocriptine is a medicine used to treat certain conditions." },
+  { word: "eclaircissement", sentence: "The eclaircissement explained everything clearly." },
+  { word: "abseil", sentence: "The climbers had to abseil down the cliff." },
+  { word: "Murraya", sentence: "Murraya is a genus of flowering shrubs." },
+  { word: "aiguillette", sentence: "The aiguillette is a decorative cord on a uniform." },
+  { word: "erysipelas", sentence: "Erysipelas is a bacterial skin infection." },
+  { word: "bougainvillea", sentence: "The bougainvillea climbed over the wall." },
+  { word: "pendeloque", sentence: "The pendeloque hangs from the necklace." },
+  { word: "cernuous", sentence: "The cernuous flower droops toward the ground." },
+  { word: "odylic", sentence: "Odic force refers to a vital energy." },
+  { word: "palama", sentence: "Palama is the webbing on a bird's foot." },
+  { word: "auslaut", sentence: "Auslaut refers to the final sound of a word." },
+  { word: "chthonic", sentence: "Chthonic deities dwell in the underworld." },
+  { word: "floccinaucinihilipilification", sentence: "Floccinaucinihilipilification means estimating something as worthless." },
+  { word: "hippopotomonstrosesquipedaliophobia", sentence: "Hippopotomonstrosesquipedaliophobia is the fear of long words." },
+  { word: "absquatulate", sentence: "To absquatulate is to leave abruptly." },
+  { word: "prestidigitation", sentence: "The magician's prestidigitation delighted the crowd." },
+  { word: "tergiversation", sentence: "His tergiversation on the issue angered everyone." },
+  { word: "pulchritudinous", sentence: "The pulchritudinous garden was full of roses." },
+  { word: "sesquipedalian", sentence: "His sesquipedalian speech was hard to follow." },
+  { word: "antidisestablishmentarianism", sentence: "Antidisestablishmentarianism is one of the longest English words." },
+  { word: "magniloquent", sentence: "The magniloquent speaker loved the sound of his own voice." },
+  { word: "sphygmomanometer", sentence: "The nurse used a sphygmomanometer to measure blood pressure." },
+  { word: "guetapens", sentence: "A guetapens is a surprise ambush." },
+  { word: "succedaneum", sentence: "A succedaneum is a substitute or replacement." },
+  { word: "pococurante", sentence: "The pococurante customer was indifferent to everything." },
+  { word: "serrefine", sentence: "A serrefine is a small surgical clamp." },
+  { word: "guerdon", sentence: "The guerdon for his bravery was a medal." },
+  { word: "meerschaum", sentence: "The meerschaum pipe is carved from white clay." },
+  { word: "soubrette", sentence: "The soubrette played a clever maidservant in the comedy." },
+  { word: "transept", sentence: "The transept is the crosswise part of a church." },
+  { word: "schappe", sentence: "Schappe is a yarn made from waste silk." },
+  { word: "syllepsis", sentence: "Syllepsis is a figure of speech with double meaning." },
+  { word: "eudaemonic", sentence: "Eudaemonic philosophy focuses on human flourishing." },
+  { word: "semaphore", sentence: "The ships communicated by semaphore." },
+  { word: "sacrilegious", sentence: "Stealing from a church is a sacrilegious act." },
+  { word: "gladiolus", sentence: "The gladiolus grows tall in the summer garden." },
+  { word: "albumen", sentence: "The albumen of the egg is the white part." },
+  { word: "asceticism", sentence: "The monk's asceticism impressed every visitor." },
+  { word: "insouciant", sentence: "She gave an insouciant wave as she left." },
+  { word: "vignette", sentence: "The short story was a charming vignette of village life." },
+  { word: "condominium", sentence: "They bought a condominium by the sea." },
+  { word: "torsion", sentence: "The torsion of the wire gives it strength." },
+  { word: "chlorophyll", sentence: "Chlorophyll is what makes leaves green." },
+  { word: "hydrophyte", sentence: "A hydrophyte is a plant that lives in water." },
+  { word: "staphylococci", sentence: "Staphylococci are a type of bacteria." },
+  { word: "kamikaze", sentence: "The kamikaze pilots flew in World War Two." },
 
   // ══════════════ NEW WORD LIST (120 words) ══════════════
   { word: "platform", sentence: "The train will leave from platform three." },
@@ -940,7 +1344,6 @@ const WORDS = [
   { word: "muscle", sentence: "Every muscle in my body hurt after playing football all day." },
 
   // ══════════════ THESAURUS GROUP B (35 words) ══════════════
-  { word: "elegant", sentence: "She wore an elegant dress to the wedding." },
   { word: "invincible", sentence: "Superman is basically invincible - except for kryptonite!" },
   { word: "spacious", sentence: "Even with a very large desk and several chairs, the office seemed spacious." },
   { word: "seashore", sentence: "Sally sells seashells by the seashore." },
@@ -964,20 +1367,17 @@ const WORDS = [
   { word: "vague", sentence: "I didn't understand what he meant as his statement had been very vague." },
   { word: "fascinated", sentence: "I'm fascinated by how machines work." },
   { word: "machinery", sentence: "The heavy machinery in the factory had to be replaced once it got rusty." },
-  { word: "euphoria", sentence: "I felt a sense of euphoria as I finally got to the top of the mountain." },
   { word: "quiche", sentence: "I've run out of eggs, so I won't be able to bake a quiche today." },
   { word: "doubtful", sentence: "It's doubtful that my team can win the match now that they've conceded two goals." },
   { word: "placid", sentence: "The lake was placid, with no waves or any movement at all." },
   { word: "bruise", sentence: "You'll have a big bruise on your leg where you fell down." },
   { word: "adorable", sentence: "The puppies were just adorable, but soon they would be huge, dangerous dogs." },
   { word: "delightful", sentence: "The weather has been delightful - sunny with a light breeze every day this week!" },
-  { word: "blizzard", sentence: "Make sure you have enough food at home when the blizzard comes, or you might go hungry." },
   { word: "bizarre", sentence: "I had a bizarre dream last night - it didn't make any sense!" },
   { word: "scrawny", sentence: "Even though he tried to exercise every day to get big and strong, he still looked scrawny." },
   { word: "screech", sentence: "The animal let out a loud screech, which you could hear a mile away." },
 
   // ══════════════ THESAURUS GROUP C (35 words) ══════════════
-  { word: "belligerent", sentence: "He is a belligerent old man. Everyone feels threatened by him." },
   { word: "juvenile", sentence: "He's a 14 year old juvenile so cannot be sent to prison." },
   { word: "circular", sentence: "A frisbee is circular in shape." },
   { word: "victorious", sentence: "They were victorious in battle." },
@@ -993,11 +1393,9 @@ const WORDS = [
   { word: "accommodation", sentence: "A house, apartment or boarding house are options for accommodation." },
   { word: "incandescent", sentence: "The incandescent lightbulb was invented in the nineteenth century." },
   { word: "lackadaisical", sentence: "The players' lackadaisical approach meant that they lost 5-0. They should try harder next game." },
-  { word: "bureaucracy", sentence: "The problem of bureaucracy is that decision making takes time." },
   { word: "condemned", sentence: "His lack of education condemned him to a life of manual labour." },
   { word: "beige", sentence: "The brown carpet is too dark. I would prefer it in beige." },
   { word: "mistaken", sentence: "It was a case of mistaken identity. They arrested the wrong person." },
-  { word: "whimsical", sentence: "He has a whimsical sense of humour." },
   { word: "materialistic", sentence: "She always wants to show off by having the most up-to-date gadgets. She's so materialistic." },
   { word: "noxious", sentence: "Miners need to be careful of noxious gasses while they are underground." },
   { word: "conviction", sentence: "The prosecutor is hoping for a conviction." },
@@ -1090,7 +1488,6 @@ const WORDS = [
   { word: "Tonight", sentence: "We are going to watch a movie tonight after dinner." },
   { word: "Puppet", sentence: "The children watched a puppet show at the school festival." },
   { word: "Mascot", sentence: "The tiger is the official mascot of our school sports team." },
-  { word: "Apartment", sentence: "They rented an apartment near the university." },
   { word: "Fierce", sentence: "The two teams had a fierce competition for the championship." },
   { word: "Building", sentence: "The new office building has twenty floors." },
   { word: "Gown", sentence: "She wore a beautiful gown to the formal ceremony." },
@@ -1103,7 +1500,6 @@ const WORDS = [
   { word: "Salami", sentence: "He added slices of salami to the sandwich." },
   { word: "Cushion", sentence: "I placed a soft cushion on the chair to make it more comfortable." },
   { word: "Squash", sentence: "She bought a squash at the market to use in the soup." },
-  { word: "Mischievous", sentence: "The mischievous puppy kept hiding my socks around the house." },
   { word: "Comfortable", sentence: "These shoes are very comfortable, even after walking for several hours." },
   { word: "Movie", sentence: "We watched a movie together after finishing our homework." },
   { word: "Exhausted", sentence: "After the long hike, everyone was completely exhausted." },
@@ -1162,22 +1558,76 @@ const WORDS = [
   { word: "Relaxation", sentence: "Just listening to the rain brings me a sense of relaxation." }
 ];
 
-// Each list's starting index in WORDS. The first list is the default.
 const LIST_STARTS = [
   { name: "🏆 Spelling Bee Real — Competition Words", start: 0 },
-  { name: "New word list", start: 170 },
-  { name: "Thesaurus list · Section 1", start: 290 },
-  { name: "Thesaurus · Group A", start: 305 },
-  { name: "Thesaurus · Group B", start: 338 },
-  { name: "Thesaurus · Group C", start: 373 },
-  { name: "Word practice · Group A (Grade 1–2)", start: 408 },
-  { name: "Word practice · Group B (Grade 3–4)", start: 443 },
-  { name: "Word practice · Group C (Grade 5–6)", start: 471 },
-  { name: "Word practice · Group C word list", start: 500 }
+  { name: "🥉 Intermediate Level", start: 170 },
+  { name: "🥈 Advanced Level", start: 347 },
+  { name: "🥇 Championship Level", start: 637 },
+  { name: "New word list", start: 708 },
+  { name: "Thesaurus list · Section 1", start: 828 },
+  { name: "Thesaurus · Group A", start: 843 },
+  { name: "Thesaurus · Group B", start: 876 },
+  { name: "Thesaurus · Group C", start: 910 },
+  { name: "Word practice · Group A (Grade 1–2)", start: 944 },
+  { name: "Word practice · Group B (Grade 3–4)", start: 979 },
+  { name: "Word practice · Group C (Grade 5–6)", start: 1007 },
+  { name: "Word practice · Group C word list", start: 1035 }
 ];
 
-// The competition list is always the default on page load.
 const DEFAULT_LIST = '0';
+const CUSTOM_START = BASE_WORDS.length;
+const CUSTOM_STORAGE_KEY = 'sbp.customWords.v1';
+
+const WORDS = [...BASE_WORDS];
+let customWords = [];
+
+function loadCustomWords() {
+  try {
+    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter(w => w && typeof w.word === 'string' && typeof w.sentence === 'string')
+      .map(w => ({ word: w.word.trim(), sentence: w.sentence.trim(), isCustom: true }));
+  } catch (e) { return []; }
+}
+function saveCustomWords() {
+  try { localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(customWords)); }
+  catch (e) { console.warn('Could not save custom words:', e); }
+}
+customWords = loadCustomWords();
+customWords.forEach(w => WORDS.push(w));
+
+const BLOCKED_PATTERNS = [
+  /f+u+c+k+/i, /s+h+i+t+/i, /b+i+t+c+h+/i, /\bcunt\b/i, /\basshole\b/i, /\bbastard\b/i,
+  /\bdickhead\b/i, /\bpussy\b/i, /\bpenis\b/i, /\bvagina\b/i, /\bporn\b/i, /\borgasm\b/i,
+  /\bmasturbat/i, /\bpedophil/i, /\bpaedophil/i, /\brape\b/i, /\brapist\b/i,
+  /\bsex(ual|y|ism|ist)?\b/i, /\bnude(s)?\b/i, /\bnaked\b/i,
+  /n+i+g+g+/i, /f+a+g+g+/i, /\bretard/i, /\bkike\b/i, /\bchink\b/i, /\bspic\b/i, /\bwetback\b/i,
+  /\bsuicide\b/i, /\bkill (my|your)self\b/i, /\bcut (my|your)self\b/i,
+  /\bcocaine\b/i, /\bheroin\b/i, /\bmeth\b/i, /\bmarijuana\b/i
+];
+function matchesBlocklist(text) { return BLOCKED_PATTERNS.some(p => p.test(text)); }
+
+function validateNewWord(word, sentence) {
+  if (!word) return { ok: false, message: 'Please enter a word.' };
+  if (!sentence) return { ok: false, message: 'Please enter an example sentence.' };
+  if (!/^[A-Za-z][A-Za-z'\-]{0,29}$/.test(word)) {
+    return { ok: false, message: 'Words can only contain letters, apostrophes and hyphens (2–30 characters).' };
+  }
+  if (sentence.length < 10) return { ok: false, message: 'The sentence must be at least 10 characters long.' };
+  if (sentence.length > 250) return { ok: false, message: 'The sentence must be 250 characters or fewer.' };
+  if (!sentence.toLowerCase().includes(word.toLowerCase())) {
+    return { ok: false, message: 'The sentence must contain the word "' + word + '".' };
+  }
+  if (matchesBlocklist(word) || matchesBlocklist(sentence)) {
+    return { ok: false, message: 'This word or sentence contains a term that is not appropriate for primary school students.' };
+  }
+  const dup = WORDS.find(w => w.word.toLowerCase() === word.toLowerCase());
+  if (dup) return { ok: false, message: 'This word is already in the list.' };
+  return { ok: true };
+}
 
 const store = {
   get(k, d) { try { const v = localStorage.getItem('sbp.' + k); return v === null ? d : v; } catch (e) { return d; } },
@@ -1195,7 +1645,7 @@ const LABELS = {
   streamelements: 'StreamElements', browser: 'Browser voice'
 };
 const REASON = {
-  timeout: 'no response (slow or blocked)', notfound: 'not found or blocked', network: 'network error',
+  timeout: 'no response', notfound: 'not found', network: 'network error',
   decode: 'unreadable audio', blocked: 'browser blocked playback', stalled: 'stalled',
   interrupted: 'interrupted', nospeech: 'no speech engine', nouk: 'no UK recording',
   lookup: 'lookup failed', speech: 'speech error', maxtime: 'took too long'
@@ -1272,7 +1722,6 @@ function buildCandidates(kind, text) {
   const orders = kind === 'word' ? WORD_ORDERS : SENTENCE_ORDERS;
   let order = orders[pref] || orders.auto;
   if (pref === 'auto') order = [...order].sort((a, b) => (isHealthy(a) ? 0 : 1) - (isHealthy(b) ? 0 : 1));
-
   let list = [];
   for (const p of order) {
     if (p === 'oxford') oxfordUrls(text).forEach(url => list.push({ provider: p, group: p, url }));
@@ -1289,9 +1738,7 @@ function buildCandidates(kind, text) {
   return list;
 }
 
-function startTimeoutFor(provider) {
-  return provider === 'oxford' ? 4000 : 6000;
-}
+function startTimeoutFor(provider) { return provider === 'oxford' ? 4000 : 6000; }
 
 let ukVoice = null;
 function pickUKVoice() {
@@ -1314,7 +1761,7 @@ function dbg(msg) {
   dbgLines.push(((performance.now() - T0) / 1000).toFixed(2) + 's ' + msg);
   if (dbgLines.length > 800) dbgLines.shift();
 }
-dbg('page loaded · engine v8 (preset 1 locked) · ' + navigator.userAgent);
+dbg('page loaded · engine v10 · ' + navigator.userAgent);
 
 let unlocked = false, speechUnlocked = false, unlockCtx = null;
 function unlockAudio() {
@@ -1334,19 +1781,6 @@ function unlockAudio() {
           dbg('unlock: Web Audio primed');
         }
       } catch (e) { dbg('unlock: Web Audio failed ' + (e && e.message)); }
-    } else if (ENGINE.unlock === 'silent') {
-      try {
-        const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
-        const u = new Audio();
-        u.preload = 'auto';
-        u.src = SILENT_WAV;
-        u.addEventListener('ended', () => {
-          try { u.removeAttribute('src'); u.load(); } catch (e) {}
-        }, { once: true });
-        const p = u.play();
-        if (p && p.catch) p.catch(() => {});
-        dbg('unlock: silent WAV playing');
-      } catch (e) { dbg('unlock: silent WAV failed ' + (e && e.message)); }
     }
   }
   if (!speechUnlocked && typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined') {
@@ -1393,14 +1827,11 @@ function attemptClip(run, url, opts) {
   return new Promise((resolve) => {
     if (run.cancelled) { resolve({ ok: false, reason: 'cancelled' }); return; }
     const el = new Audio();
-    el.preload = 'auto';
-    el.autoplay = false;
+    el.preload = 'auto'; el.autoplay = false;
     el.setAttribute('playsinline', '');
-
     let settled = false, started = false, playRequested = false, gateOpen = false;
     let startTimer = null, pauseTimer = null, watch = null;
     let lastTime = -1, stuck = 0;
-
     const fmt = (ev) => {
       const d = isFinite(el.duration) ? el.duration.toFixed(2) : '?';
       return `${tag} ${ev} t=${el.currentTime.toFixed(2)}/${d} ready=${el.readyState} net=${el.networkState}` +
@@ -1408,7 +1839,6 @@ function attemptClip(run, url, opts) {
     };
     const TRACE = ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'waiting', 'stalled', 'abort'];
     const trace = (e) => dbg(fmt(e.type));
-
     const cleanup = () => {
       clearTimeout(startTimer); clearTimeout(pauseTimer); clearInterval(watch);
       el.removeEventListener('playing', onPlaying);
@@ -1423,14 +1853,13 @@ function attemptClip(run, url, opts) {
       if (settled) return;
       settled = true;
       cleanup();
-      dbg(`${tag} → ${ok ? 'OK' : 'FAILED'} (${reason}) t=${el.currentTime.toFixed(2)}/${isFinite(el.duration) ? el.duration.toFixed(2) : '?'}`);
+      dbg(`${tag} → ${ok ? 'OK' : 'FAILED'} (${reason})`);
       try { el.pause(); } catch (e) {}
       try { el.removeAttribute('src'); el.load(); } catch (e) {}
       dispose();
       resolve({ ok, reason });
     };
     const dispose = run.onCancel(() => finish(false, 'cancelled'));
-
     function onPlaying() {
       if (started) return;
       started = true;
@@ -1451,14 +1880,10 @@ function attemptClip(run, url, opts) {
     }
     function onPause() {
       if (!started) return;
-      dbg(fmt('pause'));
       clearTimeout(pauseTimer);
       pauseTimer = setTimeout(() => { if (!settled && el.paused && !el.ended) finish(false, 'interrupted'); }, 600);
     }
-    function onReady() {
-      dbg(fmt('ready'));
-      if (gateOpen) requestPlay();
-    }
+    function onReady() { if (gateOpen) requestPlay(); }
     function requestPlay() {
       if (settled || run.cancelled || playRequested) return;
       playRequested = true;
@@ -1473,15 +1898,11 @@ function attemptClip(run, url, opts) {
           if (settled || run.cancelled) return;
           const name = err && err.name;
           dbg(`${tag} play() rejected: ${name} (try ${attempt})`);
-          if (name === 'AbortError' && attempt < 2) {
-            setTimeout(() => attemptPlay(attempt + 1), 80);
-            return;
-          }
+          if (name === 'AbortError' && attempt < 2) { setTimeout(() => attemptPlay(attempt + 1), 80); return; }
           finish(false, name === 'NotAllowedError' ? 'blocked' : 'notfound');
         });
       } catch (e) { finish(false, 'notfound'); }
     }
-
     el.addEventListener('playing', onPlaying);
     el.addEventListener('ended', onEnded);
     el.addEventListener('error', onError);
@@ -1489,15 +1910,12 @@ function attemptClip(run, url, opts) {
     el.addEventListener('canplay', onReady);
     el.addEventListener('loadeddata', onReady);
     TRACE.forEach(ev => el.addEventListener(ev, trace));
-
     startTimer = setTimeout(() => finish(false, 'timeout'), delay + startTimeout);
-
     try {
-      dbg(`${tag} load ${url.length > 90 ? url.slice(0, 90) + '…' : url}${delay > 0 ? ' (plays in ' + Math.round(delay) + ' ms)' : ''}`);
+      dbg(`${tag} load ${url.length > 90 ? url.slice(0, 90) + '…' : url}`);
       el.defaultPlaybackRate = rate;
       el.src = url;
     } catch (e) { finish(false, 'notfound'); return; }
-
     (async () => {
       if (delay > 0 && !(await wait(run, delay))) return;
       if (settled || run.cancelled) return;
@@ -1540,12 +1958,10 @@ async function playStep(run, step) {
   const ui = run.ui;
   const playAt = performance.now() + delay;
   const skip = new Set(), failedGroups = new Set();
-
   for (const c of cands) {
     if (run.cancelled) return null;
     if (skip.has(c.group)) continue;
     if (ui) ui.step(idx, 'loading', c.provider);
-
     let url = c.url;
     if (c.lazy) {
       const d = await resolveDictionary(text);
@@ -1553,13 +1969,11 @@ async function playStep(run, step) {
       if (!d.url) { run.notes.push(LABELS.dictionary + ': ' + (d.error ? REASON.lookup : REASON.nouk)); continue; }
       url = d.url;
     }
-
     const tag = (kind === 'word' ? 'W' : 'S') + (idx + 1) + ':' + c.provider;
     const started = () => { if (!run.cancelled && ui) ui.step(idx, 'playing', c.provider); };
     const r = c.speech
       ? await speakBrowser(run, text, { rate: (kind === 'word' ? 0.8 : 0.9) * run.rate, onStart: started, delay: Math.max(0, playAt - performance.now()) })
       : await attemptClip(run, url, { startTimeout: startTimeoutFor(c.provider), rate: run.rate, tag, onStart: started, delay: Math.max(0, playAt - performance.now()) });
-
     if (run.cancelled) return null;
     if (r.reason === 'interrupted') { run.interrupted = true; return null; }
     if (r.ok) {
@@ -1578,28 +1992,24 @@ async function playStep(run, step) {
   return false;
 }
 
-async function playSequence(index, ui) {
+async function playSequence(item, ui) {
   stopAll();
   unlockAudio();
-  const { word, sentence } = WORDS[index];
+  const { word, sentence } = item;
   const run = newRun(ui);
   current = run;
-  ui.begin();
+  if (ui) ui.begin();
   say('Playing ' + word);
-  dbg(`=== tap #${index + 1} "${word}" · firstDelay ${ENGINE.firstDelay} ms · speed ${settings.speed} · pause ${settings.pauseMs} ms · word:${settings.wordPref} sentence:${settings.sentencePref} ===`);
+  dbg(`=== tap "${word}" · firstDelay ${ENGINE.firstDelay} · speed ${settings.speed} · pause ${settings.pauseMs} ===`);
   const dead = () => run.cancelled || run.interrupted;
-
   const w1 = await playStep(run, { kind: 'word', text: word, idx: 0, cands: buildCandidates('word', word), delay: ENGINE.firstDelay });
   if (dead()) return finishRun(run, null);
-
   const mid = await playStep(run, { kind: 'sentence', text: sentence, idx: 1, cands: buildCandidates('sentence', sentence), delay: settings.pauseMs });
   if (dead()) return finishRun(run, null);
-
   let w3 = false;
   if (w1) w3 = await playStep(run, { kind: 'word', text: word, idx: 2, cands: buildCandidates('word', word), delay: settings.pauseMs });
-  else ui.step(2, 'failed');
+  else if (ui) ui.step(2, 'failed');
   if (dead()) return finishRun(run, null);
-
   finishRun(run, { w1, mid, w3 });
 }
 
@@ -1674,45 +2084,91 @@ function makeCardUI(btn, statusEl) {
   };
 }
 
-const listOf = (i) => { let n = 0; for (let k = 0; k < LIST_STARTS.length; k++) if (i >= LIST_STARTS[k].start) n = k; return n; };
+function listOf(i) {
+  if (i >= CUSTOM_START) return 'custom';
+  let n = 0;
+  for (let k = 0; k < LIST_STARTS.length; k++) if (i >= LIST_STARTS[k].start) n = k;
+  return n;
+}
+
 const grid = $('wordGrid');
 const cards = [];
 
-WORDS.forEach(({ word, sentence }, index) => {
+function makeCard(item, index) {
+  const { word, sentence } = item;
   const card = document.createElement('div');
-  card.className = 'word-card';
-
+  card.className = 'word-card' + (item.isCustom ? ' custom' : '');
   const btn = document.createElement('button');
   btn.className = 'word-btn'; btn.type = 'button';
   btn.setAttribute('aria-pressed', 'false');
   btn.setAttribute('aria-label', 'Play ' + word + ', then its sentence, then the word again');
-
   const numEl = document.createElement('span'); numEl.className = 'num'; numEl.textContent = String(index + 1);
   const wordEl = document.createElement('span'); wordEl.className = 'w'; wordEl.textContent = word;
-  const iconEl = document.createElement('span'); iconEl.className = 'icon'; iconEl.textContent = '🔊'; iconEl.setAttribute('aria-hidden', 'true');
+  const iconEl = document.createElement('span'); iconEl.className = 'icon'; iconEl.textContent = '🔊';
+  iconEl.setAttribute('aria-hidden', 'true');
   btn.append(numEl, wordEl, iconEl);
-
   const sentenceEl = document.createElement('div'); sentenceEl.className = 'sentence'; sentenceEl.textContent = sentence;
   const statusEl = document.createElement('div'); statusEl.className = 'status';
-
   const ui = makeCardUI(btn, statusEl);
   btn.addEventListener('click', () => {
     if (ui.isPlaying()) { stopAll(); return; }
-    playSequence(index, ui);
+    playSequence(item, ui);
   });
-
+  const cardRef = {
+    el: card, item, index, ui, list: listOf(index),
+    text: (word + ' ' + sentence).toLowerCase()
+  };
+  if (item.isCustom) {
+    const del = document.createElement('button');
+    del.className = 'card-del'; del.type = 'button';
+    del.setAttribute('aria-label', 'Delete ' + word);
+    del.title = 'Delete this word';
+    del.textContent = '✕';
+    del.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm('Delete "' + word + '" from your teacher list?\n\nThis cannot be undone.')) {
+        deleteCustomWord(cardRef);
+      }
+    });
+    card.appendChild(del);
+  }
   card.append(btn, sentenceEl, statusEl);
   grid.appendChild(card);
-  cards.push({ el: card, index, ui, list: listOf(index), text: (word + ' ' + sentence).toLowerCase() });
-});
+  return cardRef;
+}
+
+BASE_WORDS.forEach((item, i) => cards.push(makeCard(item, i)));
+customWords.forEach((item, i) => cards.push(makeCard(item, CUSTOM_START + i)));
+
+function deleteCustomWord(cardRef) {
+  const ci = cards.indexOf(cardRef);
+  if (ci >= 0) cards.splice(ci, 1);
+  const wi = WORDS.indexOf(cardRef.item);
+  if (wi >= 0) WORDS.splice(wi, 1);
+  const gi = customWords.indexOf(cardRef.item);
+  if (gi >= 0) customWords.splice(gi, 1);
+  cardRef.el.remove();
+  saveCustomWords();
+  rebuildListDropdown();
+  applyFilter();
+}
 
 const searchEl = $('search'), listFilter = $('listFilter'), countEl = $('count'), emptyEl = $('empty');
 const clearSearchBtn = $('clearSearch');
-const listCounts = LIST_STARTS.map((l, k) => (k + 1 < LIST_STARTS.length ? LIST_STARTS[k + 1].start : WORDS.length) - l.start);
-listFilter.innerHTML = `<option value="all">All lists (${WORDS.length})</option>`
-  + LIST_STARTS.map((l, k) => `<option value="${k}">${l.name} (${listCounts[k]})</option>`).join('');
-// Always default to the competition list on page load — parents land directly
-// on the official words.
+const listCounts = LIST_STARTS.map((l, k) => (k + 1 < LIST_STARTS.length ? LIST_STARTS[k + 1].start : CUSTOM_START) - l.start);
+
+function rebuildListDropdown() {
+  const prev = listFilter.value;
+  let html = `<option value="all">All lists (${WORDS.length})</option>`;
+  html += LIST_STARTS.map((l, k) => `<option value="${k}">${l.name} (${listCounts[k]})</option>`).join('');
+  if (customWords.length > 0) {
+    html += `<option value="custom">✏️ Teacher-added words (${customWords.length})</option>`;
+  }
+  listFilter.innerHTML = html;
+  if ([...listFilter.options].some(o => o.value === prev)) listFilter.value = prev;
+  else listFilter.value = DEFAULT_LIST;
+}
+rebuildListDropdown();
 listFilter.value = DEFAULT_LIST;
 
 function applyFilter() {
@@ -1729,11 +2185,7 @@ function applyFilter() {
 }
 searchEl.addEventListener('input', applyFilter);
 listFilter.addEventListener('change', applyFilter);
-clearSearchBtn.addEventListener('click', () => {
-  searchEl.value = '';
-  applyFilter();
-  searchEl.focus();
-});
+clearSearchBtn.addEventListener('click', () => { searchEl.value = ''; applyFilter(); searchEl.focus(); });
 applyFilter();
 
 function bindSelect(id, key, parse) {
@@ -1755,19 +2207,16 @@ bindSelect('pause', 'pauseMs', (v) => parseInt(v, 10));
 $('stopBtn').addEventListener('click', () => { stopAll(); });
 $('randomBtn').addEventListener('click', () => {
   const visible = cards.filter(c => !c.el.hidden);
-  if (!visible.length) {
-    showStatus('No words to play. Try clearing the search.');
-    return;
-  }
+  if (!visible.length) { showStatus('No words to play. Try clearing the search.'); return; }
   const pick = visible[Math.floor(Math.random() * visible.length)];
   stopAll();
   pick.el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  playSequence(pick.index, pick.ui);
+  playSequence(pick.item, pick.ui);
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  if (settingsDialog.open) return;
+  if (settingsDialog.open || addWordDialog.open) return;
   stopAll();
 });
 window.addEventListener('pagehide', stopAll);
@@ -1776,6 +2225,171 @@ window.addEventListener('pagehide', stopAll);
   unlockAudio();
   if (!ukVoice) pickUKVoice();
 }, { once: true, capture: true }));
+
+const addWordDialog = $('addWordDialog');
+const newWordInput = $('newWordInput');
+const newSentenceInput = $('newSentenceInput');
+const addWordStatus = $('addWordStatus');
+const saveWordBtn = $('saveWordBtn');
+const testWordBtn = $('testWordBtn');
+
+function openAddWord() {
+  newWordInput.value = '';
+  newSentenceInput.value = '';
+  addWordStatus.textContent = '';
+  addWordStatus.className = 'add-status';
+  saveWordBtn.disabled = true;
+  testWordBtn.disabled = false;
+  testWordBtn.textContent = '🔊 Test this word';
+  if (typeof addWordDialog.showModal === 'function') addWordDialog.showModal();
+  else addWordDialog.setAttribute('open', '');
+  setTimeout(() => newWordInput.focus(), 50);
+}
+function closeAddWord() {
+  if (typeof addWordDialog.close === 'function') addWordDialog.close();
+  else addWordDialog.removeAttribute('open');
+}
+function refreshAddWordStatus() {
+  const word = newWordInput.value.trim();
+  const sentence = newSentenceInput.value.trim();
+  if (!word && !sentence) {
+    addWordStatus.textContent = '';
+    addWordStatus.className = 'add-status';
+    saveWordBtn.disabled = true;
+    return;
+  }
+  const v = validateNewWord(word, sentence);
+  if (v.ok) {
+    addWordStatus.textContent = '✓ Looks good — ready to save.';
+    addWordStatus.className = 'add-status ok';
+    saveWordBtn.disabled = false;
+  } else {
+    addWordStatus.textContent = v.message;
+    addWordStatus.className = 'add-status err';
+    saveWordBtn.disabled = true;
+  }
+}
+newWordInput.addEventListener('input', refreshAddWordStatus);
+newSentenceInput.addEventListener('input', refreshAddWordStatus);
+$('addWordBtn').addEventListener('click', openAddWord);
+$('closeAddWord').addEventListener('click', closeAddWord);
+testWordBtn.addEventListener('click', async () => {
+  const word = newWordInput.value.trim();
+  const sentence = newSentenceInput.value.trim();
+  if (!word || !sentence) {
+    addWordStatus.textContent = 'Enter both a word and a sentence to test.';
+    addWordStatus.className = 'add-status err';
+    return;
+  }
+  testWordBtn.disabled = true;
+  testWordBtn.textContent = '⏳ Testing…';
+  try { await playSequence({ word, sentence }, null); }
+  catch (e) { console.error(e); }
+  finally {
+    testWordBtn.disabled = false;
+    testWordBtn.textContent = '🔊 Test this word';
+  }
+});
+saveWordBtn.addEventListener('click', () => {
+  const word = newWordInput.value.trim();
+  const sentence = newSentenceInput.value.trim();
+  const v = validateNewWord(word, sentence);
+  if (!v.ok) { addWordStatus.textContent = v.message; addWordStatus.className = 'add-status err'; return; }
+  const item = { word, sentence, isCustom: true, addedAt: Date.now() };
+  customWords.push(item);
+  WORDS.push(item);
+  saveCustomWords();
+  const cardRef = makeCard(item, WORDS.length - 1);
+  rebuildListDropdown();
+  listFilter.value = 'custom';
+  applyFilter();
+  closeAddWord();
+  setTimeout(() => {
+    cardRef.el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    cardRef.el.classList.add('flash');
+    setTimeout(() => cardRef.el.classList.remove('flash'), 1800);
+  }, 60);
+  say('Word added: ' + word);
+});
+
+$('exportBtn').addEventListener('click', () => {
+  if (customWords.length === 0) {
+    addWordStatus.textContent = 'No custom words to export yet.';
+    addWordStatus.className = 'add-status err';
+    return;
+  }
+  const data = {
+    version: 1, exportedAt: new Date().toISOString(),
+    words: customWords.map(w => ({ word: w.word, sentence: w.sentence }))
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'spelling-bee-words-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  addWordStatus.textContent = '✓ Exported ' + customWords.length + ' word(s).';
+  addWordStatus.className = 'add-status ok';
+});
+$('importFile').addEventListener('change', async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (!data || !Array.isArray(data.words)) {
+      addWordStatus.textContent = '✗ Invalid file: missing "words" array.';
+      addWordStatus.className = 'add-status err';
+      return;
+    }
+    let added = 0, skipped = 0;
+    for (const w of data.words) {
+      if (!w || typeof w.word !== 'string' || typeof w.sentence !== 'string') { skipped++; continue; }
+      const word = w.word.trim(), sentence = w.sentence.trim();
+      const v = validateNewWord(word, sentence);
+      if (!v.ok) { skipped++; continue; }
+      const item = { word, sentence, isCustom: true, addedAt: Date.now() };
+      customWords.push(item);
+      WORDS.push(item);
+      makeCard(item, WORDS.length - 1);
+      added++;
+    }
+    saveCustomWords();
+    rebuildListDropdown();
+    applyFilter();
+    addWordStatus.textContent = '✓ Imported ' + added + ' word(s)' + (skipped ? ' — skipped ' + skipped + ' invalid/duplicate' : '') + '.';
+    addWordStatus.className = 'add-status ok';
+  } catch (err) {
+    addWordStatus.textContent = '✗ Could not read file: ' + err.message;
+    addWordStatus.className = 'add-status err';
+  }
+});
+$('clearCustomBtn').addEventListener('click', () => {
+  if (customWords.length === 0) {
+    addWordStatus.textContent = 'No custom words to delete.';
+    addWordStatus.className = 'add-status err';
+    return;
+  }
+  if (!confirm('Delete all ' + customWords.length + ' custom word(s)?\n\nThis cannot be undone.')) return;
+  for (let i = cards.length - 1; i >= 0; i--) {
+    if (cards[i].item.isCustom) {
+      cards[i].el.remove();
+      const wi = WORDS.indexOf(cards[i].item);
+      if (wi >= 0) WORDS.splice(wi, 1);
+      cards.splice(i, 1);
+    }
+  }
+  customWords = [];
+  saveCustomWords();
+  rebuildListDropdown();
+  applyFilter();
+  addWordStatus.textContent = '✓ All custom words deleted.';
+  addWordStatus.className = 'add-status ok';
+});
 
 const settingsDialog = $('settingsDialog');
 $('settingsBtn').addEventListener('click', () => {
@@ -1786,13 +2400,11 @@ $('closeSettings').addEventListener('click', () => {
   if (typeof settingsDialog.close === 'function') settingsDialog.close();
   else settingsDialog.removeAttribute('open');
 });
-settingsDialog.addEventListener('click', (e) => {
-  if (e.target === settingsDialog) $('closeSettings').click();
-});
+settingsDialog.addEventListener('click', (e) => { if (e.target === settingsDialog) $('closeSettings').click(); });
+addWordDialog.addEventListener('click', (e) => { if (e.target === addWordDialog) closeAddWord(); });
 
 const diagList = $('diag'), diagBtn = $('diagBtn'), speechStatus = $('speechStatus');
 function showStatus(text) { speechStatus.textContent = text; }
-
 async function runDiagnostics() {
   stopAll(); unlockAudio();
   const run = newRun(null);
